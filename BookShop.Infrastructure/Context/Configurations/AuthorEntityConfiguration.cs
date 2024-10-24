@@ -2,38 +2,37 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace BookShop.Infrastructure.Context.Configurations
+namespace BookShop.Infrastructure.Context.Configurations;
+
+public class AuthorEntityConfiguration : IEntityTypeConfiguration<AuthorEntity>
 {
-    public class AuthorEntityConfiguration : IEntityTypeConfiguration<AuthorEntity>
+    protected string Schema { get; set; }
+
+    public AuthorEntityConfiguration(string schema)
     {
-        protected string Schema { get; set; }
+        Schema = schema;
+    }
 
-        public AuthorEntityConfiguration(string schema)
-        {
-            Schema = schema;
-        }
+    public void Configure(EntityTypeBuilder<AuthorEntity> builder)
+    {
+        builder.HasKey(e => e.Id);
+        builder.Property(e => e.Id)
+            .ValueGeneratedOnAdd();
 
-        public void Configure(EntityTypeBuilder<AuthorEntity> builder)
-        {
-            builder.HasKey(e => e.Id);
-            builder.Property(e => e.Id)
-                .ValueGeneratedOnAdd();
+        builder.Property(e => e.Name)
+            .IsRequired()
+            .HasMaxLength(100);
 
-            builder.Property(e => e.Name)
-                .IsRequired()
-                .HasMaxLength(100);
+        builder.Property(e => e.Surname)
+            .IsRequired()
+            .HasMaxLength(100);
 
-            builder.Property(e => e.Surname)
-                .IsRequired()
-                .HasMaxLength(100);
+        builder.Metadata
+            .FindNavigation(nameof(AuthorEntity.Books))
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
 
-            builder.Metadata
-               .FindNavigation(nameof(AuthorEntity.Books))
-               .SetPropertyAccessMode(PropertyAccessMode.Field);
-
-            builder.HasMany(x => x.Books)
-                .WithOne(x => x.Author)
-                .HasForeignKey(x => x.AuthorId);
-        }
+        builder.HasMany(x => x.Books)
+            .WithOne(x => x.Author)
+            .HasForeignKey(x => x.AuthorId);
     }
 }

@@ -18,3 +18,12 @@
 9. Use general programming good practices and coding standards.
 
 If have any questions please let us know: abronowicki@openskydata.com, mlinke@openskydata.com
+
+//TODO: create alises for this command
+```bash
+>> create migration
+dotnet ef migrations add <MigrationName> --project BookShop.Infrastructure --startup-project BookShop.Web
+>> update DB
+dotnet ef database update --project BookShop.Infrastructure --startup-project BookShop.Web
+
+```

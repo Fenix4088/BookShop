@@ -13,9 +13,13 @@ namespace BookShop.Infrastructure.Context
         }
 
         public DbSet<AuthorEntity> Authors { get; set; }
+        public DbSet<AuthorEntity> Books { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Apply custom table names for the entities
+            modelBuilder.Entity<AuthorEntity>().ToTable("Authors", Schema);
+            modelBuilder.Entity<BookEntity>().ToTable("Books", Schema);
             modelBuilder.ApplyConfiguration(new AuthorEntityConfiguration(Schema));
         }
     }
