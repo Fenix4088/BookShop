@@ -20,10 +20,10 @@ namespace BookShop.Web.Controllers
             this.getAuthorListQueryHandler = getAuthorListQueryHandler;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+        // public IActionResult Index()
+        // {
+        //     return View();
+        // }
 
         [HttpGet]
         public IActionResult CreateAuthor()
