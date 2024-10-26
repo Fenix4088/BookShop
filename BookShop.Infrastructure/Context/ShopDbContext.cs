@@ -21,6 +21,7 @@ namespace BookShop.Infrastructure.Context
             modelBuilder.Entity<AuthorEntity>().ToTable("Authors", Schema);
             modelBuilder.Entity<BookEntity>().ToTable("Books", Schema);
             modelBuilder.ApplyConfiguration(new AuthorEntityConfiguration(Schema));
+            modelBuilder.ApplyConfiguration(new BookEntityConfiguration(Schema));
         }
     }
 }

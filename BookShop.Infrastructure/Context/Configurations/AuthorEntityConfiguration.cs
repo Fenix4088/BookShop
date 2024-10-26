@@ -15,24 +15,27 @@ public class AuthorEntityConfiguration : IEntityTypeConfiguration<AuthorEntity>
 
     public void Configure(EntityTypeBuilder<AuthorEntity> builder)
     {
-        builder.HasKey(e => e.Id);
-        builder.Property(e => e.Id)
+        builder.HasKey(author => author.Id);
+        builder.Property(author => author.Id)
             .ValueGeneratedOnAdd();
 
-        builder.Property(e => e.Name)
+        builder.HasIndex(author => new { author.Name, author.Surname }).IsUnique();
+
+        builder.Property(author => author.Name)
             .IsRequired()
             .HasMaxLength(100);
 
-        builder.Property(e => e.Surname)
+        builder.Property(author => author.Surname)
             .IsRequired()
             .HasMaxLength(100);
 
         builder.Metadata
             .FindNavigation(nameof(AuthorEntity.Books))
-            .SetPropertyAccessMode(PropertyAccessMode.Field);
+            ?.SetPropertyAccessMode(PropertyAccessMode.Field);
 
-        builder.HasMany(x => x.Books)
-            .WithOne(x => x.Author)
-            .HasForeignKey(x => x.AuthorId);
+        builder.HasMany(author => author.Books)
+            .WithOne(book => book.Author)
+            .HasForeignKey(book => book.AuthorId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

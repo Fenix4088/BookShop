@@ -1,25 +1,39 @@
-﻿using BookShop.Domain;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using BookShop.Domain;
 using BookShop.Infrastructure.Handlers.Abstractions;
 using BookShop.Infrastructure.Repositories;
 using BookShop.Models.Commands;
 using System.Threading.Tasks;
+using FluentValidation.Results;
+using ValidationException = FluentValidation.ValidationException;
 
-namespace BookShop.Infrastructure.Handlers.Commands
+namespace BookShop.Infrastructure.Handlers.Commands;
+
+public class CreateAuthorCommandHandler : ICommandHandler<CreateAuthorCommand>
 {
-    public class CreateAuthorCommandHandler : ICommandHandler<CreateAuthorCommand>
+    private readonly AuthorRepository _authorRepository;
+
+    public CreateAuthorCommandHandler(AuthorRepository authorRepository)
     {
-        private readonly AuthorRepository repository;
+        _authorRepository = authorRepository;
+    }
 
-        public CreateAuthorCommandHandler(AuthorRepository repository)
+    public async Task Handler(CreateAuthorCommand command)
+    {
+        var failures = new List<ValidationFailure> { };
+        if (await _authorRepository.IsUniqueAuthorAsync(command))
         {
-            this.repository = repository;
+            failures.Add(new ValidationFailure("", "An author with the same name and surname already exists."));
         }
 
-        public async Task Handler(CreateAuthorCommand command)
+        if (failures.Count > 0)
         {
-            var entity = AuthorEntity.Create(command.Name, command.Surname);
-            await repository.Add(entity);
-            await repository.Save();
+            throw new ValidationException(failures);
         }
+
+        var entity = AuthorEntity.Create(command.Name, command.Surname);
+        await _authorRepository.Add(entity);
+        await _authorRepository.Save();
     }
 }

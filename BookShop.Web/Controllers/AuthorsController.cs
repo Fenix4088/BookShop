@@ -1,10 +1,12 @@
-﻿using BookShop.Infrastructure.Handlers.Commands;
+﻿using System;
+using BookShop.Infrastructure.Handlers.Commands;
 using BookShop.Infrastructure.Handlers.Queries;
 using BookShop.Models;
 using BookShop.Models.Commands;
 using BookShop.Models.Queries;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using FluentValidation;
 
 namespace BookShop.Web.Controllers
 {
@@ -34,10 +36,19 @@ namespace BookShop.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateAuthor([FromForm] AuthorModel model)
         {
-            if (ModelState.IsValid)
+
+            if (!ModelState.IsValid) return View(model);
+            try
             {
                 await createAuthorCommandHandler.Handler(new CreateAuthorCommand(model.Name, model.Surname));
                 return RedirectToAction("AuthorList");
+            }
+            catch (ValidationException e)
+            {
+                foreach (var error in e.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                }
             }
             return View(model);
         }
