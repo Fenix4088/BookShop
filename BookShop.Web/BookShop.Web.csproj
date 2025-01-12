@@ -9,7 +9,6 @@
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="11.0.0" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -22,7 +21,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BookShop.Infrastructure\BookShop.Infrastructure.csproj" />
-    <ProjectReference Include="..\BookShop.Models\BookShop.Models.csproj" />
   </ItemGroup>
 
   <ItemGroup>

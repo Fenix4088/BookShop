@@ -1,4 +1,5 @@
 using BookShop.Domain.Validators;
+using BookShop.Infrastructure;
 using BookShop.Infrastructure.Context;
 using BookShop.Infrastructure.Handlers.Commands;
 using BookShop.Infrastructure.Handlers.Queries;
@@ -13,10 +14,12 @@ using Microsoft.Extensions.Hosting;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateAuthorValidation>());
 
-builder.Services.AddDbContext<ShopDbContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("BookShop")));
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+// builder.Services.AddDbContext<ShopDbContext>(options =>
+//     options.UseSqlServer(
+//         builder.Configuration.GetConnectionString("BookShop")));
+// builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+builder.Services.AddInfrastructure(builder.Configuration);
 
 
 builder.Services.AddTransient<AuthorRepository>();
