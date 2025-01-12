@@ -1,11 +1,11 @@
 using BookShop.Infrastructure.Context;
-using BookShop.Infrastructure.Handlers.Commands;
 using BookShop.Infrastructure.Repositories;
-using BookShop.Models.Commands;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
+using BookShop.Application.Commands;
+using BookShop.Application.Handlers.Commands;
 using Xunit;
 
 namespace BookShop.UnitTests

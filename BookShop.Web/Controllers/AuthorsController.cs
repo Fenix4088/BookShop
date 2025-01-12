@@ -1,11 +1,12 @@
 ﻿using System;
-using BookShop.Infrastructure.Handlers.Commands;
-using BookShop.Infrastructure.Handlers.Queries;
 using BookShop.Models;
-using BookShop.Models.Commands;
 using BookShop.Models.Queries;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using BookShop.Application;
+using BookShop.Application.Commands;
+using BookShop.Application.Handlers.Commands;
+using BookShop.Infrastructure.Handlers;
 using FluentValidation;
 
 namespace BookShop.Web.Controllers

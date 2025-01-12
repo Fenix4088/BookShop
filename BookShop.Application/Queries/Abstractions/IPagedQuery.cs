@@ -1,4 +1,4 @@
-﻿using BookShop.Models.Abstractions;
+﻿using BookShop.Application.Abstractions;
 
 namespace BookShop.Models.Queries.Abstractions
 {

@@ -1,9 +1,8 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using BookShop.Application.Commands;
 using BookShop.Domain;
 using BookShop.Infrastructure.Context;
 using BookShop.Infrastructure.Repositories.Abstractions;
-using BookShop.Models.Commands;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookShop.Infrastructure.Repositories;
@@ -16,9 +15,9 @@ public class AuthorRepository : GenericRepository<AuthorEntity>
         _shopDbContext = shopDbContext;
     }
 
-    public async Task<bool> IsUniqueAuthorAsync(CreateAuthorCommand command)
-    {
-        return await _shopDbContext.Authors.AnyAsync(author =>
-            author.Name == command.Name && author.Surname == command.Surname);
-    }
+    // public async Task<bool> IsUniqueAuthorAsync(CreateAuthorCommand command)
+    // {
+    //     return await _shopDbContext.Authors.AnyAsync(author =>
+    //         author.Name == command.Name && author.Surname == command.Surname);
+    // }
 }

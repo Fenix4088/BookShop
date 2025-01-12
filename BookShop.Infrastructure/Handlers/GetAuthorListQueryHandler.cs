@@ -1,13 +1,13 @@
-﻿using BookShop.Infrastructure.Context;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using BookShop.Application;
+using BookShop.Application.Abstractions;
+using BookShop.Infrastructure.Context;
 using BookShop.Infrastructure.Handlers.Abstractions;
 using BookShop.Infrastructure.Pagination;
-using BookShop.Models;
-using BookShop.Models.Abstractions;
 using BookShop.Models.Queries;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace BookShop.Infrastructure.Handlers.Queries
+namespace BookShop.Infrastructure.Handlers
 {
     public class GetAuthorListQueryHandler : IQueryHandler<GetAuthorListQuery, IPagedResult<AuthorModel>>
     {

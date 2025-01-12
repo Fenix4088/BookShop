@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using BookShop.Domain.Repositories;
 
 namespace BookShop.Infrastructure.Repositories.Abstractions
 {

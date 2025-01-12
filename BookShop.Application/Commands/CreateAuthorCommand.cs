@@ -1,6 +1,6 @@
-﻿using BookShop.Models.Commands.Abstractions;
+﻿using BookShop.Application.Commands.Abstractions;
 
-namespace BookShop.Models.Commands
+namespace BookShop.Application.Commands
 {
     public class CreateAuthorCommand : ICommand
     {

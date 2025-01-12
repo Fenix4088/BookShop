@@ -2,26 +2,25 @@
 using BookShop.Infrastructure.Context.Configurations;
 using Microsoft.EntityFrameworkCore;
 
-namespace BookShop.Infrastructure.Context
+namespace BookShop.Infrastructure.Context;
+
+public class ShopDbContext : DbContext
 {
-    public class ShopDbContext : DbContext
+    public const string Schema = "shop";
+
+    public ShopDbContext(DbContextOptions<ShopDbContext> options) : base(options)
     {
-        public const string Schema = "shop";
+    }
 
-        public ShopDbContext(DbContextOptions<ShopDbContext> options) : base(options)
-        {
-        }
+    public DbSet<AuthorEntity> Authors { get; set; }
+    public DbSet<AuthorEntity> Books { get; set; }
 
-        public DbSet<AuthorEntity> Authors { get; set; }
-        public DbSet<AuthorEntity> Books { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            // Apply custom table names for the entities
-            modelBuilder.Entity<AuthorEntity>().ToTable("Authors", Schema);
-            modelBuilder.Entity<BookEntity>().ToTable("Books", Schema);
-            modelBuilder.ApplyConfiguration(new AuthorEntityConfiguration(Schema));
-            modelBuilder.ApplyConfiguration(new BookEntityConfiguration(Schema));
-        }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        // Apply custom table names for the entities
+        modelBuilder.Entity<AuthorEntity>().ToTable("Authors", Schema);
+        modelBuilder.Entity<BookEntity>().ToTable("Books", Schema);
+        modelBuilder.ApplyConfiguration(new AuthorEntityConfiguration(Schema));
+        modelBuilder.ApplyConfiguration(new BookEntityConfiguration(Schema));
     }
 }

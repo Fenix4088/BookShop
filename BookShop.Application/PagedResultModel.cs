@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using BookShop.Application.Abstractions;
+﻿using BookShop.Application.Abstractions;
 
-namespace BookShop.Models;
+namespace BookShop.Application;
 
 public class PagedResultModel<TResult> : IPagedResult<TResult>
 {

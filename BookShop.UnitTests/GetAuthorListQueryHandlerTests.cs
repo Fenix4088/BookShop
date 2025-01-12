@@ -1,11 +1,11 @@
 ﻿using BookShop.Domain;
 using BookShop.Infrastructure.Context;
-using BookShop.Infrastructure.Handlers.Queries;
 using BookShop.Models.Queries;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
+using BookShop.Infrastructure.Handlers;
 using Xunit;
 
 namespace BookShop.UnitTests

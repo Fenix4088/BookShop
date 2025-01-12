@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace BookShop.Models.Abstractions
+﻿namespace BookShop.Application.Abstractions
 {
     public interface IPagedResult<TResult>
     {
