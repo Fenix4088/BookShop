@@ -1,24 +1,21 @@
-﻿using System;
-using BookShop.Models;
-using BookShop.Models.Queries;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using BookShop.Application;
+﻿using System.Threading.Tasks;
+using BookShop.Application.Abstractions;
 using BookShop.Application.Commands;
-using BookShop.Application.Commands.Handlers;
 using BookShop.Application.Models;
 using BookShop.Infrastructure.Handlers;
+using BookShop.Models.Queries;
 using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BookShop.Web.Controllers
 {
     public class AuthorsController : Controller
     {
-        private readonly CreateAuthorCommandHandler createAuthorCommandHandler;
-        private readonly GetAuthorListQueryHandler getAuthorListQueryHandler;
+        private readonly ICommandHandler<CreateAuthorCommand> createAuthorCommandHandler;
+        private readonly IQueryHandler<GetAuthorListQuery, IPagedResult<AuthorModel>> getAuthorListQueryHandler;
 
-        public AuthorsController(CreateAuthorCommandHandler createAuthorCommandHandler,
-            GetAuthorListQueryHandler getAuthorListQueryHandler)
+        public AuthorsController(ICommandHandler<CreateAuthorCommand> createAuthorCommandHandler,
+            IQueryHandler<GetAuthorListQuery, IPagedResult<AuthorModel>> getAuthorListQueryHandler)
         {
             this.createAuthorCommandHandler = createAuthorCommandHandler;
             this.getAuthorListQueryHandler = getAuthorListQueryHandler;

@@ -10,5 +10,10 @@
     <ItemGroup>
         <ProjectReference Include="..\BookShop.Domain\BookShop.Domain.csproj" />
     </ItemGroup>
+    
+    
+    <ItemGroup>
+      <PackageReference Include="Scrutor" Version="6.0.1" />
+    </ItemGroup>
 
 </Project>

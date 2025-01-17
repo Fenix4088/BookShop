@@ -1,10 +1,9 @@
-using BookShop.Application.Commands.Handlers;
+using BookShop.Application.Abstractions;
 using BookShop.Domain;
 using BookShop.Domain.Repositories;
 using BookShop.Infrastructure.Context;
 using BookShop.Infrastructure.Handlers;
 using BookShop.Infrastructure.Repositories;
-using BookShop.Infrastructure.Repositories.Abstractions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -21,9 +20,14 @@ public static class Extensions
                 options.UseSqlServer(
                     configuration.GetConnectionString("BookShop")))
             .AddDatabaseDeveloperPageExceptionFilter()
-            .AddScoped<IRepository<AuthorEntity>, AuthorRepository>()
-            .AddTransient<CreateAuthorCommandHandler>()
-            .AddTransient<GetAuthorListQueryHandler>();
+            .AddScoped<IRepository<AuthorEntity>, AuthorRepository>();
+
+
+        var infrastructureAssembly = typeof(GetAuthorListQueryHandler).Assembly;
+        services.Scan(s => s.FromAssemblies(infrastructureAssembly)
+            .AddClasses(c => c.AssignableTo(typeof (IQueryHandler<,>)))
+            .AsImplementedInterfaces()
+            .WithTransientLifetime());
 
         return services;
     }
