@@ -1,6 +1,6 @@
 ﻿using BookShop.Application.Abstractions;
 
-namespace BookShop.Application;
+namespace BookShop.Application.Models;
 
 public class PagedResultModel<TResult> : IPagedResult<TResult>
 {

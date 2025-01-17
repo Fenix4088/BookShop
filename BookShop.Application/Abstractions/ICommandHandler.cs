@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace BookShop.Infrastructure.Handlers.Abstractions
+﻿namespace BookShop.Application.Abstractions
 {
     public interface ICommandHandler<TCommand>
     {

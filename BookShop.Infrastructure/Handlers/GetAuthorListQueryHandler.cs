@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using BookShop.Application;
 using BookShop.Application.Abstractions;
+using BookShop.Application.Models;
 using BookShop.Infrastructure.Context;
-using BookShop.Infrastructure.Handlers.Abstractions;
 using BookShop.Infrastructure.Pagination;
 using BookShop.Models.Queries;
 

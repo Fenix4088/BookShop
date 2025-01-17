@@ -5,7 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using BookShop.Application;
 using BookShop.Application.Commands;
-using BookShop.Application.Handlers.Commands;
+using BookShop.Application.Commands.Handlers;
+using BookShop.Application.Models;
 using BookShop.Infrastructure.Handlers;
 using FluentValidation;
 

@@ -10,10 +10,5 @@
     <ItemGroup>
         <ProjectReference Include="..\BookShop.Domain\BookShop.Domain.csproj" />
     </ItemGroup>
-    
-    
-    <ItemGroup>
-      <Folder Include="Handlers\Queries\" />
-    </ItemGroup>
 
 </Project>

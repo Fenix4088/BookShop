@@ -15,9 +15,9 @@ public class AuthorRepository : GenericRepository<AuthorEntity>
         _shopDbContext = shopDbContext;
     }
 
-    // public async Task<bool> IsUniqueAuthorAsync(CreateAuthorCommand command)
-    // {
-    //     return await _shopDbContext.Authors.AnyAsync(author =>
-    //         author.Name == command.Name && author.Surname == command.Surname);
-    // }
+    public async Task<bool> IsUniqueAuthorAsync(CreateAuthorCommand command)
+    {
+        return await _shopDbContext.Authors.AnyAsync(author =>
+            author.Name == command.Name && author.Surname == command.Surname);
+    }
 }

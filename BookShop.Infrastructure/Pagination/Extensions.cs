@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using BookShop.Application;
 using BookShop.Application.Abstractions;
+using BookShop.Application.Models;
 using BookShop.Models;
 using BookShop.Models.Queries.Abstractions;
 

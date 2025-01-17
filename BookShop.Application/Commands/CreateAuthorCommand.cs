@@ -1,4 +1,4 @@
-﻿using BookShop.Application.Commands.Abstractions;
+﻿using BookShop.Application.Abstractions;
 
 namespace BookShop.Application.Commands
 {

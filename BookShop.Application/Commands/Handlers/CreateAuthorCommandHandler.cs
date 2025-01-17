@@ -1,11 +1,10 @@
-﻿using BookShop.Application.Commands;
+﻿using BookShop.Application.Abstractions;
 using BookShop.Domain;
 using BookShop.Domain.Repositories;
-using BookShop.Infrastructure.Handlers.Abstractions;
 using FluentValidation.Results;
 using ValidationException = FluentValidation.ValidationException;
 
-namespace BookShop.Application.Handlers.Commands;
+namespace BookShop.Application.Commands.Handlers;
 
 public class CreateAuthorCommandHandler : ICommandHandler<CreateAuthorCommand>
 {

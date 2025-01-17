@@ -1,4 +1,4 @@
-﻿namespace BookShop.Application;
+﻿namespace BookShop.Application.Models;
 
 public class AuthorModel
 {

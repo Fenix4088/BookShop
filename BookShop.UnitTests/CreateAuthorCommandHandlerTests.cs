@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 using BookShop.Application.Commands;
-using BookShop.Application.Handlers.Commands;
+using BookShop.Application.Commands.Handlers;
 using Xunit;
 
 namespace BookShop.UnitTests

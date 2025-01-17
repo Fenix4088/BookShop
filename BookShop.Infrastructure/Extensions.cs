@@ -1,4 +1,4 @@
-using BookShop.Application.Handlers.Commands;
+using BookShop.Application.Commands.Handlers;
 using BookShop.Domain;
 using BookShop.Domain.Repositories;
 using BookShop.Infrastructure.Context;

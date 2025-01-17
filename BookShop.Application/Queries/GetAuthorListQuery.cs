@@ -1,4 +1,5 @@
 ﻿using BookShop.Application;
+using BookShop.Application.Models;
 using BookShop.Models.Queries.Abstractions;
 
 namespace BookShop.Models.Queries
