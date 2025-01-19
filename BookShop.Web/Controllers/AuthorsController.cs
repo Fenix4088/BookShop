@@ -36,19 +36,22 @@ public class AuthorsController : Controller
     {
 
         if (!ModelState.IsValid) return View(model);
-        try
-        {
-            await createAuthorCommandHandler.Handler(new CreateAuthorCommand(model.Name, model.Surname));
-            return RedirectToAction("AuthorList");
-        }
-        catch (ValidationException e)
-        {
-            foreach (var error in e.Errors)
-            {
-                ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
-            }
-        }
-        return View(model);
+        
+        await createAuthorCommandHandler.Handler(new CreateAuthorCommand(model.Name, model.Surname));
+        return RedirectToAction("AuthorList");
+        // try
+        // {
+        //     await createAuthorCommandHandler.Handler(new CreateAuthorCommand(model.Name, model.Surname));
+        //     return RedirectToAction("AuthorList");
+        // }
+        // catch (ValidationException e)
+        // {
+        //     foreach (var error in e.Errors)
+        //     {
+        //         ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+        //     }
+        // }
+        // return View(model);
     }
 
 

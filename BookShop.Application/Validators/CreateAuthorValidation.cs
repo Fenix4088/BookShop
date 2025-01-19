@@ -1,10 +1,10 @@
-using System.Threading;
-using System.Threading.Tasks;
+using BookShop.Application.Commands;
+using BookShop.Domain;
 using FluentValidation;
 
-namespace BookShop.Domain.Validators;
+namespace BookShop.Application.Validators;
 
-public class CreateAuthorValidation: AbstractValidator<AuthorEntity>
+public class CreateAuthorValidation: AbstractValidator<CreateAuthorCommand>
 {
     public CreateAuthorValidation()
     {

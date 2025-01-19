@@ -1,4 +1,6 @@
 using BookShop.Application.Abstractions;
+using BookShop.Application.Validators;
+using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BookShop.Application;
@@ -7,6 +9,8 @@ public static class Extentions
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
+        
+        services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateAuthorValidation>());
         var applicationAssembly = typeof(ICommandHandler<>).Assembly;
 
         //? This logic automatically scan current assembly and register all DI into DI Container

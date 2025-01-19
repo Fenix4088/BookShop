@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using BookShop.Domain.Validators;
-using FluentValidation;
 
 namespace BookShop.Domain;
 
@@ -22,15 +20,13 @@ public class AuthorEntity
 
     public static AuthorEntity Create(string name, string surname)
     {
-        var author = new AuthorEntity
+        return new AuthorEntity
         {
             Name = name,
             Surname = surname,
             BookCount = 0
         };
-            
-        new CreateAuthorValidation().ValidateAndThrow(author);
-        return author;
+        
     }
 
     public void AddBook(string title, string description, string releaseDate)
