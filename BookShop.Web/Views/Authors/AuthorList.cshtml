@@ -7,8 +7,8 @@
 
 <h1>Authors</h1>
 
-<p>
-    <a asp-action="CreateAuthor">Create New</a>
+<p class="mb-2">
+    <a class="bg-sky-600 text-white font-bold py-1 px-2 rounded transition duration-300" asp-action="CreateAuthor">Create New</a>
 </p>
 @if(Model.Items.Any()){
 <table class="table">
@@ -20,6 +20,7 @@
             <th>
                 @Html.DisplayName("Full Name")
             </th>
+            <th></th>
             <th></th>
         </tr>
     </thead>
@@ -34,6 +35,9 @@
             </td>
             <td>
                 @* @Html.ActionLink("Add Book", "AddBook", "Books", new { /* id=item.PrimaryKey */ }) | *@
+            </td>
+            <td>
+                <button class="bg-red-600 text-white font-bold py-1 px-2 rounded transition duration-300">X</button>
             </td>
         </tr>
 }

@@ -30,6 +30,11 @@ public class AuthorsController : Controller
         return View(new AuthorModel());
     }
 
+    [HttpDelete]
+    public void RemoveAuthor()
+    {
+    }
+
     [HttpPost]
 
     public async Task<IActionResult> CreateAuthor([FromForm] AuthorModel model)

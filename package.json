@@ -1,0 +1,21 @@
+{
+  "name": "bookshop",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "tailwind:watch": "npx tailwindcss -i ./BookShop.Web/wwwroot/css/tailwind.css -o ./BookShop.Web/wwwroot/css/site.css --watch",
+    "dotnet:watch": "dotnet watch run --project BookShop.Web",
+    "watch": "concurrently \"npm run tailwind:watch\" \"npm run dotnet:watch\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.5.1",
+    "tailwindcss": "^3.4.17"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
