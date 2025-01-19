@@ -8,9 +8,9 @@ namespace BookShop.Application.Commands.Handlers;
 
 public class CreateAuthorCommandHandler : ICommandHandler<CreateAuthorCommand>
 {
-    private readonly IRepository<AuthorEntity> _authorRepository;
+    private readonly IAuthorRepository _authorRepository;
 
-    public CreateAuthorCommandHandler(IRepository<AuthorEntity> authorRepository)
+    public CreateAuthorCommandHandler(IAuthorRepository authorRepository)
     {
         _authorRepository = authorRepository;
     }
@@ -18,10 +18,11 @@ public class CreateAuthorCommandHandler : ICommandHandler<CreateAuthorCommand>
     public async Task Handler(CreateAuthorCommand command)
     {
         var failures = new List<ValidationFailure> { };
-        // if (await _authorRepository.IsUniqueAuthorAsync(command))
-        // {
-        //     failures.Add(new ValidationFailure("", "An author with the same name and surname already exists."));
-        // }
+
+        if (await _authorRepository.IsUniqueAuthorAsync(command.Name, command.Surname))
+        {
+            failures.Add(new ValidationFailure("", "An author with the same name and surname already exists."));
+        }
 
         if (failures.Count > 0)
         {

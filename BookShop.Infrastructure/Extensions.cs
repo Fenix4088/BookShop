@@ -20,7 +20,7 @@ public static class Extensions
                 options.UseSqlServer(
                     configuration.GetConnectionString("BookShop")))
             .AddDatabaseDeveloperPageExceptionFilter()
-            .AddScoped<IRepository<AuthorEntity>, AuthorRepository>();
+            .AddScoped<IAuthorRepository, AuthorRepository>();
 
 
         var infrastructureAssembly = typeof(GetAuthorListQueryHandler).Assembly;

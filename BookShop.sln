@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookShop.Domain", "BookShop
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookShop.Infrastructure", "BookShop.Infrastructure\BookShop.Infrastructure.csproj", "{0C659786-48BD-481F-92AE-0C45967224E3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookShop.Models", "BookShop.Models\BookShop.Models.csproj", "{10E59383-0A47-4C21-A55C-DA6102610E02}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookShop.UnitTests", "BookShop.UnitTests\BookShop.UnitTests.csproj", "{F556C296-CE90-466C-B5D4-044AD4233289}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{008560AC-D6B5-4519-91BE-A95028F0705E}"
@@ -38,10 +36,6 @@ Global
 		{0C659786-48BD-481F-92AE-0C45967224E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C659786-48BD-481F-92AE-0C45967224E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C659786-48BD-481F-92AE-0C45967224E3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{10E59383-0A47-4C21-A55C-DA6102610E02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{10E59383-0A47-4C21-A55C-DA6102610E02}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{10E59383-0A47-4C21-A55C-DA6102610E02}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{10E59383-0A47-4C21-A55C-DA6102610E02}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F556C296-CE90-466C-B5D4-044AD4233289}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F556C296-CE90-466C-B5D4-044AD4233289}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F556C296-CE90-466C-B5D4-044AD4233289}.Release|Any CPU.ActiveCfg = Release|Any CPU
