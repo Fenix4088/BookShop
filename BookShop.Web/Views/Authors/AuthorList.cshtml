@@ -37,7 +37,10 @@
                 @* @Html.ActionLink("Add Book", "AddBook", "Books", new { /* id=item.PrimaryKey */ }) | *@
             </td>
             <td>
-                <button class="bg-red-600 text-white font-bold py-1 px-2 rounded transition duration-300">X</button>
+                <form asp-action="RemoveAuthor" method="post">
+                    <input type="hidden" name="authorId" value="@item.Id" />
+                    <button class="bg-red-600 text-white font-bold py-1 px-2 rounded transition duration-300" asp-action="RemoveAuthor">X</button>
+                </form>
             </td>
         </tr>
 }

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using BookShop.Application.Abstractions;
 using BookShop.Application.Commands;
 using BookShop.Application.Models;
@@ -10,13 +11,17 @@ namespace BookShop.Web.Controllers;
 public class AuthorsController : Controller
 {
     private readonly ICommandHandler<CreateAuthorCommand> createAuthorCommandHandler;
+    private readonly ICommandHandler<RemoveAuthorCommand> removeAuthorCommandHandler;
     private readonly IQueryHandler<GetAuthorListQuery, IPagedResult<AuthorModel>> getAuthorListQueryHandler;
 
-    public AuthorsController(ICommandHandler<CreateAuthorCommand> createAuthorCommandHandler,
+    public AuthorsController(
+        ICommandHandler<CreateAuthorCommand> createAuthorCommandHandler, 
+        ICommandHandler<RemoveAuthorCommand> removeAuthorCommandHandler,
         IQueryHandler<GetAuthorListQuery, IPagedResult<AuthorModel>> getAuthorListQueryHandler)
     {
         this.createAuthorCommandHandler = createAuthorCommandHandler;
         this.getAuthorListQueryHandler = getAuthorListQueryHandler;
+        this.removeAuthorCommandHandler = removeAuthorCommandHandler;
     }
 
     // public IActionResult Index()
@@ -30,13 +35,14 @@ public class AuthorsController : Controller
         return View(new AuthorModel());
     }
 
-    [HttpDelete]
-    public void RemoveAuthor()
+    [HttpPost]
+    public async Task<IActionResult>  RemoveAuthor([FromForm] int authorId)
     {
+        await removeAuthorCommandHandler.Handler(new RemoveAuthorCommand(authorId));
+        return RedirectToAction("AuthorList");
     }
 
     [HttpPost]
-
     public async Task<IActionResult> CreateAuthor([FromForm] AuthorModel model)
     {
 
@@ -44,19 +50,6 @@ public class AuthorsController : Controller
         
         await createAuthorCommandHandler.Handler(new CreateAuthorCommand(model.Name, model.Surname));
         return RedirectToAction("AuthorList");
-        // try
-        // {
-        //     await createAuthorCommandHandler.Handler(new CreateAuthorCommand(model.Name, model.Surname));
-        //     return RedirectToAction("AuthorList");
-        // }
-        // catch (ValidationException e)
-        // {
-        //     foreach (var error in e.Errors)
-        //     {
-        //         ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
-        //     }
-        // }
-        // return View(model);
     }
 
 

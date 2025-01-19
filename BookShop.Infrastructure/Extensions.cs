@@ -1,5 +1,4 @@
 using BookShop.Application.Abstractions;
-using BookShop.Domain;
 using BookShop.Domain.Repositories;
 using BookShop.Infrastructure.Context;
 using BookShop.Infrastructure.Handlers;

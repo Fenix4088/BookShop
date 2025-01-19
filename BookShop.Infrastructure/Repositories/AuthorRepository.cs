@@ -20,4 +20,14 @@ public class AuthorRepository : GenericRepository<AuthorEntity>, IAuthorReposito
         return !(await _shopDbContext.Authors.AnyAsync(author =>
             author.Name == name && author.Surname == surname));
     }
+
+    public async Task<AuthorEntity> GetById(int id)
+    {
+        return await _shopDbContext.Authors.SingleOrDefaultAsync(x => x.Id == id);
+    }
+
+    public void Remove(AuthorEntity authorEntity)
+    { 
+        _shopDbContext.Authors.Remove(authorEntity);
+    }
 }
