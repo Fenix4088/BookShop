@@ -17,17 +17,15 @@ public class CreateAuthorCommandHandler : ICommandHandler<CreateAuthorCommand>
 
     public async Task Handler(CreateAuthorCommand command)
     {
-        var failures = new List<ValidationFailure> { };
-
-        if (await _authorRepository.IsUniqueAuthorAsync(command.Name, command.Surname))
+        
+        if (!await _authorRepository.IsUniqueAuthorAsync(command.Name, command.Surname))
         {
-            failures.Add(new ValidationFailure("", "An author with the same name and surname already exists."));
+            throw new ValidationException(new List<ValidationFailure>
+            {
+                new ("", "An author with the same name and surname already exists.")
+            });
         }
-
-        if (failures.Count > 0)
-        {
-            throw new ValidationException(failures);
-        }
+        
 
         var entity = AuthorEntity.Create(command.Name, command.Surname);
         await _authorRepository.Add(entity);

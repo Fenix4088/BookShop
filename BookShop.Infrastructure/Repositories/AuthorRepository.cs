@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using BookShop.Application.Commands;
 using BookShop.Domain;
 using BookShop.Domain.Repositories;
 using BookShop.Infrastructure.Context;
@@ -8,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookShop.Infrastructure.Repositories;
 
-public class AuthorRepository :  GenericRepository<AuthorEntity>, IAuthorRepository
+public class AuthorRepository : GenericRepository<AuthorEntity>, IAuthorRepository
 {
     private readonly ShopDbContext _shopDbContext;
     public AuthorRepository(ShopDbContext shopDbContext) : base(shopDbContext)
@@ -18,7 +17,7 @@ public class AuthorRepository :  GenericRepository<AuthorEntity>, IAuthorReposit
 
     public async Task<bool> IsUniqueAuthorAsync(string name, string surname)
     {
-        return await _shopDbContext.Authors.AnyAsync(author =>
-            author.Name == name && author.Surname == surname);
+        return !(await _shopDbContext.Authors.AnyAsync(author =>
+            author.Name == name && author.Surname == surname));
     }
 }
