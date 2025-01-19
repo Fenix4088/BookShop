@@ -6,7 +6,7 @@
     "tailwind:watch": "npx tailwindcss -i ./BookShop.Web/wwwroot/css/tailwind.css -o ./BookShop.Web/wwwroot/css/site.css --watch",
     "build:tailwind": "NODE_ENV=production npx tailwindcss -i ./BookShop.Web/wwwroot/css/tailwind.css -o ./BookShop.Web/wwwroot/css/site.css --minify",
     "dotnet:watch": "dotnet watch run --project BookShop.Web",
-    "watch": "concurrently \"npm run tailwind:watch\" \"npm run dotnet:watch\""
+    "watch": "concurrently --names \"TAILWIND,DOTNET\" --prefix-colors \"blue,green\" \"npm run tailwind:watch\" \"npm run dotnet:watch\""
   },
   "keywords": [],
   "author": "",
