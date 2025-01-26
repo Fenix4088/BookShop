@@ -18,8 +18,6 @@ internal sealed class UnitOfWorkCommandHandlerDecorator<TCommand>: ICommandHandl
 
     public async Task Handler(TCommand command)
     {
-        Console.WriteLine($"Handling command: {typeof(TCommand).Name}");
         await _unitOfWork.ExecuteAsync(() => _commandHandler.Handler(command));
-        Console.WriteLine($"Finished handling command: {typeof(TCommand).Name}");
     }
 }
