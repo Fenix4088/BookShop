@@ -19,9 +19,10 @@ public static class Extensions
         Expression<Func<TEntity, TResult>> selector, int startPaginationFrom = 1)
     {
         IQueryable<TEntity> query = orderedQuery;
-        long pages = 0;
 
         int totalCount = await orderedQuery.CountAsync();
+        
+        long pages = totalCount > 0 ? (int)Math.Ceiling((decimal)totalCount / 10) : 0;
 
         if (pagedQuery.CurrentPage > 0)
         {

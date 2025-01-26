@@ -1,10 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using BookShop.Application.Abstractions;
 using BookShop.Application.Commands;
 using BookShop.Application.Models;
 using BookShop.Models.Queries;
-using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookShop.Web.Controllers;
@@ -55,6 +53,11 @@ public class AuthorsController : Controller
 
     public async Task<IActionResult> AuthorList([FromQuery] PagedQueryModel model)
     {
+        if (model.CurrentPage == 0 || model.RowCount == 0)
+        {
+            return RedirectToAction("AuthorList", new { CurrentPage = 1, RowCount = 10 });
+        }
+
         return View(await getAuthorListQueryHandler.Handler(new GetAuthorListQuery(model.CurrentPage, model.RowCount)));
     }
 }

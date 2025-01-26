@@ -57,7 +57,8 @@ public static class Extensions
 
         app.MapControllerRoute(
             name: "default",
-            pattern: "{controller=Authors}/{action=AuthorList}/{id?}");
+            pattern: "{controller=Authors}/{action=AuthorList}/{id?}"
+            );
         return app;
     }
 }

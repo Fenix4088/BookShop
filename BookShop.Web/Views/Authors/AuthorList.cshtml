@@ -11,8 +11,8 @@
     <a class="bg-sky-600 text-white font-bold py-1 px-2 rounded transition duration-300" asp-action="CreateAuthor">Create New</a>
 </p>
 @if(Model.Items.Any()){
-<table class="table">
-    <thead>
+    <table class="table">
+        <thead>
         <tr>
             <th>
                 @Html.DisplayName("Id")
@@ -23,29 +23,35 @@
             <th></th>
             <th></th>
         </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Items) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NameAndSurname)
-            </td>
-            <td>
-                @* @Html.ActionLink("Add Book", "AddBook", "Books", new { /* id=item.PrimaryKey */ }) | *@
-            </td>
-            <td>
-                <form asp-action="RemoveAuthor" method="post">
-                    <input type="hidden" name="authorId" value="@item.Id" />
-                    <button class="bg-red-600 text-white font-bold py-1 px-2 rounded transition duration-300" asp-action="RemoveAuthor">X</button>
-                </form>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.Items) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NameAndSurname)
+                </td>
+                <td>
+                    @* @Html.ActionLink("Add Book", "AddBook", "Books", new { /* id=item.PrimaryKey */ }) | *@
+                </td>
+                <td>
+                    <form asp-action="RemoveAuthor" method="post">
+                        <input type="hidden" name="authorId" value="@item.Id" />
+                        <button class="bg-red-600 text-white font-bold py-1 px-2 rounded transition duration-300" asp-action="RemoveAuthor">X</button>
+                    </form>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    <div>
+        @foreach (var paginationButton in Enumerable.Range(1, Model.PageCount).ToList())
+        {
+            <a asp-route-CurrentPage="@paginationButton" asp-route-RowCount="10" class="bg-sky-600 text-white font-bold py-1 px-2 rounded transition duration-300">@Html.DisplayFor(modelItem => paginationButton)</a>
+        }
+    </div>
 } else {
     <p>Empty</p>
 }
