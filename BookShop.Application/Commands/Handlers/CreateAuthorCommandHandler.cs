@@ -33,7 +33,7 @@ public class CreateAuthorCommandHandler : ICommandHandler<CreateAuthorCommand>
         
 
         var entity = AuthorEntity.Create(command.Name, command.Surname);
-        await _authorRepository.Add(entity);
-        await _authorRepository.Save();
+        await _authorRepository.AddAsync(entity);
+        await _authorRepository.SaveAsync();
     }
 }

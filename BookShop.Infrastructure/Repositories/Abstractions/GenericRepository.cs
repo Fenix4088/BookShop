@@ -4,28 +4,30 @@ using BookShop.Domain.Repositories;
 
 namespace BookShop.Infrastructure.Repositories.Abstractions;
 
-public abstract class GenericRepository<TEntity> : IRepository<TEntity>
+public abstract class GenericRepository<TEntity, TContext> : IRepository<TEntity>
+    where TEntity : class
+    where TContext: DbContext
 {
-    protected DbContext context;
+    protected readonly TContext context;
 
-    public GenericRepository(DbContext shopDbContext)
+    public GenericRepository(TContext shopDbContext)
     {
         context = shopDbContext;
     }
 
-    public async Task Add(TEntity customer)
+    public async Task AddAsync(TEntity entity)
     {
-        await context.AddAsync(customer);
+        await context.Set<TEntity>().AddAsync(entity);
     }
 
-    public async Task Save()
+    public async Task SaveAsync()
     {
         await context.SaveChangesAsync();
     }
 
-    public Task Update(TEntity customer)
+    public Task UpdateAsync(TEntity entity)
     {
-        context.Update(customer);
+        context.Set<TEntity>().Update(entity);
         return Task.CompletedTask;
     }
 }

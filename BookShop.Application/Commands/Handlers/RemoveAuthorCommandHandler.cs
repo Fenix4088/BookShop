@@ -24,6 +24,6 @@ public class RemoveAuthorCommandHandler: ICommandHandler<RemoveAuthorCommand>
         }
 
         _authorRepository.Remove(authorEntity);
-        await _authorRepository.Save();
+        await _authorRepository.SaveAsync();
     }
 }

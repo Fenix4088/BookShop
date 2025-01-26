@@ -7,27 +7,25 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookShop.Infrastructure.Repositories;
 
-public class AuthorRepository : GenericRepository<AuthorEntity>, IAuthorRepository
+public class AuthorRepository : GenericRepository<AuthorEntity, ShopDbContext>, IAuthorRepository
 {
-    private readonly ShopDbContext _shopDbContext;
     public AuthorRepository(ShopDbContext shopDbContext) : base(shopDbContext)
     {
-        _shopDbContext = shopDbContext;
     }
 
     public async Task<bool> IsUniqueAuthorAsync(string name, string surname)
     {
-        return !(await _shopDbContext.Authors.AnyAsync(author =>
+        return !(await context.Authors.AnyAsync(author =>
             author.Name == name && author.Surname == surname));
     }
 
     public async Task<AuthorEntity> GetById(int id)
     {
-        return await _shopDbContext.Authors.SingleOrDefaultAsync(x => x.Id == id);
+        return await context.Authors.SingleOrDefaultAsync(x => x.Id == id);
     }
 
     public void Remove(AuthorEntity authorEntity)
     { 
-        _shopDbContext.Authors.Remove(authorEntity);
+        context.Authors.Remove(authorEntity);
     }
 }

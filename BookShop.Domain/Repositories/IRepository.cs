@@ -4,9 +4,9 @@ namespace BookShop.Domain.Repositories;
 
 public interface IRepository<TEntity>
 {
-    Task Add(TEntity customer);
+    Task AddAsync(TEntity customer);
 
-    Task Update(TEntity customer);
+    Task UpdateAsync(TEntity customer);
 
-    Task Save();
+    Task SaveAsync();
 }
