@@ -1,6 +1,8 @@
 using BookShop.Application.Abstractions;
 using BookShop.Domain.Repositories;
+using BookShop.Infrastructure.Abstractions;
 using BookShop.Infrastructure.Context;
+using BookShop.Infrastructure.Decorators;
 using BookShop.Infrastructure.Handlers;
 using BookShop.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Builder;
@@ -19,15 +21,18 @@ public static class Extensions
                 options.UseSqlServer(
                     configuration.GetConnectionString("BookShop")))
             .AddDatabaseDeveloperPageExceptionFilter()
-            .AddScoped<IAuthorRepository, AuthorRepository>();
-
-
+            .AddScoped<IAuthorRepository, AuthorRepository>()
+            .AddScoped<IUnitOfWork, UnitOfWork>();
+        
         var infrastructureAssembly = typeof(GetAuthorListQueryHandler).Assembly;
         services.Scan(s => s.FromAssemblies(infrastructureAssembly)
             .AddClasses(c => c.AssignableTo(typeof (IQueryHandler<,>)))
             .AsImplementedInterfaces()
-            .WithTransientLifetime());
+            .WithScopedLifetime());
+        
 
+        services.TryDecorate(typeof(ICommandHandler<>), typeof(UnitOfWorkCommandHandlerDecorator<>));
+        
         return services;
     }
 

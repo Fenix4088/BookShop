@@ -17,7 +17,7 @@ public static class Extentions
         //? It works because of Scrutor nugget package added to Application assembly
         services.Scan(s => s.FromAssemblies(applicationAssembly).AddClasses(c => c.AssignableTo(typeof(ICommandHandler<>)))
             .AsImplementedInterfaces()
-            .WithTransientLifetime()
+            .WithScopedLifetime()
         );
         return services;
     }
