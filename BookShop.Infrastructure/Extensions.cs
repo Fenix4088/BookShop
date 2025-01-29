@@ -4,6 +4,7 @@ using BookShop.Infrastructure.Abstractions;
 using BookShop.Infrastructure.Context;
 using BookShop.Infrastructure.Decorators;
 using BookShop.Infrastructure.Handlers;
+using BookShop.Infrastructure.Middlewares;
 using BookShop.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,7 @@ public static class Extensions
                 options.UseSqlServer(
                     configuration.GetConnectionString("BookShop")))
             .AddDatabaseDeveloperPageExceptionFilter()
+            .AddTransient<ExceptionsMiddleware>()
             .AddScoped<IAuthorRepository, AuthorRepository>()
             .AddScoped<IUnitOfWork, UnitOfWork>();
         
@@ -48,6 +50,8 @@ public static class Extensions
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
+
+        app.UseMiddleware<ExceptionsMiddleware>();
         app.UseHttpsRedirection();
         app.UseStaticFiles();
 

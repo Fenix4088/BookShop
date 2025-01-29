@@ -1,5 +1,4 @@
 using BookShop.Application.Commands;
-using BookShop.Domain;
 using FluentValidation;
 
 namespace BookShop.Application.Validators;

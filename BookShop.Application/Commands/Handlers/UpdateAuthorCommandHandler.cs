@@ -1,4 +1,5 @@
 using BookShop.Application.Abstractions;
+using BookShop.Domain.Exceptions;
 using BookShop.Domain.Repositories;
 using FluentValidation;
 using FluentValidation.Results;
@@ -32,8 +33,7 @@ public class UpdateAuthorCommandHandler: ICommandHandler<UpdateAuthorCommand>
 
         if (author == null)
         {
-            //TODO: author not found exception
-            throw new Exception();
+            throw new AuthorNotFoundException(command.Id);
         }
 
         author.Update(command.Name, command.Surname);

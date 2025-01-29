@@ -11,6 +11,7 @@ builder.Services
     .AddControllersWithViews(options =>
     {
         options.Filters.Add<ValidationExceptionFilter>();
+        options.Filters.Add<BookShopExceptionFilter>();
     });
 
 var app = builder.Build();

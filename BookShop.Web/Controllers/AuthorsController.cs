@@ -73,20 +73,9 @@ public class AuthorsController : Controller
     {
         if (!ModelState.IsValid) return View("CreateAuthor", model);
 
-        try
-        {
-            await updateAuthorCommandHandler.Handler(new UpdateAuthorCommand(22, model.Name, model.Surname));
-        }
-        catch (ValidationException ex)
-        {
-            foreach (var error in ex.Errors)
-            {
-                ModelState.AddModelError(string.Empty, error.ErrorMessage);
-            }
-
-            return View("CreateAuthor", model);
-        }
-
+        HttpContext.Items["CurrentModel"] = model;
+        
+        await updateAuthorCommandHandler.Handler(new UpdateAuthorCommand(model.Id, model.Name, model.Surname));
         
         return RedirectToAction("AuthorList");
     }

@@ -4,9 +4,9 @@ namespace BookShop.Web.Controllers;
 
 public class HomeController : Controller
 {
-    // GET
-    public IActionResult Index()
+    public IActionResult Error(string message)
     {
-        return View();
+        ViewData["ErrorMessage"] = message ?? "An unexpected error occurred.";
+        return View("Error");
     }
 }

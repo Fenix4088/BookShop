@@ -1,6 +1,9 @@
-namespace BookShop.Domain.Exceptions;
+using System;
 
-public class BookShopException
+public abstract class BookShopException: Exception
 {
-    
+    protected BookShopException(string message) : base(message)
+    {
+    }
+
 }

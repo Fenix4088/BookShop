@@ -1,5 +1,7 @@
+using System.Security.Authentication;
 using BookShop.Application.Abstractions;
 using BookShop.Domain;
+using BookShop.Domain.Exceptions;
 using BookShop.Domain.Repositories;
 
 namespace BookShop.Application.Commands.Handlers;
@@ -19,8 +21,7 @@ public class RemoveAuthorCommandHandler: ICommandHandler<RemoveAuthorCommand>
 
         if (authorEntity is null)
         {
-            //TODO: refactor into custom error
-            throw new Exception("author not found");
+            throw new AuthorNotFoundException(command.AuthorId);
         }
 
         _authorRepository.Remove(authorEntity);
