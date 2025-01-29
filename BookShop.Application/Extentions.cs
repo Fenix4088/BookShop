@@ -10,7 +10,9 @@ public static class Extentions
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         
-        services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateAuthorValidation>());
+        services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateAuthorValidation>().RegisterValidatorsFromAssemblyContaining<UpdateAuthorValidation>());
+        
+        
         var applicationAssembly = typeof(ICommandHandler<>).Assembly;
 
         //? This logic automatically scan current assembly and register all DI into DI Container

@@ -29,6 +29,12 @@ public class AuthorEntity
         
     }
 
+    public void Update(string name, string surname)
+    {
+        Name = name;
+        Surname = surname;
+    }
+
     public void AddBook(string title, string description, string releaseDate)
     {
         throw new NotImplementedException();

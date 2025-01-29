@@ -36,12 +36,23 @@
                 <td>
                     @* @Html.ActionLink("Add Book", "AddBook", "Books", new { /* id=item.PrimaryKey */ }) | *@
                 </td>
-                <td>
+                <td class="flex gap-x-2">
                     <form asp-action="RemoveAuthor" method="post">
                         <input type="hidden" name="authorId" value="@item.Id" />
-                        <button class="bg-red-600 text-white font-bold py-1 px-2 rounded transition duration-300" asp-action="RemoveAuthor">X</button>
+                        <button class="bg-red-600 text-white font-bold py-1 px-2 rounded transition duration-300" asp-action="RemoveAuthor">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
                     </form>
-                </td>
+                    <a asp-action="AuthorForm" asp-route-id="@item.Id" class="bg-blue-600 text-white font-bold py-1 px-2 rounded transition duration-300" >
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </a>
+                    @* <form asp-action="AuthorForm" method="post"> *@
+                    @*     <input type="hidden" name="authorId" value="@item.Id" /> *@
+                    @*     <button class="bg-blue-600 text-white font-bold py-1 px-2 rounded transition duration-300" asp-action="AuthorForm"> *@
+                    @*         <i class="fa-solid fa-pen-to-square"></i> *@
+                    @*     </button> *@
+                    @* </form> *@
+                </td>               
             </tr>
         }
         </tbody>

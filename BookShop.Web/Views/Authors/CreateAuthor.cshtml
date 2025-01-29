@@ -1,30 +1,30 @@
 ﻿@model BookShop.Application.Models.AuthorModel
 
 @{
-    ViewData["Title"] = "CreateAuthor";
+    var isEdit = Model?.Id > 0;
+    ViewData["Title"] = isEdit ? "Edit Author" : "Create Author";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Create Author</h1>
+<h1>@(ViewData["Title"])</h1>
 
-<h4>AuthorModel</h4>
-<hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="CreateAuthor">
+        <form asp-action="@(isEdit ? "EditAuthor" : "CreateAuthor")">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input asp-for="Id" type="hidden" class="form-control" />
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
+                <input asp-for="Name" class="form-control" value="@(isEdit ? Model.Name : String.Empty)"/>
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Surname" class="control-label"></label>
-                <input asp-for="Surname" class="form-control" />
+                <input asp-for="Surname" class="form-control" value="@(isEdit ? Model.Surname : String.Empty)" />
                 <span asp-validation-for="Surname" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="@(isEdit ? "Save Changes" : "Create")" class="btn btn-primary" />
             </div>
         </form>
     </div>

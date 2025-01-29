@@ -19,7 +19,7 @@ public class AuthorRepository : GenericRepository<AuthorEntity, ShopDbContext>, 
             author.Name == name && author.Surname == surname));
     }
 
-    public async Task<AuthorEntity> GetById(int id)
+    public async Task<AuthorEntity> GetById(int? id)
     {
         return await context.Authors.SingleOrDefaultAsync(x => x.Id == id);
     }
