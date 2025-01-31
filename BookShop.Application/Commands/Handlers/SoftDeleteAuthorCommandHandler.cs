@@ -6,16 +6,16 @@ using BookShop.Domain.Repositories;
 
 namespace BookShop.Application.Commands.Handlers;
 
-public class RemoveAuthorCommandHandler: ICommandHandler<RemoveAuthorCommand>
+public class SoftDeleteAuthorCommandHandler: ICommandHandler<SoftDeleteAuthorCommand>
 {
     private readonly IAuthorRepository _authorRepository;
 
-    public RemoveAuthorCommandHandler(IAuthorRepository authorRepository)
+    public SoftDeleteAuthorCommandHandler(IAuthorRepository authorRepository)
     {
         _authorRepository = authorRepository;
     }
 
-    public async Task Handler(RemoveAuthorCommand command)
+    public async Task Handler(SoftDeleteAuthorCommand command)
     {
         var authorEntity = await _authorRepository.GetById(command.AuthorId);
 
@@ -24,7 +24,7 @@ public class RemoveAuthorCommandHandler: ICommandHandler<RemoveAuthorCommand>
             throw new AuthorNotFoundException(command.AuthorId);
         }
 
-        _authorRepository.Remove(authorEntity);
+        _authorRepository.SoftRemove(authorEntity);
         await _authorRepository.SaveAsync();
     }
 }

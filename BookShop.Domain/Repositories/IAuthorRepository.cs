@@ -6,5 +6,5 @@ public interface IAuthorRepository: IRepository<AuthorEntity>
 {
     Task<bool> IsUniqueAuthorAsync(string name, string surname);
     Task<AuthorEntity> GetById(int? id);
-    void Remove(AuthorEntity authorEntity);
+    void SoftRemove(AuthorEntity authorEntity);
 }

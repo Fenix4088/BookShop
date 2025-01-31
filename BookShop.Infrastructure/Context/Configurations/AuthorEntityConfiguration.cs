@@ -29,6 +29,8 @@ public class AuthorEntityConfiguration : IEntityTypeConfiguration<AuthorEntity>
             .IsRequired()
             .HasMaxLength(100);
 
+        builder.Property(author => author.DeletedAt).IsRequired(false);
+
         builder.Metadata
             .FindNavigation(nameof(AuthorEntity.Books))
             ?.SetPropertyAccessMode(PropertyAccessMode.Field);
@@ -36,6 +38,6 @@ public class AuthorEntityConfiguration : IEntityTypeConfiguration<AuthorEntity>
         builder.HasMany(author => author.Books)
             .WithOne(book => book.Author)
             .HasForeignKey(book => book.AuthorId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.NoAction);
     }
 }

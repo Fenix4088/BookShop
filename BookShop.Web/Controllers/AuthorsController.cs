@@ -11,14 +11,14 @@ namespace BookShop.Web.Controllers;
 public class AuthorsController : Controller
 {
     private readonly ICommandHandler<CreateAuthorCommand> createAuthorCommandHandler;
-    private readonly ICommandHandler<RemoveAuthorCommand> removeAuthorCommandHandler;
+    private readonly ICommandHandler<SoftDeleteAuthorCommand> softDeleteAuthorCommandHandler;
     private readonly IQueryHandler<GetAuthorListQuery, IPagedResult<AuthorModel>> getAuthorListQueryHandler;
     private readonly IQueryHandler<GetAuthorQuery, AuthorModel> getAuthorQueryHandler;
     private readonly ICommandHandler<UpdateAuthorCommand> updateAuthorCommandHandler;
 
     public AuthorsController(
         ICommandHandler<CreateAuthorCommand> createAuthorCommandHandler, 
-        ICommandHandler<RemoveAuthorCommand> removeAuthorCommandHandler,
+        ICommandHandler<SoftDeleteAuthorCommand> softDeleteAuthorCommandHandler,
         IQueryHandler<GetAuthorListQuery, IPagedResult<AuthorModel>> getAuthorListQueryHandler,
         IQueryHandler<GetAuthorQuery, AuthorModel> getAuthorQueryHandler,
         ICommandHandler<UpdateAuthorCommand> updateAuthorCommandHandler
@@ -27,7 +27,7 @@ public class AuthorsController : Controller
     {
         this.createAuthorCommandHandler = createAuthorCommandHandler;
         this.getAuthorListQueryHandler = getAuthorListQueryHandler;
-        this.removeAuthorCommandHandler = removeAuthorCommandHandler;
+        this.softDeleteAuthorCommandHandler = softDeleteAuthorCommandHandler;
         this.getAuthorQueryHandler = getAuthorQueryHandler;
         this.updateAuthorCommandHandler = updateAuthorCommandHandler;
     }
@@ -64,7 +64,7 @@ public class AuthorsController : Controller
     [HttpPost]
     public async Task<IActionResult>  RemoveAuthor([FromForm] int authorId)
     {
-        await removeAuthorCommandHandler.Handler(new RemoveAuthorCommand(authorId));
+        await softDeleteAuthorCommandHandler.Handler(new SoftDeleteAuthorCommand(authorId));
         return RedirectToAction("AuthorList");
     }
     

@@ -24,8 +24,9 @@ public class AuthorRepository : GenericRepository<AuthorEntity, ShopDbContext>, 
         return await context.Authors.SingleOrDefaultAsync(x => x.Id == id);
     }
 
-    public void Remove(AuthorEntity authorEntity)
+    public void SoftRemove(AuthorEntity authorEntity)
     { 
-        context.Authors.Remove(authorEntity);
+        authorEntity.Delete();
+        context.Authors.Update(authorEntity);
     }
 }

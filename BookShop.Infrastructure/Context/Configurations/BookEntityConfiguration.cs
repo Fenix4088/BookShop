@@ -26,9 +26,11 @@ public class BookEntityConfiguration: IEntityTypeConfiguration<BookEntity>
         
         builder.Property(e => e.ReleaseDate).IsRequired();
         
+        builder.Property(author => author.DeletedAt).IsRequired(false);
+        
         builder.HasOne(b => b.Author)
             .WithMany(a => a.Books)
             .HasForeignKey(b => b.AuthorId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.NoAction);
     }
 }
