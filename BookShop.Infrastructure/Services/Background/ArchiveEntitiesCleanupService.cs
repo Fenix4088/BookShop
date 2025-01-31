@@ -48,8 +48,7 @@ internal sealed class ArchiveEntitiesCleanupService : BackgroundService
 
     private async Task CleanupOldArchivedEntities(ShopDbContext dbContext)
     {
-        // var cutoffDate = DateTime.UtcNow.AddYears(-1);
-        var cutoffDate = DateTime.UtcNow.AddSeconds(-120);
+        var cutoffDate = DateTime.UtcNow.AddYears(-1);
 
         var oldAuthors = await dbContext.Authors.Where(author => author.DeletedAt != null && author.DeletedAt < cutoffDate).ToListAsync();
 
