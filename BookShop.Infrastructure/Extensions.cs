@@ -6,6 +6,7 @@ using BookShop.Infrastructure.Decorators;
 using BookShop.Infrastructure.Handlers;
 using BookShop.Infrastructure.Middlewares;
 using BookShop.Infrastructure.Repositories;
+using BookShop.Infrastructure.Services.Background;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -34,6 +35,8 @@ public static class Extensions
         
 
         services.TryDecorate(typeof(ICommandHandler<>), typeof(UnitOfWorkCommandHandlerDecorator<>));
+
+        services.AddHostedService<ArchiveEntitiesCleanupService>();
         
         return services;
     }
