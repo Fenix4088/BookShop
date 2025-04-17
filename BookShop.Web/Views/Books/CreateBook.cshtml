@@ -1,0 +1,54 @@
+@model BookShop.Application.Models.BookModel
+
+@{
+    var isEdit = Model?.Id > 0;
+    ViewData["Title"] = isEdit ? "Edit Book" : "Create Book";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@(ViewData["Title"])</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="@(isEdit ? "EditBook" : "CreateBook")">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input asp-for="Id" type="hidden" class="form-control" />
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" value="@(isEdit ? Model.Title : String.Empty)" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control">@Model.Description</textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ReleaseDate" class="control-label"></label>
+                <input asp-for="ReleaseDate" type="date" class="form-control" value="@(isEdit ? Model.ReleaseDate.ToString("yyyy-MM-dd") : String.Empty)" />
+                <span asp-validation-for="ReleaseDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AuthorId" class="control-label"></label>
+                <input asp-for="AuthorId" type="number" class="form-control" value="@(isEdit ? Model.AuthorId.ToString() : String.Empty)" />
+                <span asp-validation-for="AuthorId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CoverImgUrl" class="control-label"></label>
+                <input asp-for="CoverImgUrl" type="url" class="form-control" value="@(isEdit ? Model.CoverImgUrl : String.Empty)" />
+                <span asp-validation-for="CoverImgUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="@(isEdit ? "Save Changes" : "Create")" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="BooksList">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
