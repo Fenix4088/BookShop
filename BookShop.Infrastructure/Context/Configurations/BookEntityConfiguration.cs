@@ -32,5 +32,7 @@ public class BookEntityConfiguration: IEntityTypeConfiguration<BookEntity>
             .WithMany(a => a.Books)
             .HasForeignKey(b => b.AuthorId)
             .OnDelete(DeleteBehavior.NoAction);
+
+        builder.HasIndex(e => new { e.AuthorId, e.Title }).IsUnique();
     }
 }

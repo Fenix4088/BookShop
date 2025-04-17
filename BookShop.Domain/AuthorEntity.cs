@@ -24,6 +24,7 @@ public class AuthorEntity : BookShopGenericEntity
         {
             Name = name,
             Surname = surname,
+            CreatedAt = DateTime.Now,
             BookCount = 0
         };
         
@@ -53,8 +54,14 @@ public class AuthorEntity : BookShopGenericEntity
         Surname = surname;
     }
 
-    public void AddBook(string title, string description, string releaseDate)
+    public void AddBook()
     {
-        throw new NotImplementedException();
+        BookCount += 1;
+    }
+    
+    public void RemoveBook()
+    {
+        if (BookCount <= 0) return;
+        BookCount += 1;
     }
 }

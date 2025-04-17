@@ -13,7 +13,7 @@ public class ShopDbContext : DbContext
     }
 
     public DbSet<AuthorEntity> Authors { get; set; }
-    public DbSet<AuthorEntity> Books { get; set; }
+    public DbSet<BookEntity> Books { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

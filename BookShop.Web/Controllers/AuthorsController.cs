@@ -4,7 +4,6 @@ using BookShop.Application.Commands;
 using BookShop.Application.Models;
 using BookShop.Application.Queries;
 using BookShop.Models.Queries;
-using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookShop.Web.Controllers;

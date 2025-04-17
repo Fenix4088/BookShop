@@ -4,6 +4,7 @@ namespace BookShop.Domain;
 
 public abstract class BookShopGenericEntity
 {
+    public DateTime CreatedAt { get; protected set; }
     public DateTime? DeletedAt { get; private set; }
 
     public bool IsDeleted => DeletedAt.HasValue;

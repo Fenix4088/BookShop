@@ -25,6 +25,7 @@ public static class Extensions
             .AddDatabaseDeveloperPageExceptionFilter()
             .AddTransient<ExceptionsMiddleware>()
             .AddScoped<IAuthorRepository, AuthorRepository>()
+            .AddScoped<IBookRepository, BookRepository>()
             .AddScoped<IUnitOfWork, UnitOfWork>();
         
         var infrastructureAssembly = typeof(GetAuthorListQueryHandler).Assembly;

@@ -24,6 +24,5 @@ If have any questions please let us know: abronowicki@openskydata.com, mlinke@op
 >> create migration
 dotnet ef migrations add <MigrationName> --project BookShop.Infrastructure --startup-project BookShop.Web
 >> update DB
-dotnet ef database update --project BookShop.Infrastructure --startup-project BookShop.Web
 
 ```
