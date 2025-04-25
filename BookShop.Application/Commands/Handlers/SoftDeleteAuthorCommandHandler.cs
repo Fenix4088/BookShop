@@ -9,10 +9,12 @@ namespace BookShop.Application.Commands.Handlers;
 public class SoftDeleteAuthorCommandHandler: ICommandHandler<SoftDeleteAuthorCommand>
 {
     private readonly IAuthorRepository _authorRepository;
+    private readonly IBookRepository _bookRepository;
 
-    public SoftDeleteAuthorCommandHandler(IAuthorRepository authorRepository)
+    public SoftDeleteAuthorCommandHandler(IAuthorRepository authorRepository, IBookRepository bookRepository)
     {
         _authorRepository = authorRepository;
+        _bookRepository = bookRepository;
     }
 
     public async Task Handler(SoftDeleteAuthorCommand command)
@@ -25,6 +27,8 @@ public class SoftDeleteAuthorCommandHandler: ICommandHandler<SoftDeleteAuthorCom
         }
 
         _authorRepository.SoftRemove(authorEntity);
+        _bookRepository.BulkSoftRemove(authorEntity.Id);
         await _authorRepository.SaveAsync();
+        await _bookRepository.SaveAsync();
     }
 }

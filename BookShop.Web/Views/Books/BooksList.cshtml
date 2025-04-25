@@ -1,68 +1,71 @@
-﻿@model BookShop.Application.Abstractions.IPagedResult<BookShop.Application.Models.BookModel>
+﻿@using System.Text
+@model BookShop.Application.Abstractions.IPagedResult<BookShop.Application.Models.BookModel>
 
 @{
     ViewData["Title"] = "AuthorList";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Authors</h1>
 
 <p class="mb-2">
     <a class="bg-sky-600 text-white font-bold py-1 px-2 rounded transition duration-300" asp-action="BookForm">Create Book</a>
 </p>
-@if(Model.Items.Any()){
+@if (Model.Items.Any())
+{
     <table class="table">
         <thead>
-        <tr>
-            <th>
-                @Html.DisplayName("Id")
-            </th>
-            <th>
-                @Html.DisplayName("title")
-            </th>
-            <th></th>
-            <th></th>
-        </tr>
+            <tr>
+                <th>@Html.DisplayName("Id")</th>
+                <th>@Html.DisplayName("Title")</th>
+                <th>@Html.DisplayName("Description")</th>
+                <th>@Html.DisplayName("ReleaseDate")</th>
+                <th>@Html.DisplayName("Author Name")</th>
+                <th>@Html.DisplayName("Cover")</th>
+                <th></th>  <!-- actions column -->
+            </tr>
         </thead>
         <tbody>
-        @foreach (var item in Model.Items) {
+        @foreach (var item in Model.Items)
+        {
             <tr>
+                <td>@Html.DisplayFor(_ => item.Id)</td>
+                <td>@Html.DisplayFor(_ => item.Title)</td>
+                <td>@Html.DisplayFor(_ => item.Description)</td>
+                <td>@item.ReleaseDate.ToString("yyyy-MM-dd")</td>
+                <td>@item.Author.NameAndSurname</td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    @* @Html.ActionLink("Add Book", "AddBook", "Books", new { /* id=item.PrimaryKey */ }) | *@
+                    @if (!string.IsNullOrEmpty(item.CoverImgUrl))
+                    {
+                        <img src="@item.CoverImgUrl" alt="Cover" style="max-height:100px;" />
+                    }
                 </td>
                 <td class="flex gap-x-2">
-                    @* <form asp-action="RemoveAuthor" method="post"> *@
-                        <input type="hidden" name="authorId" value="@item.Id" />
-                        <button class="bg-red-600 text-white font-bold py-1 px-2 rounded transition duration-300" asp-action="RemoveAuthor">
+                    <form asp-action="RemoveBook" method="post">
+                        <input type="hidden" name="bookId" value="@item.Id" />
+                        <button class="bg-red-600 text-white font-bold py-1 px-2 rounded transition duration-300" asp-action="RemoveBook">
                             <i class="fa-solid fa-trash"></i>
                         </button>
-                    @* </form> *@
-                    @* <a asp-action="AuthorForm" asp-route-id="@item.Id" class="bg-blue-600 text-white font-bold py-1 px-2 rounded transition duration-300" > *@
+                    </form>
+                    <a asp-action="BookForm" asp-route-id="@item.Id" class="bg-blue-600 text-white font-bold py-1 px-2 rounded transition duration-300" >
                         <i class="fa-solid fa-pen-to-square"></i>
-                    @* </a> *@
-                </td>               
+                    </a>
+                </td>
             </tr>
         }
         </tbody>
     </table>
+
     <div class="d-flex">
-        
-        @foreach (var paginationButton in Enumerable.Range(1, Model.PageCount).ToList())
+        @foreach (var paginationButton in Enumerable.Range(1, Model.PageCount))
         {
-            <a asp-route-CurrentPage="@paginationButton" asp-route-RowCount="10" 
-               class="@("font-bold mr-1 !px-1 rounded transition duration-300 cursor-pointer text-decoration-none " + 
-                        (Model.CurrentPage == paginationButton ? "bg-white-600 !text-sky-600 !border !border-sky-600" : "bg-sky-600 text-white "))">
-                @Html.DisplayFor(modelItem => paginationButton)
+            <a asp-route-CurrentPage="@paginationButton" asp-route-RowCount="10"
+               class="font-bold mr-1 !px-1 rounded transition duration-300 cursor-pointer text-decoration-none @(Model.CurrentPage == paginationButton ? "bg-white-600 !text-sky-600 !border !border-sky-600" : "bg-sky-600 text-white")">
+                @paginationButton
             </a>
         }
-
     </div>
-} else {
+}
+else
+{
     <p>Empty</p>
 }

@@ -1,0 +1,27 @@
+{
+      // @ VS Code debug config version
+      "version": "0.2.0",
+      "configurations": [
+          {
+              // @ Launch the BookShop.Web project
+              "name": ".NET Core Launch (BookShop.Web)",
+              "type": "coreclr",
+              "request": "launch",
+              // @ Run the build task before debugging
+              "preLaunchTask": "build",
+              // @ Path to the compiled DLL
+              "program": "${workspaceFolder}/BookShop.Web/bin/Debug/net6.0/BookShop.Web.dll",
+              // @ Set working directory to the Web project
+              "cwd": "${workspaceFolder}/BookShop.Web",
+              "stopAtEntry": false,
+              // @ Enable ASPNETCORE_ENVIRONMENT=Development
+              "env": {
+                  "ASPNETCORE_ENVIRONMENT": "Development"
+              },
+              // @ Map Razor views for breakpoint resolution
+              "sourceFileMap": {
+                  "/Views": "${workspaceFolder}/BookShop.Web/Views"
+              }
+          }
+      ]
+  }

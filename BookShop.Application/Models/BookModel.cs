@@ -1,3 +1,6 @@
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+
 namespace BookShop.Application.Models;
 
 public class BookModel
@@ -6,6 +9,8 @@ public class BookModel
     public string Title { get;  set; }
     public string Description { get;  set; }
     public DateTime ReleaseDate { get;  set; }
-    public int AuthorId { get;  set; }
+    public int AuthorId { get; set; }
+    [ValidateNever]  
+    public AuthorModel Author { get; set; }
     public string? CoverImgUrl { get;  set; }
 }

@@ -5,6 +5,7 @@ using BookShop.Application.Models;
 using BookShop.Application.Queries;
 using BookShop.Infrastructure.Context;
 using BookShop.Infrastructure.Pagination;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookShop.Infrastructure.Handlers;
 
@@ -20,12 +21,18 @@ public class GetBookListQueryHandler: IQueryHandler<GetBookListQuery, IPagedResu
 
     public async  Task<IPagedResult<BookModel>> Handler(GetBookListQuery query)
     {
-        var dbQuery =  dbContext.Books.AsQueryable().Where(x => x.DeletedAt != null).OrderBy(x => x.CreatedAt);
+        var dbQuery =  dbContext.Books.AsQueryable().Include(x => x.Author).Where(x => x.DeletedAt == null).OrderBy(x => x.CreatedAt);
 
         return  await dbQuery.ToPagedResult(query, x => new BookModel()
         {
             Id = x.Id,
             AuthorId = x.AuthorId,
+            Author = new AuthorModel()
+            {
+                Id = x.Author.Id,
+                Name = x.Author.Name,
+                Surname = x.Author.Surname
+            },
             Description = x.Description,
             Title = x.Title,
             ReleaseDate = x.ReleaseDate,
