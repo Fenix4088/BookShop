@@ -35,7 +35,7 @@ public class UpdateAuthorCommandHandler: ICommandHandler<UpdateAuthorCommand>
         {
             throw new AuthorNotFoundException(command.Id);
         }
-
+        
         author.Update(command.Name, command.Surname);
 
         await _authorRepository.UpdateAsync(author);

@@ -23,20 +23,6 @@ public class GetBookListQueryHandler: IQueryHandler<GetBookListQuery, IPagedResu
     {
         var dbQuery =  dbContext.Books.AsQueryable().Include(x => x.Author).Where(x => x.DeletedAt == null).OrderBy(x => x.CreatedAt);
 
-        return  await dbQuery.ToPagedResult(query, x => new BookModel()
-        {
-            Id = x.Id,
-            AuthorId = x.AuthorId,
-            Author = new AuthorModel()
-            {
-                Id = x.Author.Id,
-                Name = x.Author.Name,
-                Surname = x.Author.Surname
-            },
-            Description = x.Description,
-            Title = x.Title,
-            ReleaseDate = x.ReleaseDate,
-            CoverImgUrl = x.CoverImgUrl
-        });
+        return  await dbQuery.ToPagedResult(query, x => x.ToModel());
     }
 } 

@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using BookShop.Domain;
 using BookShop.Domain.Repositories;
 using BookShop.Infrastructure.Context;
 using BookShop.Infrastructure.Repositories.Abstractions;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookShop.Infrastructure.Repositories;
 
@@ -13,9 +15,11 @@ public class BookRepository: GenericRepository<BookEntity, ShopDbContext>, IBook
     {
     }
 
+    public Task<BookEntity> GetBookById(int bookId) => context.Books.Include(x => x.Author).FirstOrDefaultAsync(x => x.Id == bookId);
+
     public IEnumerable<BookEntity> GetAllBooks(bool includeDeleted = false)
     {
-        var books = context.Books;
+        var books = context.Books.Include(x => x.Author);
         return includeDeleted ? books.ToList() : books.Where(x => x.DeletedAt == null).ToList();
     }
 

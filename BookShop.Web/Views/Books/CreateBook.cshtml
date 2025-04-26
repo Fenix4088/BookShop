@@ -33,7 +33,7 @@
                 <select class="form-select w-100" asp-for="Book.AuthorId">
                     @foreach (var author in Model.Authors)
                     {
-                        <option value="@author.Id" selected="@isEdit && @author.Id == @Model.Book.AuthorId">@Html.DisplayFor(_ => author.NameAndSurname)</option>
+                        <option value="@author.Id" selected="@(isEdit && author.Id == Model.Book.AuthorId)">@Html.DisplayFor(_ => author.NameAndSurname)</option>
                     }
                 </select>
                 <span asp-validation-for="Book.AuthorId" class="text-danger"></span>

@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using System.Threading.Tasks;
 using BookShop.Application.Abstractions;
 using BookShop.Application.Commands;
@@ -17,28 +15,55 @@ public class BooksController: Controller
     private readonly ICommandHandler<CreateBookCommand> createBookCommandHandler;
     private readonly IQueryHandler<GetBookListQuery, IPagedResult<BookModel>> getBookListQueryHandler;
     private readonly IQueryHandler<GetAuthorListQuery, IPagedResult<AuthorModel>> getAuthorsListQueryHandler;
+    private readonly IQueryHandler<GetBookQuery, BookModel> getBookQueryHandler;
+    private readonly ICommandHandler<SoftDeleteBookCommand> softDeleteBookCommandHandler;
 
 
     public BooksController(
         ICommandHandler<CreateBookCommand> createBookCommandHandler, 
         IQueryHandler<GetBookListQuery, IPagedResult<BookModel>> getBookListQueryHandler, 
-        IQueryHandler<GetAuthorListQuery, IPagedResult<AuthorModel>> getAuthorsListQueryHandler)
+        IQueryHandler<GetAuthorListQuery, IPagedResult<AuthorModel>> getAuthorsListQueryHandler,
+        ICommandHandler<SoftDeleteBookCommand> softDeleteBookCommandHandler,
+        IQueryHandler<GetBookQuery, BookModel> getBookQueryHandler
+        )
     {
         this.createBookCommandHandler = createBookCommandHandler;
         this.getBookListQueryHandler = getBookListQueryHandler;
         this.getAuthorsListQueryHandler = getAuthorsListQueryHandler;
+        this.softDeleteBookCommandHandler = softDeleteBookCommandHandler;
+        this.getBookQueryHandler = getBookQueryHandler;
     }
 
 
     [HttpGet]
-    public async Task<IActionResult> BookForm()
+    public async Task<IActionResult> BookForm(int? id)
     {
-        var model = new BookDetailsViewModel {
-            Book    = new BookModel(),
-            Authors = null // will be filled next
+
+
+        var modelT = new BookDetailsViewModel();
+        if (id is null)
+        {
+            
+            modelT.Book = new BookModel();
+            modelT = await PopulateAuthorsAsync(modelT);
+            return View("CreateBook", modelT);
+        }
+
+        var book = await getBookQueryHandler.Handler(new GetBookQuery(id.Value));
+        
+        if (book == null)
+        {
+            return NotFound();
+        }
+
+        modelT = new BookDetailsViewModel()
+        {
+            Book = book,
+            Authors = null
         };
-        model = await PopulateAuthorsAsync(model);
-        return View("CreateBook", model);
+        modelT = await PopulateAuthorsAsync(modelT);
+        return View("CreateBook", modelT);
+
     }
     
     
@@ -54,6 +79,19 @@ public class BooksController: Controller
         
         return RedirectToAction("BooksList");
     }
+    
+    
+    [HttpPost]
+    public async Task<IActionResult> EditBook([FromForm] BookDetailsViewModel model)
+    {
+        if (!ModelState.IsValid) return View("CreateBook", model);
+
+        HttpContext.Items["CurrentModel"] = model;
+        
+        // await updateAuthorCommandHandler.Handler(new UpdateAuthorCommand(model.Id, model.Name, model.Surname));
+        
+        return RedirectToAction("BooksList");
+    }
 
 
     public async Task<IActionResult> BooksList([FromQuery] PagedQueryModel model)
@@ -65,6 +103,13 @@ public class BooksController: Controller
         }
 
         return View(await getBookListQueryHandler.Handler(new GetBookListQuery(model.CurrentPage, model.RowCount)));
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult>  RemoveBook([FromForm] int bookId)
+    {
+        await softDeleteBookCommandHandler.Handler(new SoftDeleteBookCommand(bookId));
+        return RedirectToAction("BooksList");
     }
 
 

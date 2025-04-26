@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BookShop.Domain.Repositories;
 
@@ -8,5 +9,9 @@ public interface IBookRepository: IRepository<BookEntity>
     public IEnumerable<BookEntity> GetAllBooksByAuthor(int authorId, bool includeDeleted = false);
 
     public void BulkSoftRemove(int authorId, bool includeDeleted = false);
+
+    public Task<BookEntity> GetBookById(int bookId);
+
+    public void SoftRemove(BookEntity bookEntity);
 
 }

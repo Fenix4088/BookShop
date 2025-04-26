@@ -21,12 +21,7 @@ public class GetAuthorListQueryHandler : IQueryHandler<GetAuthorListQuery, IPage
     {
         var dbQuery = dbContext.Authors.AsQueryable().Where(author => author.DeletedAt == null).OrderBy(x => x.CreatedAt);
         
-        var pagedResult = await dbQuery.ToPagedResult(query, x => new AuthorModel
-        {
-            Id = x.Id,
-            Name = x.Name,
-            Surname = x.Surname
-        });
+        var pagedResult = await dbQuery.ToPagedResult(query, x => x.ToModel());
         return pagedResult;
     }
 }
