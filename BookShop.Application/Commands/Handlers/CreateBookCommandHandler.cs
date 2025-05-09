@@ -2,6 +2,7 @@ using BookShop.Application.Abstractions;
 using BookShop.Domain;
 using BookShop.Domain.Exceptions;
 using BookShop.Domain.Repositories;
+using FluentValidation;
 
 namespace BookShop.Application.Commands.Handlers;
 
@@ -10,15 +11,20 @@ public sealed class CreateBookCommandHandler: ICommandHandler<CreateBookCommand>
 
     private readonly IBookRepository _bookRepository;
     private readonly IAuthorRepository _authorRepository;
+    private readonly IValidator<CreateBookCommand> _validator;
     
-    public CreateBookCommandHandler(IBookRepository bookRepository, IAuthorRepository authorRepository)
+    public CreateBookCommandHandler(IBookRepository bookRepository, IAuthorRepository authorRepository, IValidator<CreateBookCommand> validator)
     {
         _bookRepository = bookRepository;
         _authorRepository = authorRepository;
+        _validator = validator;
     }
 
     public async Task Handler(CreateBookCommand command)
     {
+
+        await _validator.ValidateAndThrowAsync(command);
+        
         var authorEntity = await _authorRepository.GetById(command.AuthorId);
 
         if (authorEntity is null)
@@ -26,8 +32,7 @@ public sealed class CreateBookCommandHandler: ICommandHandler<CreateBookCommand>
             throw new AuthorNotFoundException(command.AuthorId);
         }
 
-        var newBookEntity = BookEntity.Create(command.Title, command.Description, command.ReleaseDate, command.AuthorId,
-            command.CoverImgUrl);
+        var newBookEntity = BookEntity.Create(command.Title, command.Description, command.ReleaseDate, command.AuthorId);
         authorEntity.AddBook();
 
         await _authorRepository.UpdateAsync(authorEntity);

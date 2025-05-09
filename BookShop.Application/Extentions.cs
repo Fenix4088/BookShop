@@ -10,7 +10,8 @@ public static class Extentions
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         
-        services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateAuthorValidation>().RegisterValidatorsFromAssemblyContaining<UpdateAuthorValidation>());
+        services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateAuthorValidation>().RegisterValidatorsFromAssemblyContaining<UpdateAuthorValidation>().RegisterValidatorsFromAssemblyContaining<CreateBookValidation>()
+        );
         
         
         var applicationAssembly = typeof(ICommandHandler<>).Assembly;

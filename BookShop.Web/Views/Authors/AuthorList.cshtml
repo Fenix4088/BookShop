@@ -1,14 +1,12 @@
 ﻿@model BookShop.Application.Abstractions.IPagedResult<BookShop.Application.Models.AuthorModel>
 
 @{
-    ViewData["Title"] = "AuthorList";
+    ViewData["Title"] = "Author List";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Authors</h1>
-
 <p class="mb-2">
-    <a class="bg-sky-600 text-white font-bold py-1 px-2 rounded transition duration-300" asp-action="CreateAuthor">Create New</a>
+    <a class="bg-sky-600 text-white font-bold py-1 px-2 rounded transition duration-300" asp-action="CreateAuthor">Add New Author</a>
 </p>
 @if(Model.Items.Any()){
     <table class="table">
@@ -20,30 +18,32 @@
             <th>
                 @Html.DisplayName("Full Name")
             </th>
-            <th></th>
+            <th>
+                @Html.DisplayName("Books Count")
+            </th>
             <th></th>
         </tr>
         </thead>
         <tbody>
-        @foreach (var item in Model.Items) {
+        @foreach (var authorModel in Model.Items) {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Id)
+                    @Html.DisplayFor(modelItem => authorModel.Id)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.NameAndSurname)
+                    @Html.DisplayFor(modelItem => authorModel.NameAndSurname)
                 </td>
                 <td>
-                    @* @Html.ActionLink("Add Book", "AddBook", "Books", new { /* id=item.PrimaryKey */ }) | *@
+                    @Html.DisplayFor(modelItem => authorModel.BookCount)
                 </td>
                 <td class="flex gap-x-2">
                     <form asp-action="RemoveAuthor" method="post">
-                        <input type="hidden" name="authorId" value="@item.Id" />
+                        <input type="hidden" name="authorId" value="@authorModel.Id" />
                         <button class="bg-red-600 text-white font-bold py-1 px-2 rounded transition duration-300" asp-action="RemoveAuthor">
                             <i class="fa-solid fa-trash"></i>
                         </button>
                     </form>
-                    <a asp-action="AuthorForm" asp-route-id="@item.Id" class="bg-blue-600 text-white font-bold py-1 px-2 rounded transition duration-300" >
+                    <a asp-action="AuthorForm" asp-route-id="@authorModel.Id" class="bg-blue-600 text-white font-bold py-1 px-2 rounded transition duration-300" >
                         <i class="fa-solid fa-pen-to-square"></i>
                     </a>
                 </td>               

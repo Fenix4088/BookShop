@@ -6,6 +6,8 @@ public class AuthorModel
     public string Name { get; set; }
     public string Surname { get; set; }
 
+    public int BookCount { get; set; }
+
     public string NameAndSurname
     {
         get

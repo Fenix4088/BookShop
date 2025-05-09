@@ -13,16 +13,34 @@ public class BookEntity : BookShopGenericEntity
     public string? CoverImgUrl { get; private set; }
     public AuthorEntity Author { get; private set; }
 
+    
+    //TODO: AddBook to author inside Create method
     public static BookEntity Create(string title, string description, DateTime releaseDate, int authorId,
-        string? coverImageUrl) => new()
+        string? coverImageUrl = "") => new()
     {
         Title = title,
         Description = description,
         ReleaseDate = releaseDate,
         AuthorId = authorId,
-        CoverImgUrl = coverImageUrl,
+        CoverImgUrl = "",
         CreatedAt = DateTime.Now
     };
+
+    public void Update(int authorId, string title, string description, DateTime releaseDate)
+    {
+        Title = title;
+        Description = description;
+        ReleaseDate = releaseDate;
+        AuthorId = authorId;
+
+        if (AuthorId != authorId)
+        {
+            Author.RemoveBook();
+            AuthorId = authorId;
+            Author.AddBook();
+        }
+    }
+    
 
     public void SetCoverImage(string imageUrl)
     {

@@ -95,6 +95,7 @@ public static class Extensions
             Id = authorEntity.Id,
             Name = authorEntity.Name,
             Surname = authorEntity.Surname,
+            BookCount = authorEntity.BookCount
         };
     }
 }

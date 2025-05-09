@@ -62,6 +62,6 @@ public class AuthorEntity : BookShopGenericEntity
     public void RemoveBook()
     {
         if (BookCount <= 0) return;
-        BookCount += 1;
+        BookCount -= 1;
     }
 }

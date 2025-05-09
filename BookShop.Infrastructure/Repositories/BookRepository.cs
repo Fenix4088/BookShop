@@ -43,6 +43,7 @@ public class BookRepository: GenericRepository<BookEntity, ShopDbContext>, IBook
     public void SoftRemove(BookEntity bookEntity)
     { 
         bookEntity.Delete();
+        bookEntity.Author.RemoveBook();
         context.Books.Update(bookEntity);
     }
 }

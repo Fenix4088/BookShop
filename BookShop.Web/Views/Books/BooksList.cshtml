@@ -2,13 +2,13 @@
 @model BookShop.Application.Abstractions.IPagedResult<BookShop.Application.Models.BookModel>
 
 @{
-    ViewData["Title"] = "AuthorList";
+    ViewData["Title"] = "Book List";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 
 <p class="mb-2">
-    <a class="bg-sky-600 text-white font-bold py-1 px-2 rounded transition duration-300" asp-action="BookForm">Create Book</a>
+    <a class="bg-sky-600 text-white font-bold py-1 px-2 rounded transition duration-300" asp-action="BookForm">Add New Book</a>
 </p>
 @if (Model.Items.Any())
 {
@@ -20,7 +20,6 @@
                 <th>@Html.DisplayName("Description")</th>
                 <th>@Html.DisplayName("ReleaseDate")</th>
                 <th>@Html.DisplayName("Author Name")</th>
-                <th>@Html.DisplayName("Cover")</th>
                 <th></th>  <!-- actions column -->
             </tr>
         </thead>
@@ -33,12 +32,6 @@
                 <td>@Html.DisplayFor(_ => item.Description)</td>
                 <td>@item.ReleaseDate.ToString("yyyy-MM-dd")</td>
                 <td>@item.Author.NameAndSurname</td>
-                <td>
-                    @if (!string.IsNullOrEmpty(item.CoverImgUrl))
-                    {
-                        <img src="@item.CoverImgUrl" alt="Cover" style="max-height:100px;" />
-                    }
-                </td>
                 <td class="flex gap-x-2">
                     <form asp-action="RemoveBook" method="post">
                         <input type="hidden" name="bookId" value="@item.Id" />

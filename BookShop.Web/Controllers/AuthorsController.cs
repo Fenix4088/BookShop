@@ -3,10 +3,12 @@ using BookShop.Application.Abstractions;
 using BookShop.Application.Commands;
 using BookShop.Application.Models;
 using BookShop.Application.Queries;
+using BookShop.Infrastructure.Filters;
 using BookShop.Models.Queries;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookShop.Web.Controllers;
+[ValidationExceptionFilter]
 public class AuthorsController : Controller
 {
     private readonly ICommandHandler<CreateAuthorCommand> createAuthorCommandHandler;

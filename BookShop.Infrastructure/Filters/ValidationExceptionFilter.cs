@@ -1,3 +1,4 @@
+using System;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -12,10 +13,12 @@ namespace BookShop.Infrastructure.Filters;
 public class ValidationExceptionFilter : IExceptionFilter
 {
     private readonly ILogger<ValidationExceptionFilter> _logger;
+    private readonly string _prefix;
 
-    public ValidationExceptionFilter(ILogger<ValidationExceptionFilter> logger)
+    public ValidationExceptionFilter(ILogger<ValidationExceptionFilter> logger, string prefix)
     {
         _logger = logger;
+        _prefix = prefix;
     }
 
     public void OnException(ExceptionContext context)
@@ -24,7 +27,7 @@ public class ValidationExceptionFilter : IExceptionFilter
         {
             foreach (var error in validationException.Errors)
             {
-                context.ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                context.ModelState.AddModelError(string.IsNullOrEmpty(_prefix) ? error.PropertyName : $"{_prefix}.{error.PropertyName}", error.ErrorMessage);
             }
             
             _logger.LogError("Validation failed: {Errors}", validationException.Errors);
@@ -50,6 +53,7 @@ public class ValidationExceptionFilter : IExceptionFilter
         return viewName switch
         {
             "EditAuthor" => "CreateAuthor",
+            "EditBook" => "CreateBook",
             _ => viewName
         };
     }

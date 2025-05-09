@@ -3,12 +3,13 @@ using BookShop.Application.Abstractions;
 using BookShop.Application.Commands;
 using BookShop.Application.Models;
 using BookShop.Application.Queries;
+using BookShop.Infrastructure.Filters;
 using BookShop.Models.Queries;
 using BookShop.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookShop.Web.Controllers;
-
+[ValidationExceptionFilter("Book")]
 public class BooksController: Controller
 {
 
@@ -75,7 +76,9 @@ public class BooksController: Controller
 
         if (!ModelState.IsValid) return View(model);
         
-        await createBookCommandHandler.Handler(new CreateBookCommand(model.Book.AuthorId, model.Book.Title, model.Book.Description, model.Book.ReleaseDate, model.Book.CoverImgUrl));
+        HttpContext.Items["CurrentModel"] = model;
+        
+        await createBookCommandHandler.Handler(new CreateBookCommand(model.Book.AuthorId, model.Book.Title, model.Book.Description, model.Book.ReleaseDate));
         
         return RedirectToAction("BooksList");
     }

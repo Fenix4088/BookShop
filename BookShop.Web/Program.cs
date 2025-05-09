@@ -10,7 +10,7 @@ builder.Services
     .AddInfrastructure(builder.Configuration)
     .AddControllersWithViews(options =>
     {
-        options.Filters.Add<ValidationExceptionFilter>();
+        // options.Filters.Add<ValidationExceptionFilter>();
         options.Filters.Add<BookShopExceptionFilter>();
     });
 
