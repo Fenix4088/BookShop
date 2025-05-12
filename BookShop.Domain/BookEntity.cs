@@ -26,21 +26,19 @@ public class BookEntity : BookShopGenericEntity
         CreatedAt = DateTime.Now
     };
 
-    public void Update(int authorId, string title, string description, DateTime releaseDate)
+    public void Update(AuthorEntity newAuthor, string title, string description, DateTime releaseDate)
     {
         Title = title;
         Description = description;
         ReleaseDate = releaseDate;
-        AuthorId = authorId;
 
-        if (AuthorId != authorId)
+        if (AuthorId != newAuthor.Id)
         {
             Author.RemoveBook();
-            AuthorId = authorId;
-            Author.AddBook();
+            AuthorId = newAuthor.Id;
+            newAuthor.AddBook();
         }
     }
-    
 
     public void SetCoverImage(string imageUrl)
     {

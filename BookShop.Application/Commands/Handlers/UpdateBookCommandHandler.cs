@@ -31,6 +31,9 @@ public class UpdateBookCommandHandler: ICommandHandler<UpdateBookCommand>
 
         if (authorEntity is null) throw new AuthorNotFoundException(command.AuthorId);
         
-        bookEntity.Update(command.AuthorId, command.Title, command.Description, command.ReleaseDate);
+        bookEntity.Update(authorEntity, command.Title, command.Description, command.ReleaseDate);
+        await _bookRepository.SaveAsync();
+        await _authorRepository.SaveAsync();
+
     }
 }

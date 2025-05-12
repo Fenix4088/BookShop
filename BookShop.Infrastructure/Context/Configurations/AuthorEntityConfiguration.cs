@@ -19,7 +19,9 @@ public class AuthorEntityConfiguration : IEntityTypeConfiguration<AuthorEntity>
         builder.Property(author => author.Id)
             .ValueGeneratedOnAdd();
 
-        builder.HasIndex(author => new { author.Name, author.Surname }).IsUnique();
+        builder.HasIndex(author => new { author.Name, author.Surname, })
+            .IsUnique()
+            .HasFilter("\"DeletedAt\" IS NULL");
 
         builder.Property(author => author.Name)
             .IsRequired()

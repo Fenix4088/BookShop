@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using BookShop.Domain;
 using BookShop.Domain.Repositories;
 using BookShop.Infrastructure.Context;
@@ -15,7 +16,7 @@ public class AuthorRepository : GenericRepository<AuthorEntity, ShopDbContext>, 
 
     public async Task<bool> IsUniqueAuthorAsync(string name, string surname)
     {
-        return !(await context.Authors.AnyAsync(author =>
+        return !(await context.Authors.Where(x => x.DeletedAt == null).AnyAsync(author =>
             author.Name == name && author.Surname == surname));
     }
 
