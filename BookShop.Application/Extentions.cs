@@ -10,9 +10,7 @@ public static class Extentions
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         
-        services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateAuthorValidation>().RegisterValidatorsFromAssemblyContaining<UpdateAuthorValidation>().RegisterValidatorsFromAssemblyContaining<CreateBookValidation>()
-        );
-        
+        services.RegisterFluentValidators();
         
         var applicationAssembly = typeof(ICommandHandler<>).Assembly;
 
@@ -22,6 +20,18 @@ public static class Extentions
             .AsImplementedInterfaces()
             .WithScopedLifetime()
         );
+        return services;
+    }
+
+
+    public static IServiceCollection RegisterFluentValidators(this IServiceCollection services)
+    {
+        services.AddFluentValidation(fv => fv
+            .RegisterValidatorsFromAssemblyContaining<CreateAuthorValidation>().RegisterValidatorsFromAssemblyContaining<UpdateAuthorValidation>()
+            .RegisterValidatorsFromAssemblyContaining<CreateBookValidation>()
+            .RegisterValidatorsFromAssemblyContaining<UpdateBookValidation>()
+        );
+
         return services;
     }
 }

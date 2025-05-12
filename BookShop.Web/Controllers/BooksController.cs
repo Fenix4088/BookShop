@@ -18,6 +18,7 @@ public class BooksController: Controller
     private readonly IQueryHandler<GetAuthorListQuery, IPagedResult<AuthorModel>> getAuthorsListQueryHandler;
     private readonly IQueryHandler<GetBookQuery, BookModel> getBookQueryHandler;
     private readonly ICommandHandler<SoftDeleteBookCommand> softDeleteBookCommandHandler;
+    private readonly ICommandHandler<UpdateBookCommand> updateBookCommandHandler;
 
 
     public BooksController(
@@ -25,7 +26,8 @@ public class BooksController: Controller
         IQueryHandler<GetBookListQuery, IPagedResult<BookModel>> getBookListQueryHandler, 
         IQueryHandler<GetAuthorListQuery, IPagedResult<AuthorModel>> getAuthorsListQueryHandler,
         ICommandHandler<SoftDeleteBookCommand> softDeleteBookCommandHandler,
-        IQueryHandler<GetBookQuery, BookModel> getBookQueryHandler
+        IQueryHandler<GetBookQuery, BookModel> getBookQueryHandler,
+        ICommandHandler<UpdateBookCommand> updateBookCommandHandler
         )
     {
         this.createBookCommandHandler = createBookCommandHandler;
@@ -33,6 +35,7 @@ public class BooksController: Controller
         this.getAuthorsListQueryHandler = getAuthorsListQueryHandler;
         this.softDeleteBookCommandHandler = softDeleteBookCommandHandler;
         this.getBookQueryHandler = getBookQueryHandler;
+        this.updateBookCommandHandler = updateBookCommandHandler;
     }
 
 
@@ -87,11 +90,13 @@ public class BooksController: Controller
     [HttpPost]
     public async Task<IActionResult> EditBook([FromForm] BookDetailsViewModel model)
     {
+        model = await PopulateAuthorsAsync(model);
+        
         if (!ModelState.IsValid) return View("CreateBook", model);
 
         HttpContext.Items["CurrentModel"] = model;
         
-        // await updateAuthorCommandHandler.Handler(new UpdateAuthorCommand(model.Id, model.Name, model.Surname));
+        await updateBookCommandHandler.Handler(new UpdateBookCommand(model.Book.Id, model.Book.AuthorId, model.Book.Title, model.Book.Description, model.Book.ReleaseDate));
         
         return RedirectToAction("BooksList");
     }
