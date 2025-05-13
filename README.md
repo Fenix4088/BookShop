@@ -26,3 +26,5 @@ dotnet ef migrations add <MigrationName> --project BookShop.Infrastructure --sta
 >> update DB
 
 ```
+
+

@@ -23,8 +23,11 @@ public static class Extensions
     {
         services.AddDbContext<ShopDbContext>(options =>
                 options.UseSqlServer(
-                    configuration.GetConnectionString("BookShop")))
-            .AddDatabaseDeveloperPageExceptionFilter()
+                    configuration.GetConnectionString("BookShop")));
+
+        services.AddHostedService<DatabaseInitializer>();
+        
+        services.AddDatabaseDeveloperPageExceptionFilter()
             .AddTransient<ExceptionsMiddleware>()
             .AddScoped<IAuthorRepository, AuthorRepository>()
             .AddScoped<IBookRepository, BookRepository>()

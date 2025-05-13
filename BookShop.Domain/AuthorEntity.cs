@@ -13,7 +13,7 @@ public class AuthorEntity : BookShopGenericEntity
     public IReadOnlyCollection<BookEntity> Books => books;
     private List<BookEntity> books;
 
-    protected AuthorEntity()
+    public AuthorEntity()
     {
         books = new List<BookEntity>();
     }
@@ -54,9 +54,9 @@ public class AuthorEntity : BookShopGenericEntity
         Surname = surname;
     }
 
-    public void AddBook()
+    public void AddBook(int count = 1)
     {
-        BookCount += 1;
+        BookCount += count;
     }
     
     public void RemoveBook()
