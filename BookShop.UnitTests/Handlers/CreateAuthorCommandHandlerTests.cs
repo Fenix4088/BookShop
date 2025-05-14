@@ -1,0 +1,60 @@
+using System.Threading.Tasks;
+using BookShop.Application.Commands;
+using BookShop.Application.Commands.Handlers;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Xunit;
+
+namespace BookShop.UnitTests.Handlers;
+
+public class CreateAuthorCommandHandlerTests: TestBase
+{
+    const string InvalidName = "InvalidNameInvalidNameInvalidNameInvalidNameInvalidNameInvalidNameInvalidNameInvalidNameInvalidNameInvalidNameInvalidNameInvalidName";
+    const string InvalidSurname = "InvalidSurnameInvalidSurnameInvalidSurnameInvalidSurnameInvalidSurnameInvalidSurnameInvalidSurnameInvalidSurnameInvalidSurnameInvalidSurnameInvalidSurnameInvalidSurname";
+
+    [Fact]
+    public async Task CreateAuthorCommandHandler_Success()
+    {
+        var handler = Provider.GetService<CreateAuthorCommandHandler>();
+        var command = new CreateAuthorCommand("Johne", "Doe");
+
+        await handler.Handler(command);
+
+        var entity = await DbContext.Authors.FirstOrDefaultAsync();
+        Assert.NotNull(entity);
+        Assert.NotEqual(0, entity.Id);
+        Assert.Equal(command.Name, entity.Name);
+        Assert.Equal(command.Surname, entity.Surname);
+        Assert.Equal(0, entity.BookCount);
+    }
+    
+    [Theory]
+    [InlineData("", "")]
+    [InlineData(InvalidName, InvalidSurname)]
+    public async Task CreateAuthorCommandHandler_WithInvalidNames_ShouldThrow_ValidationError(string name, string surname)
+    {
+        var handler = Provider.GetService<CreateAuthorCommandHandler>();
+        var command = new CreateAuthorCommand(name, surname);
+
+        await Assert.ThrowsAsync<FluentValidation.ValidationException>(async () => await handler.Handler(command));
+        
+        var entity = await DbContext.Authors.FirstOrDefaultAsync();
+        Assert.Null(entity);
+    }
+    
+    [Fact]
+    public async Task CreateAuthorCommandHandler_WithSameNameAndSurname_ShouldThrow_ValidationError()
+    {
+        var handler = Provider.GetService<CreateAuthorCommandHandler>();
+        var commandBillyOne = new CreateAuthorCommand("Billy", "Milligan");
+        var commandBillyTwo = new CreateAuthorCommand("Billy", "Milligan");
+
+        await handler.Handler(commandBillyOne);
+        
+        var exception = await Assert.ThrowsAsync<FluentValidation.ValidationException>(async () => await handler.Handler(commandBillyTwo));
+        
+        Assert.Contains("An author with the same name and surname already exists.", exception.Message);
+    }
+    
+}
+
