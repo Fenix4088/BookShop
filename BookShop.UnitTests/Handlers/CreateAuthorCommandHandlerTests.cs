@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using BookShop.Application.Commands;
 using BookShop.Application.Commands.Handlers;
@@ -11,12 +12,21 @@ public class CreateAuthorCommandHandlerTests: TestBase
 {
     const string InvalidName = "InvalidNameInvalidNameInvalidNameInvalidNameInvalidNameInvalidNameInvalidNameInvalidNameInvalidNameInvalidNameInvalidNameInvalidName";
     const string InvalidSurname = "InvalidSurnameInvalidSurnameInvalidSurnameInvalidSurnameInvalidSurnameInvalidSurnameInvalidSurnameInvalidSurnameInvalidSurnameInvalidSurnameInvalidSurnameInvalidSurname";
+    
+    private readonly CreateAuthorCommandHandler handler;
+
+    private readonly string validName = "Billy";
+    private readonly string validSurname = "Milligan";
+
+    public CreateAuthorCommandHandlerTests()
+    {
+        handler = Provider.GetService<CreateAuthorCommandHandler>();
+    }
 
     [Fact]
     public async Task CreateAuthorCommandHandler_Success()
     {
-        var handler = Provider.GetService<CreateAuthorCommandHandler>();
-        var command = new CreateAuthorCommand("Johne", "Doe");
+        var command = new CreateAuthorCommand(validName, validSurname);
 
         await handler.Handler(command);
 
@@ -33,7 +43,6 @@ public class CreateAuthorCommandHandlerTests: TestBase
     [InlineData(InvalidName, InvalidSurname)]
     public async Task CreateAuthorCommandHandler_WithInvalidNames_ShouldThrow_ValidationError(string name, string surname)
     {
-        var handler = Provider.GetService<CreateAuthorCommandHandler>();
         var command = new CreateAuthorCommand(name, surname);
 
         await Assert.ThrowsAsync<FluentValidation.ValidationException>(async () => await handler.Handler(command));
@@ -43,11 +52,10 @@ public class CreateAuthorCommandHandlerTests: TestBase
     }
     
     [Fact]
-    public async Task CreateAuthorCommandHandler_WithSameNameAndSurname_ShouldThrow_ValidationError()
+    public async Task CreateAuthorCommandHandler_NameAndSurname_ShouldBe_Unique()
     {
-        var handler = Provider.GetService<CreateAuthorCommandHandler>();
-        var commandBillyOne = new CreateAuthorCommand("Billy", "Milligan");
-        var commandBillyTwo = new CreateAuthorCommand("Billy", "Milligan");
+        var commandBillyOne = new CreateAuthorCommand(validName, validSurname);
+        var commandBillyTwo = new CreateAuthorCommand(validName, validSurname);
 
         await handler.Handler(commandBillyOne);
         

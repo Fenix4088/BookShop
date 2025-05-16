@@ -27,7 +27,8 @@ public static class DIExtensions
 
         //Handlers
         services.AddTransient<CreateAuthorCommandHandler>()
-            .AddTransient<GetAuthorListQueryHandler>();
+            .AddTransient<GetAuthorListQueryHandler>()
+            .AddTransient<UpdateAuthorCommandHandler>();
 
         //Validators
         services.AddFluentValidation(fv => fv

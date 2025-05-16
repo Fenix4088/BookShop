@@ -18,10 +18,10 @@ public class GetAuthorListQueryHandlerTests: TestBase
     [Fact]
     public async Task GetAuthorListQueryHandler_Success()
     {
-        var handle = Provider.GetService<GetAuthorListQueryHandler>();
+        var handler = Provider.GetService<GetAuthorListQueryHandler>();
         var query = new GetAuthorListQuery(1, 5);
 
-        var result = await handle.Handler(query);
+        var result = await handler.Handler(query);
 
         Assert.Equal(query.RowCount, result.PageSize);
         Assert.Equal(query.CurrentPage, result.CurrentPage);
