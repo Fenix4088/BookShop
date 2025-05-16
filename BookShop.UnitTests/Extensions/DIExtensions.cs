@@ -23,12 +23,15 @@ public static class DIExtensions
         });
         
         // Repositories
-        services.AddTransient<IAuthorRepository, AuthorRepository>();
+        services.AddTransient<IAuthorRepository, AuthorRepository>()
+            .AddTransient<IBookRepository, BookRepository>();
 
         //Handlers
         services.AddTransient<CreateAuthorCommandHandler>()
             .AddTransient<GetAuthorListQueryHandler>()
-            .AddTransient<UpdateAuthorCommandHandler>();
+            .AddTransient<UpdateAuthorCommandHandler>()
+            .AddTransient<GetAuthorQueryHandler>()
+            .AddTransient<SoftDeleteAuthorCommandHandler>();
 
         //Validators
         services.AddFluentValidation(fv => fv

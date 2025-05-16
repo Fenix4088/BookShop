@@ -32,6 +32,7 @@ public class CreateAuthorCommandHandlerTests: TestBase
 
         var entity = await DbContext.Authors.FirstOrDefaultAsync();
         Assert.NotNull(entity);
+        Assert.False(entity.IsDeleted);
         Assert.NotEqual(0, entity.Id);
         Assert.Equal(command.Name, entity.Name);
         Assert.Equal(command.Surname, entity.Surname);
