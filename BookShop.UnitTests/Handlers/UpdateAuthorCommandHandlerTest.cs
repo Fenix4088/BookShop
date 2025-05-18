@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
 using BookShop.Application.Commands;
 using BookShop.Application.Commands.Handlers;
-using BookShop.Domain;
 using BookShop.Domain.Exceptions;
+using BookShop.UnitTests.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
@@ -18,16 +18,18 @@ public class UpdateAuthorCommandHandlerTest: TestBase
     private readonly string validSurname = "Milligan";
     private readonly string newName = "NewName";
     private readonly string newSurname = "NewSurname";
+    private readonly MockHelper mockHelper;
 
     public UpdateAuthorCommandHandlerTest()
     {
         updateAuthorCommandHandler = Provider.GetService<UpdateAuthorCommandHandler>();
+        mockHelper = new MockHelper(DbContext);
     }
 
     [Fact]
     public async Task UpdateAuthorCommandHandler_Success()
     {
-        var author = CreateAuthor();
+        var author = mockHelper.CreateAuthor();
 
         var command = new UpdateAuthorCommand(author.Id, newName, newSurname);
 
@@ -42,9 +44,9 @@ public class UpdateAuthorCommandHandlerTest: TestBase
     [Fact]
     public async Task UpdateAuthorCommandHandler_ValidationException()
     {
-        var author = CreateAuthor();
+        var author = mockHelper.CreateAuthor();
 
-        var command = new UpdateAuthorCommand(author.Id, validName, validSurname);
+        var command = new UpdateAuthorCommand(author.Id, author.Name, author.Surname);
 
         await Assert.ThrowsAsync<FluentValidation.ValidationException>(async () =>
         {
@@ -55,7 +57,7 @@ public class UpdateAuthorCommandHandlerTest: TestBase
     [Fact]
     public async Task UpdateAuthorCommandHandler_ValidationException_EmptyName()
     {
-        var author = CreateAuthor();
+        var author = mockHelper.CreateAuthor();
 
         var command = new UpdateAuthorCommand(author.Id, "", validSurname);
 
@@ -68,7 +70,7 @@ public class UpdateAuthorCommandHandlerTest: TestBase
     [Fact]
     public async Task UpdateAuthorCommandHandler_ValidationException_EmptySurname()
     {
-        var author = CreateAuthor();
+        var author = mockHelper.CreateAuthor();
 
         var command = new UpdateAuthorCommand(author.Id, validName, "");
 
@@ -81,8 +83,8 @@ public class UpdateAuthorCommandHandlerTest: TestBase
     [Fact]
     public async Task UpdateAuthorCommandHandler_ValidationException_If_Name_Already_Exists()
     {
-        var author1 = CreateAuthor();
-        var author2 = CreateAuthor();
+        var author1 = mockHelper.CreateAuthor();
+        var author2 = mockHelper.CreateAuthor();
 
         var command = new UpdateAuthorCommand(author2.Id, author1.Name, author1.Surname);
 
@@ -102,13 +104,4 @@ public class UpdateAuthorCommandHandlerTest: TestBase
             await updateAuthorCommandHandler.Handler(command);
         });
     }
-
-    private AuthorEntity CreateAuthor()
-    {
-        var author = AuthorEntity.Create(validName, validSurname);
-        DbContext.Add(author);
-        DbContext.SaveChanges();
-        return author;
-    }
-
 }

@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using BookShop.Application.Queries;
 using BookShop.Domain;
 using BookShop.Infrastructure.Handlers;
+using BookShop.UnitTests.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
@@ -13,16 +14,18 @@ public class GetAuthorQueryHandlerTest: TestBase
     private readonly string validName = "Valid Name";
     private readonly string validSurname = "Valid Surname";
     private readonly GetAuthorQueryHandler getAuthorQueryHandler;
+    private readonly MockHelper mockHelper;
 
     public GetAuthorQueryHandlerTest()
     {
         getAuthorQueryHandler = Provider.GetService<GetAuthorQueryHandler>();
+        mockHelper = new MockHelper(DbContext);
     }
 
     [Fact]
     public async Task GetAuthorQueryHandler_Success()
     {
-         var author = CreateAuthor();
+         var author = mockHelper.CreateAuthor();
          var query = new GetAuthorQuery(author.Id);
 
          var result = await getAuthorQueryHandler.Handler(query);
@@ -43,11 +46,11 @@ public class GetAuthorQueryHandlerTest: TestBase
          Assert.Null(result);
     }
     
-    private AuthorEntity CreateAuthor()
-    {
-         var author = AuthorEntity.Create(validName, validSurname);
-         DbContext.Add(author);
-         DbContext.SaveChanges();
-         return author;
-    }
+    // private AuthorEntity CreateAuthor()
+    // {
+    //      var author = AuthorEntity.Create(validName, validSurname);
+    //      DbContext.Add(author);
+    //      DbContext.SaveChanges();
+    //      return author;
+    // }
 }

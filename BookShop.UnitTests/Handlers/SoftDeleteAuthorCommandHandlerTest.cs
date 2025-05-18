@@ -1,10 +1,8 @@
-
-
 using System.Threading.Tasks;
 using BookShop.Application.Commands;
 using BookShop.Application.Commands.Handlers;
-using BookShop.Domain;
 using BookShop.Domain.Exceptions;
+using BookShop.UnitTests.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
@@ -14,16 +12,18 @@ public class SoftDeleteAuthorCommandHandlerTest: TestBase
 {
 
     private readonly SoftDeleteAuthorCommandHandler softDeleteAuthorCommandHandler;
+    private readonly MockHelper mockHelper;
     
     public SoftDeleteAuthorCommandHandlerTest()
     {
-        softDeleteAuthorCommandHandler = Provider.GetService<SoftDeleteAuthorCommandHandler>();
+        softDeleteAuthorCommandHandler = Provider.GetService<SoftDeleteAuthorCommandHandler>(); ;
+        mockHelper = new MockHelper(DbContext);
     }
 
     [Fact]
     public async Task SoftDeleteAuthorCommandHandler_Success()
     {
-        var author = CreateAuthor();
+        var author = mockHelper.CreateAuthor();
         var command = new SoftDeleteAuthorCommand(author.Id);
 
         await softDeleteAuthorCommandHandler.Handler(command);
@@ -40,14 +40,5 @@ public class SoftDeleteAuthorCommandHandlerTest: TestBase
         var command = new SoftDeleteAuthorCommand(0);
 
         await Assert.ThrowsAsync<AuthorNotFoundException>(() => softDeleteAuthorCommandHandler.Handler(command));
-    }
-    
-    
-    private AuthorEntity CreateAuthor()
-    {
-        var author = AuthorEntity.Create("Test Name", "Test Surname");
-        DbContext.Add(author);
-        DbContext.SaveChanges();
-        return author;
     }
 }
