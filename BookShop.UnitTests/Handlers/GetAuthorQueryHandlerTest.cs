@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using BookShop.Application.Queries;
-using BookShop.Domain;
 using BookShop.Infrastructure.Handlers;
 using BookShop.UnitTests.Helpers;
 using Microsoft.Extensions.DependencyInjection;

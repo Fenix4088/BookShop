@@ -33,6 +33,6 @@ public class BookEntityConfiguration: IEntityTypeConfiguration<BookEntity>
             .HasForeignKey(b => b.AuthorId)
             .OnDelete(DeleteBehavior.NoAction);
 
-        builder.HasIndex(e => new { e.AuthorId, e.Title }).IsUnique();
+        builder.HasIndex(e => new { e.AuthorId, e.Title, e.ReleaseDate }).IsUnique();
     }
 }

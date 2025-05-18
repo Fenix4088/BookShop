@@ -3,6 +3,7 @@ using BookShop.Domain;
 using BookShop.Domain.Exceptions;
 using BookShop.Domain.Repositories;
 using FluentValidation;
+using FluentValidation.Results;
 
 namespace BookShop.Application.Commands.Handlers;
 
@@ -30,6 +31,14 @@ public sealed class CreateBookCommandHandler: ICommandHandler<CreateBookCommand>
         if (authorEntity is null)
         {
             throw new AuthorNotFoundException(command.AuthorId);
+        }
+        
+        if(!await _bookRepository.IsUniqueBookAsync(command.Title, command.ReleaseDate))
+        {
+            throw new ValidationException(new List<ValidationFailure>
+            {
+                new ("", $"Author {authorEntity.ToModel().NameAndSurname} already has a book with the title {command.Title} and release date: {command.ReleaseDate.Date.ToShortDateString()}.")
+            }); 
         }
 
         var newBookEntity = BookEntity.Create(command.Title, command.Description, command.ReleaseDate, command.AuthorId);

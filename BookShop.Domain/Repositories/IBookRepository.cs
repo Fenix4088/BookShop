@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -11,6 +12,8 @@ public interface IBookRepository: IRepository<BookEntity>
     public void BulkSoftRemove(int authorId, bool includeDeleted = false);
 
     public Task<BookEntity> GetBookById(int bookId);
+    
+    public Task<bool> IsUniqueBookAsync(string title, DateTime releaseDate);
 
     public void SoftRemove(BookEntity bookEntity);
 

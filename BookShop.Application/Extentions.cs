@@ -1,5 +1,7 @@
 using BookShop.Application.Abstractions;
+using BookShop.Application.Models;
 using BookShop.Application.Validators;
+using BookShop.Domain;
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -34,4 +36,30 @@ public static class Extentions
 
         return services;
     }
+    
+    public static BookModel ToModel(this BookEntity bookEntity)
+    {
+        return new BookModel()
+        {
+            Id = bookEntity.Id,
+            Title = bookEntity.Title,
+            Description = bookEntity.Description,
+            ReleaseDate = bookEntity.ReleaseDate,
+            AuthorId = bookEntity.AuthorId,
+            Author = bookEntity.Author.ToModel(),
+            CoverImgUrl = bookEntity.CoverImgUrl
+        };
+    }
+    
+    
+    public static AuthorModel ToModel(this AuthorEntity authorEntity)
+    {
+        return new AuthorModel()
+        {
+            Id = authorEntity.Id,
+            Name = authorEntity.Name,
+            Surname = authorEntity.Surname,
+        };
+    }
+    
 }

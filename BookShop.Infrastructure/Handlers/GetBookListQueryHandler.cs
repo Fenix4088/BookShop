@@ -21,7 +21,7 @@ public class GetBookListQueryHandler: IQueryHandler<GetBookListQuery, IPagedResu
 
     public async  Task<IPagedResult<BookModel>> Handler(GetBookListQuery query)
     {
-        var dbQuery =  dbContext.Books.AsQueryable().Include(x => x.Author).Where(x => x.DeletedAt == null).OrderBy(x => x.CreatedAt);
+        var dbQuery =  dbContext.Books.AsQueryable().Include(x => x.Author).Where(x => x.DeletedAt == null).OrderByDescending(x => x.CreatedAt);
 
         return  await dbQuery.ToPagedResult(query, x => x.ToModel());
     }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -27,6 +28,12 @@ public class BookRepository: GenericRepository<BookEntity, ShopDbContext>, IBook
     public IEnumerable<BookEntity> GetAllBooksByAuthor(int authorId, bool includeDeleted = false)
     {
         return GetAllBooks(includeDeleted).Where(x => x.AuthorId == authorId);
+    }
+    
+    public async Task<bool> IsUniqueBookAsync(string title, DateTime releaseDate)
+    {
+        return !(await context.Books.Where(x => x.DeletedAt == null).AnyAsync(book =>
+            book.Title == title && book.ReleaseDate == releaseDate && book.DeletedAt == null));
     }
 
     public void BulkSoftRemove(int authorId, bool includeDeleted = false)

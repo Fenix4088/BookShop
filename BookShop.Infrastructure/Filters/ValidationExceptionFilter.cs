@@ -27,7 +27,14 @@ public class ValidationExceptionFilter : IExceptionFilter
         {
             foreach (var error in validationException.Errors)
             {
-                context.ModelState.AddModelError(string.IsNullOrEmpty(_prefix) ? error.PropertyName : $"{_prefix}.{error.PropertyName}", error.ErrorMessage);
+                var key = string.IsNullOrWhiteSpace(error.PropertyName)
+                    ? "" 
+                    : (string.IsNullOrEmpty(_prefix)
+                        ? error.PropertyName
+                        : $"{_prefix}.{error.PropertyName}");
+
+                context.ModelState.AddModelError(key, error.ErrorMessage);
+                // context.ModelState.AddModelError(string.IsNullOrEmpty(_prefix) ? error.PropertyName : $"{_prefix}.{error.PropertyName}", error.ErrorMessage);
             }
             
             _logger.LogError("Validation failed: {Errors}", validationException.Errors);

@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using BookShop.Application.Commands;
 using BookShop.Application.Commands.Handlers;

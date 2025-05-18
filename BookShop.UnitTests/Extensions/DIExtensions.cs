@@ -31,7 +31,12 @@ public static class DIExtensions
             .AddTransient<GetAuthorListQueryHandler>()
             .AddTransient<UpdateAuthorCommandHandler>()
             .AddTransient<GetAuthorQueryHandler>()
-            .AddTransient<SoftDeleteAuthorCommandHandler>();
+            .AddTransient<SoftDeleteAuthorCommandHandler>()
+            .AddTransient<GetBookQueryHandler>()
+            .AddTransient<CreateBookCommandHandler>()
+            .AddTransient<UpdateBookCommandHandler>()
+            .AddTransient<SoftDeleteBookCommandHandler>()
+            .AddTransient<GetBookListQueryHandler>();
 
         //Validators
         services.AddFluentValidation(fv => fv
