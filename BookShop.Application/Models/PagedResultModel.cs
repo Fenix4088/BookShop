@@ -1,4 +1,5 @@
 ﻿using BookShop.Application.Abstractions;
+using BookShop.Application.Enums;
 
 namespace BookShop.Application.Models;
 
@@ -13,4 +14,8 @@ public class PagedResultModel<TResult> : IPagedResult<TResult>
     public int PageSize { get; set; }
 
     public int TotalRowCount { get; set; }
+    
+    public SortDirection SortDirection { get; set; } = SortDirection.Descending;
+    
+    public string SearchByNameAndSurname { get; set; } = string.Empty;
 }

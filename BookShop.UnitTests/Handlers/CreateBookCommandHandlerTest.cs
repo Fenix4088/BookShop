@@ -72,4 +72,18 @@ public class CreateBookCommandHandlerTest: TestBase
         exception.Message.ShouldContain("already has a book with the title");
     }
     
+    [Fact]
+    public async Task CreateBook_Should_IncreaseAuthorBookCount_WhenBookIsCreated()
+    {
+        // Arrange
+        var author = mockHelper.CreateAuthor();
+        var command = new CreateBookCommand(author.Id, "Test Book", "Test Description", DateTime.Now.AddDays(-1));
+        
+        // Act
+        await createBookCommandHandler.Handler(command);
+        
+        // Assert
+        author.BookCount.ShouldBe(1);
+    }
+    
 }

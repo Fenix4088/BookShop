@@ -1,7 +1,9 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using BookShop.Application.Abstractions;
+using BookShop.Application.Enums;
 using BookShop.Application.Models;
+using BookShop.Domain;
 using BookShop.Infrastructure.Context;
 using BookShop.Infrastructure.Pagination;
 using BookShop.Models.Queries;
@@ -19,9 +21,18 @@ public class GetAuthorListQueryHandler : IQueryHandler<GetAuthorListQuery, IPage
 
     public async Task<IPagedResult<AuthorModel>> Handler(GetAuthorListQuery query)
     {
-        var dbQuery = dbContext.Authors.AsQueryable().Where(author => author.DeletedAt == null).OrderBy(x => x.CreatedAt);
+        var dbQuery = dbContext.Authors.AsQueryable().Where(x => x.DeletedAt.HasValue == query.IsDeleted);
         
-        var pagedResult = await dbQuery.ToPagedResult(query, x => x.ToModel());
+        if (!string.IsNullOrWhiteSpace(query.SearchByNameAndSurname))
+        {
+            dbQuery = dbQuery.Where(x => x.Name.Contains(query.SearchByNameAndSurname) || x.Surname.Contains(query.SearchByNameAndSurname));
+        }
+
+        IOrderedQueryable<AuthorEntity> orderedQuery = query.SortDirection == SortDirection.Descending
+            ? dbQuery.OrderBy(x => x.Surname)
+            : dbQuery.OrderByDescending(x => x.Surname);
+        
+        var pagedResult = await orderedQuery.ToPagedResult(query, x => x.ToModel());
         return pagedResult;
     }
 }

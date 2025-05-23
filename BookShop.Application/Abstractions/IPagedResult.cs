@@ -1,4 +1,6 @@
-﻿namespace BookShop.Application.Abstractions
+﻿using BookShop.Application.Enums;
+
+namespace BookShop.Application.Abstractions
 {
     public interface IPagedResult<TResult>
     {
@@ -7,5 +9,9 @@
         int PageCount { get; }
         int PageSize { get; }
         int TotalRowCount { get; }
+        
+        SortDirection SortDirection { get; }
+        
+        string SearchByNameAndSurname { get; }
     }
 }

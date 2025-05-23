@@ -1,4 +1,5 @@
 ﻿using BookShop.Application.Abstractions;
+using BookShop.Application.Enums;
 
 namespace BookShop.Models.Queries.Abstractions
 {
@@ -6,5 +7,9 @@ namespace BookShop.Models.Queries.Abstractions
     {
         int CurrentPage { get; }
         int RowCount { get; }
+        
+        SortDirection SortDirection { get; }
+        
+        string SearchByNameAndSurname { get; }
     }
 }

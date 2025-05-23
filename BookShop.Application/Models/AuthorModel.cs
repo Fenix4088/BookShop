@@ -12,7 +12,7 @@ public class AuthorModel
     {
         get
         {
-            return $"{Name} {Surname}";
+            return $"{Surname} {Name}";
         }
     }
 }

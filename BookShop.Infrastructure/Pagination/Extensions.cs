@@ -38,7 +38,8 @@ public static class Extensions
             PageSize = pagedQuery.RowCount,
             TotalRowCount = totalCount,
             PageCount = pages <= int.MaxValue ? (int)pages : 1,
-            CurrentPage = pagedQuery.CurrentPage
+            CurrentPage = pagedQuery.CurrentPage,
+            SortDirection = pagedQuery.SortDirection,
         };
 
         return pagedResponse;

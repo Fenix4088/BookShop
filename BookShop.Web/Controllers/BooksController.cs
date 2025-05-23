@@ -110,7 +110,9 @@ public class BooksController: Controller
             return RedirectToAction("BooksList", new { CurrentPage = 1, RowCount = 10 });
         }
 
-        return View(await getBookListQueryHandler.Handler(new GetBookListQuery(model.CurrentPage, model.RowCount)));
+        //TODO: Make to change IsDelete just for admins
+        //TODO: Add search by title instead of nameAndSurname
+        return View(await getBookListQueryHandler.Handler(new GetBookListQuery(model.CurrentPage, model.RowCount, model.SortDirection, "")));
     }
     
     [HttpPost]

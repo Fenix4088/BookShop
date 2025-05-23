@@ -95,11 +95,20 @@ public class AuthorsController : Controller
 
     public async Task<IActionResult> AuthorList([FromQuery] PagedQueryModel model)
     {
+        
+        //TODO: Make to change IsDelete just for admins
         if (model.CurrentPage == 0 || model.RowCount == 0)
         {
-            return RedirectToAction("AuthorList", new { CurrentPage = 1, RowCount = 10 });
+            return RedirectToAction("AuthorList", new
+            {
+                CurrentPage = 1, 
+                RowCount = 10,  
+                SortDirection = model.SortDirection, 
+                SearchByNameAndSurname = model.SearchByNameAndSurname, 
+                IsDeleted = model.IsDeleted
+            });
         }
 
-        return View(await getAuthorListQueryHandler.Handler(new GetAuthorListQuery(model.CurrentPage, model.RowCount)));
+        return View(await getAuthorListQueryHandler.Handler(new GetAuthorListQuery(model.CurrentPage, model.RowCount, model.SortDirection, model.SearchByNameAndSurname, model.IsDeleted)));
     }
 }

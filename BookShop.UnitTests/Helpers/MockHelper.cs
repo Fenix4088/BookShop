@@ -32,6 +32,7 @@ public sealed class MockHelper
     {
         var book = BookEntity.Create(title, description, DateTime.Now, author.Id);
         dbContext.Add(book);
+        author.AddBook();
         dbContext.SaveChanges();
         return book;
     }
