@@ -1,15 +1,12 @@
-﻿using BookShop.Application.Abstractions;
-using BookShop.Application.Enums;
+﻿using BookShop.Application.Enums;
+using BookShop.Models.Queries.Abstractions;
 
-namespace BookShop.Models.Queries.Abstractions
+namespace BookShop.Application.Abstractions;
+
+public interface IPagedQuery<TResult> : IQuery<IPagedResult<TResult>>
 {
-    public interface IPagedQuery<TResult> : IQuery<IPagedResult<TResult>>
-    {
-        int CurrentPage { get; }
-        int RowCount { get; }
+    int CurrentPage { get; }
+    int RowCount { get; }
         
-        SortDirection SortDirection { get; }
-        
-        string SearchByNameAndSurname { get; }
-    }
+    SortDirection SortDirection { get; }
 }

@@ -9,15 +9,15 @@
 <p class="mb-2">
     <a class="bg-sky-600 text-white font-bold py-1 px-2 rounded transition duration-300" asp-action="CreateAuthor">Add New Author</a>
 </p>
+<div class="flex gap-x-2 mb-4">
+    <form asp-action="AuthorList" method="get" class="flex gap-x-2">
+        <input asp-for="SearchByNameAndSurname" type="text" placeholder="Search by name and surname" class="border border-gray-300 rounded px-2 py-1" />
+        <button type="submit" class="bg-sky-600 text-white font-bold py-1 px-2 rounded transition duration-300">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+    </form>
+</div>
 @if(Model.Items.Any()){
-    <div class="flex gap-x-2 mb-4">
-        <form asp-action="AuthorList" method="get" class="flex gap-x-2">
-            <input asp-for="SearchByNameAndSurname" value="@Model.SearchByNameAndSurname" type="text" placeholder="Search by name and surname" class="border border-gray-300 rounded px-2 py-1" />
-            <button type="submit" class="bg-sky-600 text-white font-bold py-1 px-2 rounded transition duration-300">
-                <i class="fa-solid fa-magnifying-glass"></i>
-            </button>
-        </form>
-    </div>
     <table class="table">
         <thead>
         <tr>

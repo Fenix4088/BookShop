@@ -93,7 +93,7 @@ public class AuthorsController : Controller
     }
 
 
-    public async Task<IActionResult> AuthorList([FromQuery] PagedQueryModel model)
+    public async Task<IActionResult> AuthorList([FromQuery] PageAuthorQueryModel model)
     {
         
         //TODO: Make to change IsDelete just for admins

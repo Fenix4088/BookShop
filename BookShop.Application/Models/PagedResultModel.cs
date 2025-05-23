@@ -18,4 +18,7 @@ public class PagedResultModel<TResult> : IPagedResult<TResult>
     public SortDirection SortDirection { get; set; } = SortDirection.Descending;
     
     public string SearchByNameAndSurname { get; set; } = string.Empty;
+    
+    public string SearchByBookTitle { get; set; } = string.Empty;
+    public string SearchByAuthorName { get; set; } = string.Empty;
 }

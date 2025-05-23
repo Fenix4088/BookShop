@@ -13,5 +13,8 @@ namespace BookShop.Application.Abstractions
         SortDirection SortDirection { get; }
         
         string SearchByNameAndSurname { get; }
+        
+        string SearchByBookTitle { get; }
+        string SearchByAuthorName { get; }
     }
 }

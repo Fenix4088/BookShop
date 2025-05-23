@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using BookShop.Application.Abstractions;
 using BookShop.Application.Enums;
 using BookShop.Application.Models;
+using BookShop.Application.Queries;
 using BookShop.Domain;
 using BookShop.Infrastructure.Context;
 using BookShop.Infrastructure.Pagination;

@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using BookShop.Application.Abstractions;
 using BookShop.Application.Commands;
+using BookShop.Application.Enums;
 using BookShop.Application.Models;
 using BookShop.Application.Queries;
 using BookShop.Infrastructure.Filters;
@@ -102,17 +103,25 @@ public class BooksController: Controller
     }
 
 
-    public async Task<IActionResult> BooksList([FromQuery] PagedQueryModel model)
+    public async Task<IActionResult> BooksList([FromQuery] PageBookQueryModel model)
     {
         
+        //TODO: Make to change IsDelete just for admins
         if (model.CurrentPage == 0 || model.RowCount == 0)
         {
-            return RedirectToAction("BooksList", new { CurrentPage = 1, RowCount = 10 });
+            return RedirectToAction("BooksList", new
+            {
+                CurrentPage = 1,
+                RowCount = 10,
+                SortDirection = model.SortDirection,
+                SearchByBookTitle = model.SearchByBookTitle,
+                SearchByAuthorName = model.SearchByAuthorName,
+                IsDeleted = model.IsDeleted
+            });
         }
 
-        //TODO: Make to change IsDelete just for admins
         //TODO: Add search by title instead of nameAndSurname
-        return View(await getBookListQueryHandler.Handler(new GetBookListQuery(model.CurrentPage, model.RowCount, model.SortDirection, "")));
+        return View(await getBookListQueryHandler.Handler(new GetBookListQuery(model.CurrentPage, model.RowCount, model.SortDirection, model.SearchByBookTitle, model.SearchByAuthorName, model.IsDeleted)));
     }
     
     [HttpPost]

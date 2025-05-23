@@ -1,8 +1,10 @@
 using System.Linq;
 using System.Threading.Tasks;
 using BookShop.Application.Abstractions;
+using BookShop.Application.Enums;
 using BookShop.Application.Models;
 using BookShop.Application.Queries;
+using BookShop.Domain;
 using BookShop.Infrastructure.Context;
 using BookShop.Infrastructure.Pagination;
 using Microsoft.EntityFrameworkCore;
@@ -21,8 +23,25 @@ public class GetBookListQueryHandler: IQueryHandler<GetBookListQuery, IPagedResu
 
     public async  Task<IPagedResult<BookModel>> Handler(GetBookListQuery query)
     {
-        var dbQuery =  dbContext.Books.AsQueryable().Include(x => x.Author).Where(x => x.DeletedAt == null).OrderByDescending(x => x.CreatedAt);
+        var dbQuery = dbContext.Books.AsQueryable();
+        
+        dbQuery = dbQuery.Include(x => x.Author).Where(x => query.IsDeleted == x.DeletedAt.HasValue);
+        
+        if (!string.IsNullOrEmpty(query.SearchByBookTitle))
+        {
+            dbQuery = dbQuery.Where(x => x.Title.Contains(query.SearchByBookTitle));
+        }
+        
+        if (!string.IsNullOrEmpty(query.SearchByAuthorName))
+        {
+            dbQuery = dbQuery.Where(x => x.Author.Name.Contains(query.SearchByAuthorName) || 
+                                         x.Author.Surname.Contains(query.SearchByAuthorName));
+        }
+        
+        IOrderedQueryable<BookEntity> orderedQuery = query.SortDirection == SortDirection.Ascending
+            ? dbQuery.OrderBy(x => x.Title)
+            : dbQuery.OrderByDescending(x => x.Title);
 
-        return  await dbQuery.ToPagedResult(query, x => x.ToModel());
+        return  await orderedQuery.ToPagedResult(query, x => x.ToModel());
     }
 } 
