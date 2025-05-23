@@ -3,6 +3,7 @@ using BookShop.Application.Commands;
 using BookShop.Application.Commands.Handlers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Shouldly;
 using Xunit;
 
 namespace BookShop.UnitTests.Handlers;

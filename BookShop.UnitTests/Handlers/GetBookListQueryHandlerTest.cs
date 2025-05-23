@@ -2,7 +2,6 @@ using System.Threading.Tasks;
 using BookShop.Application.Commands;
 using BookShop.Application.Commands.Handlers;
 using BookShop.Application.Models;
-using BookShop.Application.Queries;
 using BookShop.Infrastructure.Handlers;
 using BookShop.UnitTests.Helpers;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,7 +28,7 @@ public class GetBookListQueryHandlerTest: TestBase
     {
         // Arrange
         mockHelper.CreateAuthorWithBooks();
-        var query = new GetBookListQuery(1, 10);
+        var query = mockHelper.CreateGetBookListQuery();
         
         // Act
         var result = await getBookListQueryHandler.Handler(query);
@@ -52,7 +51,7 @@ public class GetBookListQueryHandlerTest: TestBase
         DbContext.SaveChanges();
         
         
-        var query = new GetBookListQuery(1, 10);
+        var query = mockHelper.CreateGetBookListQuery();
         
         // Act
         await softDeleteBookCommandHandler.Handler(new SoftDeleteBookCommand(book.Id));

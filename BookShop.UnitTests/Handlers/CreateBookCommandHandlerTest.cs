@@ -11,6 +11,7 @@ using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using Xunit;
+using SortDirection = BookShop.Application.Enums.SortDirection;
 
 namespace BookShop.UnitTests.Handlers;
 
@@ -36,7 +37,7 @@ public class CreateBookCommandHandlerTest: TestBase
         
         // Act
         await createBookCommandHandler.Handler(command);
-        var result = (await getBookListQueryHandler.Handler(new GetBookListQuery(1, 10))).Items.FirstOrDefault();
+        var result = (await getBookListQueryHandler.Handler(mockHelper.CreateGetBookListQuery())).Items.FirstOrDefault();
         
         // Assert
         result.ShouldNotBeNull();
