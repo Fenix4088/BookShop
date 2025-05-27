@@ -1,4 +1,6 @@
+using System;
 using System.Threading.Tasks;
+using BookShop.Application.Enums;
 using BookShop.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -31,7 +33,16 @@ public class AccountController : Controller
         {
             var result = await signInManager.PasswordSignInAsync(user, password, true, false);
             if (result.Succeeded)
-                return RedirectToAction("AuthorList", "Authors");
+            {
+                return RedirectToAction("AuthorList", "Authors", new
+                {
+                    CurrentPage = 1, 
+                    RowCount = 10,  
+                    SortDirection = SortDirection.Descending, 
+                    SearchByNameAndSurname = String.Empty, 
+                    IsDeleted = false
+                });
+            }
         }
 
         ModelState.AddModelError("", "Invalid login");

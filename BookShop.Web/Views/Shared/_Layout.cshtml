@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var userName = Context.User.Identity?.Name;
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -28,6 +32,12 @@
                     </ul>
                 </div>
             </div>
+            <div>
+                @userName
+            </div>
+            <a class="bg-sky-600 text-white font-bold py-1 px-2 rounded transition duration-300" asp-controller="Account" asp-action="Logout">
+                Logout
+            </a>
         </nav>
     </header>
     <div class="container">

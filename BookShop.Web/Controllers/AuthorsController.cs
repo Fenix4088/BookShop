@@ -4,7 +4,9 @@ using BookShop.Application.Commands;
 using BookShop.Application.Models;
 using BookShop.Application.Queries;
 using BookShop.Infrastructure.Filters;
+using BookShop.Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookShop.Web.Controllers;
@@ -15,14 +17,17 @@ public class AuthorsController : Controller
     private readonly ICommandHandler<SoftDeleteAuthorCommand> softDeleteAuthorCommandHandler;
     private readonly IQueryHandler<GetAuthorListQuery, IPagedResult<AuthorModel>> getAuthorListQueryHandler;
     private readonly IQueryHandler<GetAuthorQuery, AuthorModel> getAuthorQueryHandler;
-    private readonly ICommandHandler<UpdateAuthorCommand> updateAuthorCommandHandler;
+    private readonly ICommandHandler<UpdateAuthorCommand> updateAuthorCommandHandler;    
+    private readonly SignInManager<BookShopUser> signInManager;
+
 
     public AuthorsController(
         ICommandHandler<CreateAuthorCommand> createAuthorCommandHandler, 
         ICommandHandler<SoftDeleteAuthorCommand> softDeleteAuthorCommandHandler,
         IQueryHandler<GetAuthorListQuery, IPagedResult<AuthorModel>> getAuthorListQueryHandler,
         IQueryHandler<GetAuthorQuery, AuthorModel> getAuthorQueryHandler,
-        ICommandHandler<UpdateAuthorCommand> updateAuthorCommandHandler
+        ICommandHandler<UpdateAuthorCommand> updateAuthorCommandHandler,
+        SignInManager<BookShopUser> signInManager
         )
         
     {
@@ -31,6 +36,7 @@ public class AuthorsController : Controller
         this.softDeleteAuthorCommandHandler = softDeleteAuthorCommandHandler;
         this.getAuthorQueryHandler = getAuthorQueryHandler;
         this.updateAuthorCommandHandler = updateAuthorCommandHandler;
+        this.signInManager = signInManager;
     }
 
     // public IActionResult Index()
@@ -39,14 +45,14 @@ public class AuthorsController : Controller
     // }
 
     [HttpGet]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public IActionResult CreateAuthor()
     {
         return View(new AuthorModel());
     }
 
     [HttpGet]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> AuthorForm(int? id)
     {
         if (id == null)
@@ -65,7 +71,7 @@ public class AuthorsController : Controller
     }
 
     [HttpPost]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult>  RemoveAuthor([FromForm] int authorId)
     {
         await softDeleteAuthorCommandHandler.Handler(new SoftDeleteAuthorCommand(authorId));
@@ -73,7 +79,7 @@ public class AuthorsController : Controller
     }
     
     [HttpPost]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> EditAuthor([FromForm] AuthorModel model)
     {
         if (!ModelState.IsValid) return View("CreateAuthor", model);
@@ -86,7 +92,7 @@ public class AuthorsController : Controller
     }
 
     [HttpPost]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> CreateAuthor([FromForm] AuthorModel model)
     {
 
@@ -100,7 +106,6 @@ public class AuthorsController : Controller
     [Authorize]
     public async Task<IActionResult> AuthorList([FromQuery] PageAuthorQueryModel model)
     {
-        
         //TODO: Make to change IsDelete just for admins
         if (model.CurrentPage == 0 || model.RowCount == 0)
         {
