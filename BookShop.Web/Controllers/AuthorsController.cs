@@ -4,7 +4,7 @@ using BookShop.Application.Commands;
 using BookShop.Application.Models;
 using BookShop.Application.Queries;
 using BookShop.Infrastructure.Filters;
-using BookShop.Models.Queries;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookShop.Web.Controllers;
@@ -39,12 +39,14 @@ public class AuthorsController : Controller
     // }
 
     [HttpGet]
+    [Authorize]
     public IActionResult CreateAuthor()
     {
         return View(new AuthorModel());
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> AuthorForm(int? id)
     {
         if (id == null)
@@ -63,6 +65,7 @@ public class AuthorsController : Controller
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult>  RemoveAuthor([FromForm] int authorId)
     {
         await softDeleteAuthorCommandHandler.Handler(new SoftDeleteAuthorCommand(authorId));
@@ -70,6 +73,7 @@ public class AuthorsController : Controller
     }
     
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> EditAuthor([FromForm] AuthorModel model)
     {
         if (!ModelState.IsValid) return View("CreateAuthor", model);
@@ -82,6 +86,7 @@ public class AuthorsController : Controller
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> CreateAuthor([FromForm] AuthorModel model)
     {
 
@@ -92,7 +97,7 @@ public class AuthorsController : Controller
         return RedirectToAction("AuthorList");
     }
 
-
+    [Authorize]
     public async Task<IActionResult> AuthorList([FromQuery] PageAuthorQueryModel model)
     {
         

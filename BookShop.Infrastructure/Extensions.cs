@@ -38,7 +38,6 @@ public static class Extensions
             .AddClasses(c => c.AssignableTo(typeof (IQueryHandler<,>)))
             .AsImplementedInterfaces()
             .WithScopedLifetime());
-        
 
         services.TryDecorate(typeof(ICommandHandler<>), typeof(UnitOfWorkCommandHandlerDecorator<>));
 

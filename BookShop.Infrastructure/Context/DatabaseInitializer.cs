@@ -4,6 +4,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Bogus;
 using BookShop.Domain;
+using BookShop.Infrastructure.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -16,11 +18,21 @@ internal sealed class DatabaseInitializer: IHostedService
     
     private readonly IServiceProvider _services;
     private readonly ILogger<DatabaseInitializer> _logger;
+    // private readonly UserManager<BookShopUser> _userManager;
+    // private readonly RoleManager<BookShopRole> _roleManager;
     
-    public DatabaseInitializer(IServiceProvider services, ILogger<DatabaseInitializer> logger)
+    
+    public DatabaseInitializer(
+        IServiceProvider services, 
+        ILogger<DatabaseInitializer> logger
+        // UserManager<BookShopUser> userManager,
+        // RoleManager<BookShopRole> roleManager
+        )
     {
         _services = services;
         _logger   = logger;
+        // _userManager = userManager;
+        // _roleManager = roleManager;
     }
     
     public async Task StartAsync(CancellationToken cancellationToken)
@@ -30,7 +42,17 @@ internal sealed class DatabaseInitializer: IHostedService
         using var scope = _services.CreateScope();
         var ctx = scope.ServiceProvider.GetRequiredService<ShopDbContext>();
 
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<BookShopUser>>();
+        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<BookShopRole>>();
+        
         await ctx.Database.MigrateAsync(cancellationToken);
+        
+        
+        if (!(await ctx.Users.AnyAsync(cancellationToken)))
+        {
+            await SeedRoles(roleManager, cancellationToken);
+            await SeedUsers(userManager, cancellationToken);
+        }
 
         if (!(await ctx.Authors.AnyAsync(cancellationToken)))
         {
@@ -40,6 +62,38 @@ internal sealed class DatabaseInitializer: IHostedService
     }
 
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+    
+    
+    private async Task SeedRoles(RoleManager<BookShopRole> roleManager, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Seeding roles...");
+        
+        var roles = new List<BookShopRole>
+        {
+            new() { Name = "Admin" },
+            new() { Name = "User" }
+        };
+        
+        foreach (var role in roles)
+        {
+            if (!await roleManager.RoleExistsAsync(role.Name))
+            {
+                await roleManager.CreateAsync(new BookShopRole { Name = role.Name });
+            }
+        }
+    }
+
+    private async Task SeedUsers(UserManager<BookShopUser> userManager, CancellationToken cancellationToken)
+    {
+        var adminEmail = "admin@bookshop.com";
+        var adminUser = await userManager.FindByEmailAsync(adminEmail);
+        if (adminUser == null)
+        {
+            adminUser = new BookShopUser() { UserName = adminEmail, Email = adminEmail };
+            await userManager.CreateAsync(adminUser, "Admin123!");
+            await userManager.AddToRoleAsync(adminUser, "Admin");
+        }
+    }
 
     private async Task SeedAuthors(ShopDbContext ctx, CancellationToken cancellationToken)
     {
