@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Bogus;
+using BookShop.Application.Enums;
 using BookShop.Domain;
 using BookShop.Infrastructure.Identity;
+using BookShop.Shared;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -70,8 +72,8 @@ internal sealed class DatabaseInitializer: IHostedService
         
         var roles = new List<BookShopRole>
         {
-            new() { Name = "Admin" },
-            new() { Name = "User" }
+            new() { Name = Roles.Admin.GetName() },
+            new() { Name = Roles.User.GetName() }
         };
         
         foreach (var role in roles)

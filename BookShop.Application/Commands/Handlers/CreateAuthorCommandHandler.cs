@@ -1,4 +1,5 @@
 ﻿using BookShop.Application.Abstractions;
+using BookShop.Application.Enums;
 using BookShop.Domain;
 using BookShop.Domain.Repositories;
 using FluentValidation;
@@ -20,7 +21,6 @@ public class CreateAuthorCommandHandler : ICommandHandler<CreateAuthorCommand>
 
     public async Task Handler(CreateAuthorCommand command)
     {
-
         await _validator.ValidateAndThrowAsync(command);
         
         if (!await _authorRepository.IsUniqueAuthorAsync(command.Name, command.Surname))

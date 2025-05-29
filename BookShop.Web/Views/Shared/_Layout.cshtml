@@ -1,5 +1,12 @@
-﻿@{
+﻿@using BookShop.Application.Enums
+@using BookShop.Shared
+@{
     var userName = Context.User.Identity?.Name;
+    var isAuthorized = Context.User.Identity?.IsAuthenticated ?? false;
+    var roleDescription =  Context.User.IsInRole(Roles.Admin.GetName()) ? Roles.Admin.GetDescription() : Roles.User.GetDescription();
+    var pageName = ViewContext.RouteData.Values["action"]?.ToString()?.ToLower();
+
+
 }
 
 <!DOCTYPE html>
@@ -15,29 +22,43 @@
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Authors" asp-action="AuthorList">BookShop</a>
+            @if (isAuthorized)
+            {
+                <div class="container">
+                    <a class="navbar-brand" asp-area="" asp-controller="Authors" asp-action="AuthorList">BookShop</a>
+                    <div>
+                        <a class="navbar-brand" asp-area="" asp-controller="Books" asp-action="BooksList">Books</a>
+                    </div>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Authors" asp-action="AuthorList">Authors</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
                 <div>
-                    <a class="navbar-brand" asp-area="" asp-controller="Books" asp-action="BooksList">Books</a>
+                    @roleDescription: 
+                    @userName
                 </div>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Authors" asp-action="AuthorList">Authors</a>
-                        </li>
-                    </ul>
+                <a class="bg-sky-600 text-white font-bold py-1 px-2 rounded transition duration-300" asp-controller="Account" asp-action="Logout">
+                    Logout
+                </a>
+            }
+            else {
+                <div class="container d-flex gap-x-2 justify-content-end">
+                    <a class="@(pageName == "register" ? "bg-white-600 border-sky-600 text-blue " : "bg-sky-600 text-white " + "font-bold py-1 px-2 rounded transition duration-300")" asp-controller="Account" asp-action="Login">
+                        Login
+                    </a>
+                    <a class="@(pageName == "login" ? "bg-white-600 border-sky-600 text-blue " : "bg-sky-600 text-white " + "font-bold py-1 px-2 rounded transition duration-300")" asp-controller="Account" asp-action="Register">
+                        Register
+                    </a>
                 </div>
-            </div>
-            <div>
-                @userName
-            </div>
-            <a class="bg-sky-600 text-white font-bold py-1 px-2 rounded transition duration-300" asp-controller="Account" asp-action="Logout">
-                Logout
-            </a>
+            }
         </nav>
     </header>
     <div class="container">

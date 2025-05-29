@@ -2,8 +2,10 @@ using System;
 using System.Threading.Tasks;
 using BookShop.Application.Enums;
 using BookShop.Infrastructure.Identity;
+using BookShop.Shared;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BookShop.Web.Controllers;
 public class AccountController : Controller
@@ -64,7 +66,7 @@ public class AccountController : Controller
         var result = await userManager.CreateAsync(user, password);
         if (result.Succeeded)
         {
-            await userManager.AddToRoleAsync(user, "User"); // Default role
+            await userManager.AddToRoleAsync(user, Roles.User.GetName());
             return RedirectToAction("Login");
         }
 
