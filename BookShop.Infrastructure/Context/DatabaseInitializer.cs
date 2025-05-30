@@ -32,28 +32,39 @@ internal sealed class DatabaseInitializer: IHostedService
     
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Starting database migration & seeding…");
+        _logger.LogInformation("🚀 Starting database migration & seeding…");
 
         using var scope = _services.CreateScope();
         var ctx = scope.ServiceProvider.GetRequiredService<ShopDbContext>();
 
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<BookShopUser>>();
         var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<BookShopRole>>();
-        
-        await ctx.Database.MigrateAsync(cancellationToken);
-        
-        
-        if (!(await ctx.Users.AnyAsync(cancellationToken)))
-        {
-            await SeedRoles(roleManager, cancellationToken);
-            await SeedUsers(userManager, cancellationToken);
-        }
 
-        if (!(await ctx.Authors.AnyAsync(cancellationToken)))
+        try
         {
-            await SeedAuthors(ctx, cancellationToken);
-            await SeedBooks(ctx, cancellationToken);
+            await ctx.Database.MigrateAsync(cancellationToken);
+        
+        
+            if (!(await ctx.Users.AnyAsync(cancellationToken)))
+            {
+                await SeedRoles(roleManager, cancellationToken);
+                await SeedUsers(userManager, cancellationToken);
+            }
+
+            if (!(await ctx.Authors.AnyAsync(cancellationToken)))
+            {
+                await SeedAuthors(ctx, cancellationToken);
+                await SeedBooks(ctx, cancellationToken);
+            }
+            _logger.LogInformation("✅ Database migration & seeding completed successfully.");
         }
+        catch (Exception e)
+        {
+            _logger.LogError(e.Message);
+            throw new Exception(e.Message, e);
+        }
+        
+
     }
 
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
@@ -86,7 +97,10 @@ internal sealed class DatabaseInitializer: IHostedService
         {
             adminUser = new BookShopUser() { UserName = adminEmail, Email = adminEmail };
             await userManager.CreateAsync(adminUser, "Admin123!");
-            await userManager.AddToRoleAsync(adminUser, "Admin");
+            await userManager.AddToRoleAsync(adminUser, Roles.Admin.GetName());
+            await ConfirmEmail(adminUser, userManager);
+
+            await GenerateUsers(userManager);
         }
     }
 
@@ -129,5 +143,27 @@ internal sealed class DatabaseInitializer: IHostedService
         ctx.Books.AddRange(books);
 
         await ctx.SaveChangesAsync(cancellationToken);
+    }
+    
+
+    private async Task GenerateUsers(UserManager<BookShopUser> userManager)
+    {
+        for  (int i = 0; i < 5; i++)
+        {
+            var user = GenerateUser();
+            await userManager.CreateAsync(user, "Test12345!");
+            await userManager.AddToRoleAsync(user, Roles.User.GetName());
+            await ConfirmEmail(user, userManager);
+        }
+    }
+
+    private BookShopUser GenerateUser() => new Faker<BookShopUser>()
+        .RuleFor(user => user.UserName, f => f.Internet.Email())
+        .RuleFor(user => user.Email, (f, u) => u.UserName);
+
+    private async Task ConfirmEmail(BookShopUser user, UserManager<BookShopUser> userManager)
+    {
+        var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+        await userManager.ConfirmEmailAsync(user, token);
     }
 }
