@@ -10,8 +10,10 @@ using BookShop.Infrastructure.Decorators;
 using BookShop.Infrastructure.Handlers;
 using BookShop.Infrastructure.Middlewares;
 using BookShop.Infrastructure.Repositories;
+using BookShop.Infrastructure.Services;
 using BookShop.Infrastructure.Services.Background;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,7 +35,8 @@ public static class Extensions
             .AddTransient<ExceptionsMiddleware>()
             .AddScoped<IAuthorRepository, AuthorRepository>()
             .AddScoped<IBookRepository, BookRepository>()
-            .AddScoped<IUnitOfWork, UnitOfWork>();
+            .AddScoped<IUnitOfWork, UnitOfWork>()
+            .AddScoped<IEmailSender, EmailSender>();
         
         var infrastructureAssembly = typeof(GetAuthorListQueryHandler).Assembly;
         services.Scan(s => s.FromAssemblies(infrastructureAssembly)

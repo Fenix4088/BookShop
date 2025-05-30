@@ -20,21 +20,14 @@ internal sealed class DatabaseInitializer: IHostedService
     
     private readonly IServiceProvider _services;
     private readonly ILogger<DatabaseInitializer> _logger;
-    // private readonly UserManager<BookShopUser> _userManager;
-    // private readonly RoleManager<BookShopRole> _roleManager;
-    
     
     public DatabaseInitializer(
         IServiceProvider services, 
         ILogger<DatabaseInitializer> logger
-        // UserManager<BookShopUser> userManager,
-        // RoleManager<BookShopRole> roleManager
         )
     {
         _services = services;
         _logger   = logger;
-        // _userManager = userManager;
-        // _roleManager = roleManager;
     }
     
     public async Task StartAsync(CancellationToken cancellationToken)
