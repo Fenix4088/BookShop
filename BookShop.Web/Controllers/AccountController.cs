@@ -69,7 +69,21 @@ public class AccountController : Controller
     public IActionResult Register() => View();
     
     [HttpGet]
-    public IActionResult EmailConfirmation(EmailConfirmationModel model) => View(model);
+    public IActionResult EmailConfirmationWarning(EmailConfirmationModel model) => View(model);
+
+    [HttpGet]
+    public async Task<IActionResult> EmailConfirmationSuccess(string token, string email)
+    {
+        var user = await userManager.FindByEmailAsync(email);
+
+        if (user is null)
+        {
+            return View("Error");
+        }
+
+        var result = await userManager.ConfirmEmailAsync(user, token);
+        return View(result.Succeeded ? "EmailConfirmationSuccess" : "Error");
+    }
 
     [HttpPost]
     public async Task<IActionResult> Register(string email, string password)
@@ -86,7 +100,7 @@ public class AccountController : Controller
             await SendConfirmationEmail(user);
             await userManager.AddToRoleAsync(user, Roles.User.GetName());
             
-            return RedirectToAction("EmailConfirmation", "Account", new EmailConfirmationModel()
+            return RedirectToAction("EmailConfirmationWarning", "Account", new EmailConfirmationModel()
             {
                 Email = email
             });
@@ -109,7 +123,7 @@ public class AccountController : Controller
     private async Task SendConfirmationEmail(BookShopUser user)
     {
         var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
-        var confirmationLink = Url.Action(nameof(EmailConfirmation), "Account", new { token, email = user.Email }, Request.Scheme);
+        var confirmationLink = Url.Action(nameof(EmailConfirmationSuccess), "Account", new { token, email = user.Email }, Request.Scheme);
         var message = $"Please confirm your email by clicking this link: <a href=\"{confirmationLink}\">Confirm Email</a>";
         await emailSender.SendEmailAsync(user.Email, "Confirm your email", message);
     }
