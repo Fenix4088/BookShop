@@ -42,7 +42,7 @@ public class BooksController: Controller
 
 
     [HttpGet]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = nameof(Policies.AdminAndManager))]
     public async Task<IActionResult> BookForm(int? id)
     {
 
@@ -75,7 +75,7 @@ public class BooksController: Controller
     
     
     [HttpPost]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = nameof(Policies.AdminAndManager))]
     public async Task<IActionResult> CreateBook([FromForm] BookDetailsViewModel model)
     {
         
@@ -92,7 +92,7 @@ public class BooksController: Controller
     
     
     [HttpPost]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = nameof(Policies.AdminAndManager))]
     public async Task<IActionResult> EditBook([FromForm] BookDetailsViewModel model)
     {
         model = await PopulateAuthorsAsync(model);
@@ -128,7 +128,7 @@ public class BooksController: Controller
     }
     
     [HttpPost]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = nameof(Policies.AdminAndManager))]
     public async Task<IActionResult>  RemoveBook([FromForm] int bookId)
     {
         await softDeleteBookCommandHandler.Handler(new SoftDeleteBookCommand(bookId));

@@ -77,7 +77,8 @@ internal sealed class DatabaseInitializer: IHostedService
         var roles = new List<BookShopRole>
         {
             new() { Name = Roles.Admin.GetName() },
-            new() { Name = Roles.User.GetName() }
+            new() { Name = Roles.User.GetName() },
+            new() { Name = Roles.Manager.GetName() }
         };
         
         foreach (var role in roles)
@@ -91,6 +92,8 @@ internal sealed class DatabaseInitializer: IHostedService
 
     private async Task SeedUsers(UserManager<BookShopUser> userManager, CancellationToken cancellationToken)
     {
+        _logger.LogInformation("Seeding users...");
+
         var adminEmail = "admin@bookshop.com";
         var adminUser = await userManager.FindByEmailAsync(adminEmail);
         if (adminUser == null)
@@ -99,7 +102,7 @@ internal sealed class DatabaseInitializer: IHostedService
             await userManager.CreateAsync(adminUser, "Admin123!");
             await userManager.AddToRoleAsync(adminUser, Roles.Admin.GetName());
             await ConfirmEmail(adminUser, userManager);
-
+            await GenerateUsers(userManager, Roles.Manager, 3);
             await GenerateUsers(userManager);
         }
     }
@@ -146,13 +149,13 @@ internal sealed class DatabaseInitializer: IHostedService
     }
     
 
-    private async Task GenerateUsers(UserManager<BookShopUser> userManager)
+    private async Task GenerateUsers(UserManager<BookShopUser> userManager, Roles roles = Roles.User, int count = 5)
     {
-        for  (int i = 0; i < 5; i++)
+        for  (int i = 0; i < count; i++)
         {
             var user = GenerateUser();
             await userManager.CreateAsync(user, "Test12345!");
-            await userManager.AddToRoleAsync(user, Roles.User.GetName());
+            await userManager.AddToRoleAsync(user, roles.GetName());
             await ConfirmEmail(user, userManager);
         }
     }

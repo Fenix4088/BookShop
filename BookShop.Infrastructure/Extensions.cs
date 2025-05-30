@@ -1,5 +1,3 @@
-using System;
-using System.ComponentModel;
 using BookShop.Application.Abstractions;
 using BookShop.Application.Models;
 using BookShop.Domain;
@@ -10,7 +8,6 @@ using BookShop.Infrastructure.Decorators;
 using BookShop.Infrastructure.Handlers;
 using BookShop.Infrastructure.Middlewares;
 using BookShop.Infrastructure.Repositories;
-using BookShop.Infrastructure.Services;
 using BookShop.Infrastructure.Services.Background;
 using BookShop.Infrastructure.Services.Email;
 using Microsoft.AspNetCore.Builder;

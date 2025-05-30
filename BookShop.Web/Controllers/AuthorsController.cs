@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using BookShop.Application.Abstractions;
 using BookShop.Application.Commands;
+using BookShop.Application.Enums;
 using BookShop.Application.Models;
 using BookShop.Application.Queries;
 using BookShop.Infrastructure.Filters;
@@ -45,14 +46,14 @@ public class AuthorsController : Controller
     // }
 
     [HttpGet]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = nameof(Policies.AdminAndManager))]
     public IActionResult CreateAuthor()
     {
         return View(new AuthorModel());
     }
 
     [HttpGet]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = nameof(Policies.AdminAndManager))]
     public async Task<IActionResult> AuthorForm(int? id)
     {
         if (id == null)
@@ -71,7 +72,7 @@ public class AuthorsController : Controller
     }
 
     [HttpPost]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = nameof(Policies.AdminAndManager))]
     public async Task<IActionResult>  RemoveAuthor([FromForm] int authorId)
     {
         await softDeleteAuthorCommandHandler.Handler(new SoftDeleteAuthorCommand(authorId));
@@ -79,7 +80,7 @@ public class AuthorsController : Controller
     }
     
     [HttpPost]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = nameof(Policies.AdminAndManager))]
     public async Task<IActionResult> EditAuthor([FromForm] AuthorModel model)
     {
         if (!ModelState.IsValid) return View("CreateAuthor", model);
@@ -92,7 +93,7 @@ public class AuthorsController : Controller
     }
 
     [HttpPost]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = nameof(Policies.AdminAndManager))]
     public async Task<IActionResult> CreateAuthor([FromForm] AuthorModel model)
     {
 

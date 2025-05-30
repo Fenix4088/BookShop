@@ -1,7 +1,9 @@
 using System;
 using System.ComponentModel;
+using BookShop.Application.Enums;
 using BookShop.Infrastructure.Context;
 using BookShop.Infrastructure.Identity;
+using BookShop.Shared;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,7 +16,9 @@ public static class Extensions
 
         services.AddAuthorization(options =>
         {
-            options.AddPolicy("RequireAdmin", policy => policy.RequireRole("Admin"));
+            options.AddPolicy(Policies.AdminOnly.GetName(), policy => policy.RequireRole(Roles.Admin.GetName()));
+            options.AddPolicy(Policies.AdminAndManager.GetName(), policy => 
+                policy.RequireRole(Roles.Admin.GetName(), Roles.Manager.GetName()));
         });
 
         services.AddIdentity<BookShopUser, BookShopRole>(options =>

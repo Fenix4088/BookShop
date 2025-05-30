@@ -7,5 +7,7 @@ public enum Roles
     [Description("Administrator")]
     Admin = 1,
     [Description("Regular User")]
-    User
+    User,
+    [Description("Manager")]
+    Manager,
 }
