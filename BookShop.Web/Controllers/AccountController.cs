@@ -3,7 +3,9 @@ using System.Threading.Tasks;
 using BookShop.Application.Enums;
 using BookShop.Infrastructure.Identity;
 using BookShop.Shared;
+using BookShop.Web.Attributes;
 using BookShop.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -29,9 +31,11 @@ public class AccountController : Controller
     }
 
     [HttpGet]
+    [DenyAuthenticated]
     public IActionResult Login() => View();
 
     [HttpPost]
+    [DenyAuthenticated]
     public async Task<IActionResult> Login(string email, string password)
     {
         var user = await userManager.FindByEmailAsync(email);
@@ -66,12 +70,15 @@ public class AccountController : Controller
     }
 
     [HttpGet]
+    [DenyAuthenticated]
     public IActionResult Register() => View();
     
     [HttpGet]
+    [DenyAuthenticated]
     public IActionResult EmailConfirmationWarning(EmailConfirmationModel model) => View(model);
 
     [HttpGet]
+    [DenyAuthenticated]
     public async Task<IActionResult> EmailConfirmationSuccess(string token, string email)
     {
         var user = await userManager.FindByEmailAsync(email);
@@ -86,8 +93,23 @@ public class AccountController : Controller
     }
 
     [HttpPost]
+    [DenyAuthenticated]
     public async Task<IActionResult> Register(string email, string password)
     {
+        var isAuthenticated = User.Identity?.IsAuthenticated;
+
+        if (isAuthenticated == true)
+        {
+            return RedirectToAction("AuthorList", "Authors", new
+            {
+                CurrentPage = 1, 
+                RowCount = 10,  
+                SortDirection = SortDirection.Descending, 
+                SearchByNameAndSurname = String.Empty, 
+                IsDeleted = false
+            });
+        }
+        
         var user = new BookShopUser()
         {
             Email = email,
@@ -112,14 +134,17 @@ public class AccountController : Controller
         return View();
     }
 
+    [Authorize]
     public async Task<IActionResult> Logout()
     {
         await signInManager.SignOutAsync();
         return RedirectToAction("Login");
     }
-
+    
+    [DenyAuthenticated]
     public IActionResult AccessDenied() => View();
 
+    [DenyAuthenticated]
     private async Task SendConfirmationEmail(BookShopUser user)
     {
         var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
