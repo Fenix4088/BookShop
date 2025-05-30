@@ -12,6 +12,7 @@ using BookShop.Infrastructure.Middlewares;
 using BookShop.Infrastructure.Repositories;
 using BookShop.Infrastructure.Services;
 using BookShop.Infrastructure.Services.Background;
+using BookShop.Infrastructure.Services.Email;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,8 @@ public static class Extensions
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        services.Configure<EmailSettings>(configuration.GetSection("Smtp"));
+        
         services.AddDbContext<ShopDbContext>(options =>
                 options.UseSqlServer(
                     configuration.GetConnectionString("BookShop")));

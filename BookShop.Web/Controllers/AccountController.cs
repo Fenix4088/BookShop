@@ -96,19 +96,6 @@ public class AccountController : Controller
     [DenyAuthenticated]
     public async Task<IActionResult> Register(string email, string password)
     {
-        var isAuthenticated = User.Identity?.IsAuthenticated;
-
-        if (isAuthenticated == true)
-        {
-            return RedirectToAction("AuthorList", "Authors", new
-            {
-                CurrentPage = 1, 
-                RowCount = 10,  
-                SortDirection = SortDirection.Descending, 
-                SearchByNameAndSurname = String.Empty, 
-                IsDeleted = false
-            });
-        }
         
         var user = new BookShopUser()
         {
