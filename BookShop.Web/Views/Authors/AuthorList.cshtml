@@ -1,9 +1,14 @@
 ﻿@using BookShop.Application.Enums
+@using BookShop.Shared
 @model BookShop.Application.Abstractions.IPagedResult<BookShop.Application.Models.AuthorModel>
 
 @{
     ViewData["Title"] = "Author List";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    
+    var IsAdmin =  Context.User.IsInRole(Roles.Admin.GetName());
+    var IsManager = Context.User.IsInRole(Roles.Manager.GetName());
+    var IsAdminOrManager = IsAdmin || IsManager;
 }
 
 <p class="mb-2">
@@ -12,6 +17,13 @@
 <div class="flex gap-x-2 mb-4">
     <form asp-action="AuthorList" method="get" class="flex gap-x-2">
         <input asp-for="SearchByNameAndSurname" type="text" placeholder="Search by name and surname" class="border border-gray-300 rounded px-2 py-1" />
+        @if (IsAdminOrManager)
+        {
+            <lable>
+                <input asp-for="IsDeleted" type="checkbox"  placeholder="Show archived authors"/>
+                Show archived authors
+            </lable>
+        }
         <button type="submit" class="bg-sky-600 text-white font-bold py-1 px-2 rounded transition duration-300">
             <i class="fa-solid fa-magnifying-glass"></i>
         </button>
@@ -41,7 +53,7 @@
         </thead>
         <tbody>
         @foreach (var authorModel in Model.Items) {
-            <tr>
+            <tr class="@((authorModel.IsDeleted ? "bg-[#f1e4e4]" : ""))">
                 <td>
                     @Html.DisplayFor(modelItem => authorModel.Id)
                 </td>
@@ -53,14 +65,20 @@
                 </td>
                 <td class="flex gap-x-2">
                     <form asp-action="RemoveAuthor" method="post">
-                        <input type="hidden" name="authorId" value="@authorModel.Id" />
-                        <button class="bg-red-600 text-white font-bold py-1 px-2 rounded transition duration-300" asp-action="RemoveAuthor">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
+                        @if (!authorModel.IsDeleted && IsAdminOrManager)
+                        {
+                            <input type="hidden" name="authorId" value="@authorModel.Id"/>
+                            
+                            <div class="d-flex gap-x-2">
+                                <button class="bg-red-600 text-white font-bold py-1 px-2 rounded transition duration-300" asp-action="RemoveAuthor">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                                    <a asp-action="AuthorForm" asp-route-id="@authorModel.Id" class="bg-blue-600 text-white font-bold py-1 px-2 rounded transition duration-300">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </a>
+                            </div>
+                        }
                     </form>
-                    <a asp-action="AuthorForm" asp-route-id="@authorModel.Id" class="bg-blue-600 text-white font-bold py-1 px-2 rounded transition duration-300" >
-                        <i class="fa-solid fa-pen-to-square"></i>
-                    </a>
                 </td>               
             </tr>
         }

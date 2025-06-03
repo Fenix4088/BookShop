@@ -10,6 +10,8 @@ using BookShop.Infrastructure.Middlewares;
 using BookShop.Infrastructure.Repositories;
 using BookShop.Infrastructure.Services.Background;
 using BookShop.Infrastructure.Services.Email;
+using BookShop.Infrastructure.Services.PolicyRole;
+using BookShop.Infrastructure.Services.User;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
@@ -30,13 +32,15 @@ public static class Extensions
                     configuration.GetConnectionString("BookShop")));
 
         services.AddHostedService<DatabaseInitializer>();
-        
+
         services.AddDatabaseDeveloperPageExceptionFilter()
             .AddTransient<ExceptionsMiddleware>()
             .AddScoped<IAuthorRepository, AuthorRepository>()
             .AddScoped<IBookRepository, BookRepository>()
             .AddScoped<IUnitOfWork, UnitOfWork>()
-            .AddScoped<IEmailSender, EmailSender>();
+            .AddScoped<IEmailSender, EmailSender>()
+            .AddScoped<IUserService, UserService>()
+            .AddScoped<IPolicyRoleService, PolicyRoleService>();
         
         var infrastructureAssembly = typeof(GetAuthorListQueryHandler).Assembly;
         services.Scan(s => s.FromAssemblies(infrastructureAssembly)
@@ -91,7 +95,8 @@ public static class Extensions
             ReleaseDate = bookEntity.ReleaseDate,
             AuthorId = bookEntity.AuthorId,
             Author = bookEntity.Author.ToModel(),
-            CoverImgUrl = bookEntity.CoverImgUrl
+            CoverImgUrl = bookEntity.CoverImgUrl,
+            IsDeleted = bookEntity.IsDeleted
         };
     }
     
@@ -103,7 +108,8 @@ public static class Extensions
             Id = authorEntity.Id,
             Name = authorEntity.Name,
             Surname = authorEntity.Surname,
-            BookCount = authorEntity.BookCount
+            BookCount = authorEntity.BookCount,
+            IsDeleted = authorEntity.IsDeleted
         };
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using BookShop.Application.Enums;
 using BookShop.Infrastructure.Identity;
+using BookShop.Infrastructure.Services.User;
 using BookShop.Shared;
 using BookShop.Web.Attributes;
 using BookShop.Web.Models;
@@ -15,19 +16,18 @@ public class AccountController : Controller
 {
     private readonly UserManager<BookShopUser> userManager;
     private readonly SignInManager<BookShopUser> signInManager;
-    private readonly RoleManager<BookShopRole> roleManager;
     private readonly IEmailSender emailSender;
+    private readonly IUserService userService;
 
     public AccountController(
         UserManager<BookShopUser> userManager,
         SignInManager<BookShopUser> signInManager,
-        RoleManager<BookShopRole> roleManager,
-        IEmailSender emailSender)
+        IEmailSender emailSender, IUserService userService)
     {
         this.userManager = userManager;
         this.signInManager = signInManager;
-        this.roleManager = roleManager;
         this.emailSender = emailSender;
+        this.userService = userService;
     }
 
     [HttpGet]
@@ -38,7 +38,7 @@ public class AccountController : Controller
     [DenyAuthenticated]
     public async Task<IActionResult> Login(string email, string password)
     {
-        var user = await userManager.FindByEmailAsync(email);
+        var user = await userService.GetCurrentUserByEmail(email);
 
         if (user is null)
         {
@@ -81,7 +81,7 @@ public class AccountController : Controller
     [DenyAuthenticated]
     public async Task<IActionResult> EmailConfirmationSuccess(string token, string email)
     {
-        var user = await userManager.FindByEmailAsync(email);
+        var user = await userService.GetCurrentUserByEmail(email);
 
         if (user is null)
         {
@@ -104,6 +104,7 @@ public class AccountController : Controller
         };
 
         var result = await userManager.CreateAsync(user, password);
+        
         if (result.Succeeded)
         {
             await SendConfirmationEmail(user);

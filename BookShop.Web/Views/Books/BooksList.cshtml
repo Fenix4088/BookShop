@@ -1,10 +1,15 @@
 ﻿@using BookShop.Application.Enums
+@using BookShop.Shared
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model BookShop.Application.Abstractions.IPagedResult<BookShop.Application.Models.BookModel>
 
 @{
     ViewData["Title"] = "Book List";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    
+    var IsAdmin =  Context.User.IsInRole(Roles.Admin.GetName());
+    var IsManager = Context.User.IsInRole(Roles.Manager.GetName());
+    var IsAdminOrManager = IsAdmin || IsManager;
 }
 
 
@@ -14,6 +19,13 @@
     <form asp-action="BooksList" method="get" class="flex gap-x-2">
         <input asp-for="SearchByBookTitle" type="text" placeholder="Sear by book title" class="border border-gray-300 rounded px-2 py-1" />
         <input asp-for="SearchByAuthorName" type="text" placeholder="Search by author" class="border border-gray-300 rounded px-2 py-1" />
+        @if (IsAdminOrManager)
+        {
+            <lable>
+                <input asp-for="IsDeleted" type="checkbox"  placeholder="Show archived books"/>
+                Show archived books
+            </lable>
+        }
         <button type="submit" class="bg-sky-600 text-white font-bold py-1 px-2 rounded transition duration-300">
             <i class="fa-solid fa-magnifying-glass"></i>
         </button>
@@ -42,22 +54,27 @@
         <tbody>
         @foreach (var item in Model.Items)
         {
-            <tr>
+            <tr class="@((item.IsDeleted ? "bg-[#f1e4e4]" : ""))">
                 <td>@Html.DisplayFor(_ => item.Id)</td>
                 <td>@Html.DisplayFor(_ => item.Title)</td>
                 <td>@Html.DisplayFor(_ => item.Description)</td>
                 <td>@item.ReleaseDate.ToString("yyyy-MM-dd")</td>
                 <td>@item.Author.NameAndSurname</td>
                 <td class="flex gap-x-2">
-                    <form asp-action="RemoveBook" method="post">
-                        <input type="hidden" name="bookId" value="@item.Id" />
-                        <button class="bg-red-600 text-white font-bold py-1 px-2 rounded transition duration-300" asp-action="RemoveBook">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
-                    </form>
-                    <a asp-action="BookForm" asp-route-id="@item.Id" class="bg-blue-600 text-white font-bold py-1 px-2 rounded transition duration-300" >
-                        <i class="fa-solid fa-pen-to-square"></i>
-                    </a>
+                    @if (!item.IsDeleted && IsAdminOrManager)
+                    {
+                        <form asp-action="RemoveBook" method="post">
+                            <input type="hidden" name="bookId" value="@item.Id"/>
+                            <div class="d-flex gap-x-2">
+                                <button class="bg-red-600 text-white font-bold py-1 px-2 rounded transition duration-300" asp-action="RemoveBook">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                                    <a asp-action="BookForm" asp-route-id="@item.Id" class="bg-blue-600 text-white font-bold py-1 px-2 rounded transition duration-300">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </a>
+                            </div>
+                        </form>
+                    }
                 </td>
             </tr>
         }

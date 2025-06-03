@@ -3,11 +3,11 @@
 @{
     var userName = Context.User.Identity?.Name;
     var isAuthorized = Context.User.Identity?.IsAuthenticated ?? false;
-    var roleDescription =  Context.User.IsInRole(Roles.Admin.GetName()) ? Roles.Admin.GetDescription() : Roles.User.GetDescription();
     var pageName = ViewContext.RouteData.Values["action"]?.ToString()?.ToLower();
 
-
+    var roleDescription =  Context.User.IsInRole(Roles.Admin.GetName()) ? Roles.Admin.GetDescription() : Context.User.IsInRole(Roles.Manager.GetName()) ? Roles.Manager.GetDescription() : Roles.User.GetDescription();
 }
+
 
 <!DOCTYPE html>
 <html lang="en">

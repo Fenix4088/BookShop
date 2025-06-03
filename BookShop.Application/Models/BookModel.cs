@@ -13,4 +13,6 @@ public class BookModel
     [ValidateNever]  
     public AuthorModel Author { get; set; }
     public string? CoverImgUrl { get;  set; }
+    
+    public bool IsDeleted { get; set; }
 }

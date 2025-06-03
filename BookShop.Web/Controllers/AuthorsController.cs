@@ -5,9 +5,9 @@ using BookShop.Application.Enums;
 using BookShop.Application.Models;
 using BookShop.Application.Queries;
 using BookShop.Infrastructure.Filters;
-using BookShop.Infrastructure.Identity;
+using BookShop.Infrastructure.Services.PolicyRole;
+using BookShop.Infrastructure.Services.User;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookShop.Web.Controllers;
@@ -19,7 +19,7 @@ public class AuthorsController : Controller
     private readonly IQueryHandler<GetAuthorListQuery, IPagedResult<AuthorModel>> getAuthorListQueryHandler;
     private readonly IQueryHandler<GetAuthorQuery, AuthorModel> getAuthorQueryHandler;
     private readonly ICommandHandler<UpdateAuthorCommand> updateAuthorCommandHandler;    
-    private readonly SignInManager<BookShopUser> signInManager;
+    private readonly IPolicyRoleService policyRoleService;
 
 
     public AuthorsController(
@@ -28,7 +28,7 @@ public class AuthorsController : Controller
         IQueryHandler<GetAuthorListQuery, IPagedResult<AuthorModel>> getAuthorListQueryHandler,
         IQueryHandler<GetAuthorQuery, AuthorModel> getAuthorQueryHandler,
         ICommandHandler<UpdateAuthorCommand> updateAuthorCommandHandler,
-        SignInManager<BookShopUser> signInManager
+        IPolicyRoleService policyRoleService
         )
         
     {
@@ -37,13 +37,9 @@ public class AuthorsController : Controller
         this.softDeleteAuthorCommandHandler = softDeleteAuthorCommandHandler;
         this.getAuthorQueryHandler = getAuthorQueryHandler;
         this.updateAuthorCommandHandler = updateAuthorCommandHandler;
-        this.signInManager = signInManager;
+        this.policyRoleService = policyRoleService;
     }
-
-    // public IActionResult Index()
-    // {
-    //     return View();
-    // }
+    
 
     [HttpGet]
     [Authorize(Policy = nameof(Policies.AdminAndManager))]
@@ -107,7 +103,10 @@ public class AuthorsController : Controller
     [Authorize]
     public async Task<IActionResult> AuthorList([FromQuery] PageAuthorQueryModel model)
     {
-        //TODO: Make to change IsDelete just for admins
+        var isInAdminAndManagerPolicy = await policyRoleService.IsUserInRoleForPolicyAsync(Policies.AdminAndManager, Roles.Admin);
+        
+        var shouldShowDeleted = isInAdminAndManagerPolicy && model.IsDeleted;
+        
         if (model.CurrentPage == 0 || model.RowCount == 0)
         {
             return RedirectToAction("AuthorList", new
@@ -116,10 +115,10 @@ public class AuthorsController : Controller
                 RowCount = 10,  
                 SortDirection = model.SortDirection, 
                 SearchByNameAndSurname = model.SearchByNameAndSurname, 
-                IsDeleted = model.IsDeleted
+                IsDeleted = shouldShowDeleted
             });
         }
 
-        return View(await getAuthorListQueryHandler.Handler(new GetAuthorListQuery(model.CurrentPage, model.RowCount, model.SortDirection, model.SearchByNameAndSurname, model.IsDeleted)));
+        return View(await getAuthorListQueryHandler.Handler(new GetAuthorListQuery(model.CurrentPage, model.RowCount, model.SortDirection, model.SearchByNameAndSurname, shouldShowDeleted)));
     }
 }

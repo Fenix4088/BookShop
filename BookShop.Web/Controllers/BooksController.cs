@@ -5,7 +5,7 @@ using BookShop.Application.Enums;
 using BookShop.Application.Models;
 using BookShop.Application.Queries;
 using BookShop.Infrastructure.Filters;
-using BookShop.Models.Queries;
+using BookShop.Infrastructure.Services.PolicyRole;
 using BookShop.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +21,7 @@ public class BooksController: Controller
     private readonly IQueryHandler<GetBookQuery, BookModel> getBookQueryHandler;
     private readonly ICommandHandler<SoftDeleteBookCommand> softDeleteBookCommandHandler;
     private readonly ICommandHandler<UpdateBookCommand> updateBookCommandHandler;
-
+    private readonly IPolicyRoleService policyRoleService;
 
     public BooksController(
         ICommandHandler<CreateBookCommand> createBookCommandHandler, 
@@ -29,7 +29,8 @@ public class BooksController: Controller
         IQueryHandler<GetAuthorListQuery, IPagedResult<AuthorModel>> getAuthorsListQueryHandler,
         ICommandHandler<SoftDeleteBookCommand> softDeleteBookCommandHandler,
         IQueryHandler<GetBookQuery, BookModel> getBookQueryHandler,
-        ICommandHandler<UpdateBookCommand> updateBookCommandHandler
+        ICommandHandler<UpdateBookCommand> updateBookCommandHandler,
+        IPolicyRoleService policyRoleService
         )
     {
         this.createBookCommandHandler = createBookCommandHandler;
@@ -38,6 +39,7 @@ public class BooksController: Controller
         this.softDeleteBookCommandHandler = softDeleteBookCommandHandler;
         this.getBookQueryHandler = getBookQueryHandler;
         this.updateBookCommandHandler = updateBookCommandHandler;
+        this.policyRoleService = policyRoleService;
     }
 
 
@@ -110,6 +112,9 @@ public class BooksController: Controller
     public async Task<IActionResult> BooksList([FromQuery] PageBookQueryModel model)
     {
         
+        var isInAdminAndManagerPolicy = await policyRoleService.IsUserInRoleForPolicyAsync(Policies.AdminAndManager, Roles.Admin);
+        var shouldShowDeleted = isInAdminAndManagerPolicy && model.IsDeleted;
+        
         //TODO: Make to change IsDelete just for admins
         if (model.CurrentPage == 0 || model.RowCount == 0)
         {
@@ -120,11 +125,11 @@ public class BooksController: Controller
                 SortDirection = model.SortDirection,
                 SearchByBookTitle = model.SearchByBookTitle,
                 SearchByAuthorName = model.SearchByAuthorName,
-                IsDeleted = model.IsDeleted
+                IsDeleted = shouldShowDeleted
             });
         }
 
-        return View(await getBookListQueryHandler.Handler(new GetBookListQuery(model.CurrentPage, model.RowCount, model.SortDirection, model.SearchByBookTitle, model.SearchByAuthorName, model.IsDeleted)));
+        return View(await getBookListQueryHandler.Handler(new GetBookListQuery(model.CurrentPage, model.RowCount, model.SortDirection, model.SearchByBookTitle, model.SearchByAuthorName, shouldShowDeleted)));
     }
     
     [HttpPost]

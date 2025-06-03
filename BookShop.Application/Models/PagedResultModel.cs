@@ -21,4 +21,6 @@ public class PagedResultModel<TResult> : IPagedResult<TResult>
     
     public string SearchByBookTitle { get; set; } = string.Empty;
     public string SearchByAuthorName { get; set; } = string.Empty;
+    
+    public bool IsDeleted { get; set; } = false;
 }

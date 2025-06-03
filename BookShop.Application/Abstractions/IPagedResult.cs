@@ -1,20 +1,21 @@
 ﻿using BookShop.Application.Enums;
 
-namespace BookShop.Application.Abstractions
+namespace BookShop.Application.Abstractions;
+
+public interface IPagedResult<TResult>
 {
-    public interface IPagedResult<TResult>
-    {
-        IEnumerable<TResult> Items { get; }
-        int CurrentPage { get; }
-        int PageCount { get; }
-        int PageSize { get; }
-        int TotalRowCount { get; }
+    IEnumerable<TResult> Items { get; }
+    int CurrentPage { get; }
+    int PageCount { get; }
+    int PageSize { get; }
+    int TotalRowCount { get; }
         
-        SortDirection SortDirection { get; }
+    SortDirection SortDirection { get; }
         
-        string SearchByNameAndSurname { get; }
+    string SearchByNameAndSurname { get; }
         
-        string SearchByBookTitle { get; }
-        string SearchByAuthorName { get; }
-    }
+    string SearchByBookTitle { get; }
+    string SearchByAuthorName { get; }
+    
+    bool IsDeleted { get; }
 }

@@ -7,6 +7,8 @@ public class AuthorModel
     public string Surname { get; set; }
 
     public int BookCount { get; set; }
+    
+    public bool IsDeleted { get; set; }
 
     public string NameAndSurname
     {
