@@ -2,6 +2,7 @@ using BookShop.Application.Abstractions;
 using BookShop.Application.Models;
 using BookShop.Application.Validators;
 using BookShop.Domain;
+using BookShop.Domain.Entities;
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using BookShop.Domain;
+using BookShop.Domain.Entities;
 using BookShop.Infrastructure.Context.Configurations;
 using BookShop.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;

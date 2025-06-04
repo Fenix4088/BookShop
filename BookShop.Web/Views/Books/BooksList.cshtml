@@ -10,6 +10,7 @@
     var IsAdmin =  Context.User.IsInRole(Roles.Admin.GetName());
     var IsManager = Context.User.IsInRole(Roles.Manager.GetName());
     var IsAdminOrManager = IsAdmin || IsManager;
+    
 }
 
 
@@ -48,7 +49,8 @@
                 <th>@Html.DisplayName("Description")</th>
                 <th>@Html.DisplayName("ReleaseDate")</th>
                 <th>@Html.DisplayName("Author Name")</th>
-                <th></th>  <!-- actions column -->
+                <th></th> 
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -60,6 +62,9 @@
                 <td>@Html.DisplayFor(_ => item.Description)</td>
                 <td>@item.ReleaseDate.ToString("yyyy-MM-dd")</td>
                 <td>@item.Author.NameAndSurname</td>
+                <td>
+                    @Html.Partial("_Rating", new RatingViewModel(RatingItemType.Book, item.Id, 3))
+                </td>
                 <td class="flex gap-x-2">
                     @if (!item.IsDeleted && IsAdminOrManager)
                     {

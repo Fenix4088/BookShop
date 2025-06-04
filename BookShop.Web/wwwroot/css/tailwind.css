@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+@layer components {
+    .star:hover ~ .star svg {
+        @apply text-gray-300;
+    }
+}

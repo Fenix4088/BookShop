@@ -1,6 +1,7 @@
 using BookShop.Application.Abstractions;
 using BookShop.Application.Models;
 using BookShop.Domain;
+using BookShop.Domain.Entities;
 using BookShop.Domain.Repositories;
 using BookShop.Infrastructure.Abstractions;
 using BookShop.Infrastructure.Context;

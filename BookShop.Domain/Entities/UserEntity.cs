@@ -1,6 +1,6 @@
 using System;
 
-namespace BookShop.Domain;
+namespace BookShop.Domain.Entities;
 
 public class UserEntity
 {

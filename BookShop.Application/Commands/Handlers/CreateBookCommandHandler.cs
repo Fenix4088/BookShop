@@ -1,5 +1,6 @@
 using BookShop.Application.Abstractions;
 using BookShop.Domain;
+using BookShop.Domain.Entities;
 using BookShop.Domain.Exceptions;
 using BookShop.Domain.Repositories;
 using FluentValidation;

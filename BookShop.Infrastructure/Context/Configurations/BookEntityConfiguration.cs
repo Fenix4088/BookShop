@@ -1,4 +1,5 @@
 using BookShop.Domain;
+using BookShop.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Bogus;
 using BookShop.Application.Enums;
 using BookShop.Domain;
+using BookShop.Domain.Entities;
 using BookShop.Infrastructure.Identity;
 using BookShop.Shared;
 using Microsoft.AspNetCore.Identity;
