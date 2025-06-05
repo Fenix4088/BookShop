@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using BookShop.Domain.Entities.Rating;
 
 namespace BookShop.Domain.Entities;
 
@@ -12,6 +14,8 @@ public class BookEntity : BookShopGenericEntity
 
     public string? CoverImgUrl { get; private set; }
     public AuthorEntity Author { get; private set; }
+    
+    public ICollection<BookRatingEntity> Ratings { get; private set; } = new List<BookRatingEntity>();
 
     
     //TODO: AddBook to author inside Create method

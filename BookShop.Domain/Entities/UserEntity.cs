@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using BookShop.Domain.Entities.Rating;
 
 namespace BookShop.Domain.Entities;
 
@@ -8,7 +10,9 @@ public class UserEntity
     public string Email { get; private set; }
     public string PasswordHash { get; private set; }
     public string Role { get; private set; }  
-
+    
+    public ICollection<BookRatingEntity> Ratings { get; private set; } = new List<BookRatingEntity>();
+    
     private UserEntity() { }
 
     public static UserEntity Create(string email, string passwordHash, string role)

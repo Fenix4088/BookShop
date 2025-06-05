@@ -1,6 +1,7 @@
 ﻿using System;
 using BookShop.Domain;
 using BookShop.Domain.Entities;
+using BookShop.Domain.Entities.Rating;
 using BookShop.Infrastructure.Context.Configurations;
 using BookShop.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
@@ -26,8 +27,10 @@ public class ShopDbContext : IdentityDbContext<BookShopUser, BookShopRole, Guid>
         
         modelBuilder.Entity<AuthorEntity>().ToTable("Authors", Schema);
         modelBuilder.Entity<BookEntity>().ToTable("Books", Schema);
+        modelBuilder.Entity<BookRatingEntity>().ToTable("BookRatings", Schema);
         
         modelBuilder.ApplyConfiguration(new AuthorEntityConfiguration(Schema));
         modelBuilder.ApplyConfiguration(new BookEntityConfiguration(Schema));
+        modelBuilder.ApplyConfiguration(new BookRatingEntityConfiguration(Schema));
     }
 }
