@@ -4,9 +4,8 @@ using BookShop.Domain.Entities;
 using BookShop.Domain.Entities.Rating;
 using BookShop.Infrastructure.Context.Configurations;
 using BookShop.Infrastructure.Identity;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookShop.Infrastructure.Context;
 
@@ -20,6 +19,7 @@ public class ShopDbContext : IdentityDbContext<BookShopUser, BookShopRole, Guid>
 
     public DbSet<AuthorEntity> Authors { get; set; }
     public DbSet<BookEntity> Books { get; set; }
+    public DbSet<BookRatingEntity> BookRatings { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

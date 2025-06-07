@@ -2,6 +2,7 @@ using BookShop.Application.Abstractions;
 using BookShop.Application.Models;
 using BookShop.Domain;
 using BookShop.Domain.Entities;
+using BookShop.Domain.Entities.Rating;
 using BookShop.Domain.Repositories;
 using BookShop.Infrastructure.Abstractions;
 using BookShop.Infrastructure.Context;
@@ -38,6 +39,7 @@ public static class Extensions
             .AddTransient<ExceptionsMiddleware>()
             .AddScoped<IAuthorRepository, AuthorRepository>()
             .AddScoped<IBookRepository, BookRepository>()
+            .AddScoped<IRatingRepository<BookRatingEntity>, BookRatingRepository>()
             .AddScoped<IUnitOfWork, UnitOfWork>()
             .AddScoped<IEmailSender, EmailSender>()
             .AddScoped<IUserService, UserService>()

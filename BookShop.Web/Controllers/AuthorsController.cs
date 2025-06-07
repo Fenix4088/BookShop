@@ -6,7 +6,6 @@ using BookShop.Application.Models;
 using BookShop.Application.Queries;
 using BookShop.Infrastructure.Filters;
 using BookShop.Infrastructure.Services.PolicyRole;
-using BookShop.Infrastructure.Services.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
