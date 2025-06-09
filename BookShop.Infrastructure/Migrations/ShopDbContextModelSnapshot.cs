@@ -130,26 +130,6 @@ namespace BookShop.Infrastructure.Migrations
                     b.HasCheckConstraint("CK_Rating_Score_Valid", "[Score] >= 1 AND [Score] <= 5");
                 });
 
-            modelBuilder.Entity("BookShop.Domain.Entities.UserEntity", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Role")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("UserEntity");
-                });
-
             modelBuilder.Entity("BookShop.Infrastructure.Identity.BookShopRole", b =>
                 {
                     b.Property<Guid>("Id")
@@ -366,15 +346,13 @@ namespace BookShop.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BookShop.Domain.Entities.UserEntity", "User")
+                    b.HasOne("BookShop.Infrastructure.Identity.BookShopUser", null)
                         .WithMany("Ratings")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Book");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -438,7 +416,7 @@ namespace BookShop.Infrastructure.Migrations
                     b.Navigation("Ratings");
                 });
 
-            modelBuilder.Entity("BookShop.Domain.Entities.UserEntity", b =>
+            modelBuilder.Entity("BookShop.Infrastructure.Identity.BookShopUser", b =>
                 {
                     b.Navigation("Ratings");
                 });

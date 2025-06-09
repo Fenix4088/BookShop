@@ -7,7 +7,7 @@ public abstract class RatingBaseEntity
 {
     public Guid Id { get; private set; }
     public Guid UserId { get; protected set; }
-    public UserEntity User { get; protected set; }
+    // public UserEntity User { get; protected set; }
     [Range(1,5)]
     public int Score { get; protected set; }
     public DateTime CreateAt { get; protected set; }

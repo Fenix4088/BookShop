@@ -1,4 +1,5 @@
 using BookShop.Domain.Entities.Rating;
+using BookShop.Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -24,7 +25,9 @@ public class BookRatingEntityConfiguration : IEntityTypeConfiguration<BookRating
             .WithMany(book => book.Ratings)
             .HasForeignKey(bookRating => bookRating.BookId);
 
-        builder.HasOne(bookRating => bookRating.User)
+        // ? We use builder.HasOne<BookShopUser> instead builder.HasOne(bookRating => bookRating.User)
+        // ? because BookRatingEntity (in Domain) doesn’t contain the User property.
+        builder.HasOne<BookShopUser>()
             .WithMany(user => user.Ratings)
             .HasForeignKey(bookRating => bookRating.UserId);
 

@@ -5,24 +5,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace BookShop.Infrastructure.Migrations
 {
-    public partial class BookRatingEntity_Created : Migration
+    public partial class CreateBookRating_And_Relation_With_Book : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "UserEntity",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Role = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserEntity", x => x.Id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "BookRatings",
                 schema: "shop",
@@ -39,16 +25,16 @@ namespace BookShop.Infrastructure.Migrations
                     table.PrimaryKey("PK_BookRatings", x => x.Id);
                     table.CheckConstraint("CK_BookRatings_CK_Rating_Score_Valid", "[Score] >= 1 AND [Score] <= 5");
                     table.ForeignKey(
+                        name: "FK_BookRatings_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_BookRatings_Books_BookId",
                         column: x => x.BookId,
                         principalSchema: "shop",
                         principalTable: "Books",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_BookRatings_UserEntity_UserId",
-                        column: x => x.UserId,
-                        principalTable: "UserEntity",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -72,9 +58,6 @@ namespace BookShop.Infrastructure.Migrations
             migrationBuilder.DropTable(
                 name: "BookRatings",
                 schema: "shop");
-
-            migrationBuilder.DropTable(
-                name: "UserEntity");
         }
     }
 }

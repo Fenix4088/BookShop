@@ -5,6 +5,7 @@
         <form asp-action="RateItem" asp-controller="Rating" method="post">
             <input type="hidden" name="itemType" value="@Model.ItemType"/>
             <input type="hidden" name="itemId" value="@Model.ItemId"/>
+            <input type="hidden" name="currentPage" value="@Model.CurrentPage"/>
             <input type="hidden" name="score" value="@(i + 1)"/>
             <button>
                 <div class="star">

@@ -1,6 +1,5 @@
 ﻿@using BookShop.Application.Enums
 @using BookShop.Shared
-@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model BookShop.Application.Abstractions.IPagedResult<BookShop.Application.Models.BookModel>
 
 @{
@@ -63,7 +62,10 @@
                 <td>@item.ReleaseDate.ToString("yyyy-MM-dd")</td>
                 <td>@item.Author.NameAndSurname</td>
                 <td>
-                    @Html.Partial("_Rating", new RatingViewModel(RatingItemType.Book, item.Id, item.AverageRating))
+                    @if (item.IsDeleted == false)
+                    {
+                        @Html.Partial("_Rating", new RatingViewModel(RatingItemType.Book, item.Id, item.AverageRating, Model.CurrentPage))
+                    }
                 </td>
                 <td class="flex gap-x-2">
                     @if (!item.IsDeleted && IsAdminOrManager)
