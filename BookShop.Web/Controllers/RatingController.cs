@@ -2,9 +2,6 @@ using System.Threading.Tasks;
 using BookShop.Application.Abstractions;
 using BookShop.Application.Commands;
 using BookShop.Application.Enums;
-using BookShop.Application.Models;
-using BookShop.Application.Queries;
-using BookShop.Infrastructure.Services.PolicyRole;
 using BookShop.Infrastructure.Services.User;
 using BookShop.Shared;
 using Microsoft.AspNetCore.Authorization;
@@ -17,22 +14,16 @@ public class RatingController : Controller
     
     private readonly ICommandHandler<RateBookCommand> rateBookCommandHandler;
     private readonly IUserService userService;
-    private readonly IQueryHandler<GetBookListQuery, IPagedResult<BookModel>> getBookListQueryHandler;
-    private readonly IPolicyRoleService policyRoleService;
     
     
     
     public RatingController(
         ICommandHandler<RateBookCommand> rateBookCommandHandler, 
-        IUserService userService,
-        IQueryHandler<GetBookListQuery, IPagedResult<BookModel>> getBookListQueryHandler,
-        IPolicyRoleService policyRoleService
+        IUserService userService
         )
     {
         this.rateBookCommandHandler = rateBookCommandHandler;
         this.userService = userService;
-        this.getBookListQueryHandler = getBookListQueryHandler;
-        this.policyRoleService = policyRoleService;
     }
     
     
@@ -42,8 +33,6 @@ public class RatingController : Controller
     {
         var user = await userService.GetCurrentUserAsync();
         
-        var isInAdminAndManagerPolicy = await policyRoleService.IsUserInRoleForPolicyAsync(Policies.AdminAndManager, Roles.Admin);
-
         if (itemType == RatingItemType.Book.GetName())
         {
             var command = new RateBookCommand(itemId, user.Id, score);
