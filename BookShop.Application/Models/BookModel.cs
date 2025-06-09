@@ -15,4 +15,6 @@ public class BookModel
     public string? CoverImgUrl { get;  set; }
     
     public bool IsDeleted { get; set; }
+
+    public int AverageRating { get; set; }
 }

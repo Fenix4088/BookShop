@@ -4,7 +4,6 @@ using BookShop.Application.Abstractions;
 using BookShop.Application.Enums;
 using BookShop.Application.Models;
 using BookShop.Application.Queries;
-using BookShop.Domain;
 using BookShop.Domain.Entities;
 using BookShop.Infrastructure.Context;
 using BookShop.Infrastructure.Pagination;
@@ -26,7 +25,10 @@ public class GetBookListQueryHandler: IQueryHandler<GetBookListQuery, IPagedResu
     {
         var dbQuery = dbContext.Books.AsQueryable();
         
-        dbQuery = dbQuery.Include(x => x.Author).Where(x => query.IsDeleted == x.DeletedAt.HasValue);
+        dbQuery = dbQuery
+            .Include(x => x.Author)
+            .Include(x => x.Ratings)
+            .Where(x => query.IsDeleted == x.DeletedAt.HasValue);
         
         if (!string.IsNullOrEmpty(query.SearchByBookTitle))
         {

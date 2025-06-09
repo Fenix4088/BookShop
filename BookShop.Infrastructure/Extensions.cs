@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using BookShop.Application.Abstractions;
 using BookShop.Application.Models;
 using BookShop.Domain;
@@ -99,7 +101,8 @@ public static class Extensions
             AuthorId = bookEntity.AuthorId,
             Author = bookEntity.Author.ToModel(),
             CoverImgUrl = bookEntity.CoverImgUrl,
-            IsDeleted = bookEntity.IsDeleted
+            IsDeleted = bookEntity.IsDeleted,
+            AverageRating = (int)Math.Round(bookEntity.Ratings.Count > 0 ? bookEntity.Ratings.Average(x => x.Score) : 0, 0),
         };
     }
     

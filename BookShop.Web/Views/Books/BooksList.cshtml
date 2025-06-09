@@ -63,7 +63,7 @@
                 <td>@item.ReleaseDate.ToString("yyyy-MM-dd")</td>
                 <td>@item.Author.NameAndSurname</td>
                 <td>
-                    @Html.Partial("_Rating", new RatingViewModel(RatingItemType.Book, item.Id, 3))
+                    @Html.Partial("_Rating", new RatingViewModel(RatingItemType.Book, item.Id, item.AverageRating))
                 </td>
                 <td class="flex gap-x-2">
                     @if (!item.IsDeleted && IsAdminOrManager)
