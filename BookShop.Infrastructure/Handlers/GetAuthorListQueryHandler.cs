@@ -27,7 +27,7 @@ public class GetAuthorListQueryHandler : IQueryHandler<GetAuthorListQuery, IPage
         
         if (!string.IsNullOrWhiteSpace(query.SearchByNameAndSurname))
         {
-            dbQuery = dbQuery.Where(x => $"{x.Surname} {x.Name}".Contains(query.SearchByNameAndSurname));
+            dbQuery = dbQuery.Where(x => (x.Surname + " " + x.Name).Contains(query.SearchByNameAndSurname));
         }
 
         IOrderedQueryable<AuthorEntity> orderedQuery = query.SortDirection == SortDirection.Descending

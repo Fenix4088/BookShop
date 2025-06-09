@@ -1,6 +1,7 @@
 using System.Security.Authentication;
 using BookShop.Application.Abstractions;
 using BookShop.Domain;
+using BookShop.Domain.Entities.Rating;
 using BookShop.Domain.Exceptions;
 using BookShop.Domain.Repositories;
 
@@ -8,27 +9,34 @@ namespace BookShop.Application.Commands.Handlers;
 
 public class SoftDeleteAuthorCommandHandler: ICommandHandler<SoftDeleteAuthorCommand>
 {
-    private readonly IAuthorRepository _authorRepository;
-    private readonly IBookRepository _bookRepository;
+    private readonly IAuthorRepository authorRepository;
+    private readonly IBookRepository bookRepository;
+    private readonly IRatingRepository<BookRatingEntity> bookRatingRepository;
 
-    public SoftDeleteAuthorCommandHandler(IAuthorRepository authorRepository, IBookRepository bookRepository)
+    public SoftDeleteAuthorCommandHandler(
+        IAuthorRepository authorRepository, 
+        IBookRepository bookRepository,
+        IRatingRepository<BookRatingEntity> bookRatingRepository
+        )
     {
-        _authorRepository = authorRepository;
-        _bookRepository = bookRepository;
+        this.authorRepository = authorRepository;
+        this.bookRepository = bookRepository;
+        this.bookRatingRepository = bookRatingRepository;
     }
 
     public async Task Handler(SoftDeleteAuthorCommand command)
     {
-        var authorEntity = await _authorRepository.GetById(command.AuthorId);
+        var authorEntity = await authorRepository.GetById(command.AuthorId);
 
         if (authorEntity is null)
         {
             throw new AuthorNotFoundException(command.AuthorId);
         }
 
-        _authorRepository.SoftRemove(authorEntity);
-        _bookRepository.BulkSoftDelete(authorEntity.Id);
-        await _authorRepository.SaveAsync();
-        await _bookRepository.SaveAsync();
+        authorRepository.SoftRemove(authorEntity);
+        bookRepository.BulkSoftDelete(authorEntity.Id);
+        await authorRepository.SaveAsync();
+        await bookRepository.SaveAsync();
+        await bookRatingRepository.SaveAsync();
     }
 }

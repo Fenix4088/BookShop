@@ -17,11 +17,16 @@ public class BookRepository: GenericRepository<BookEntity, ShopDbContext>, IBook
     {
     }
 
-    public Task<BookEntity> GetBookById(int bookId) => context.Books.Include(x => x.Author).FirstOrDefaultAsync(x => x.Id == bookId);
+    public Task<BookEntity> GetBookById(int bookId) => context.Books
+        .Include(x => x.Author)
+        .Include(x => x.Ratings)
+        .FirstOrDefaultAsync(x => x.Id == bookId);
 
     public IEnumerable<BookEntity> GetAllBooks(bool includeDeleted = false)
     {
-        var books = context.Books.Include(x => x.Author);
+        var books = context.Books
+            .Include(x => x.Author)
+            .Include(x => x.Ratings);
         return includeDeleted ? books.ToList() : books.Where(x => x.DeletedAt == null).ToList();
     }
 
