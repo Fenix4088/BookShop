@@ -38,7 +38,8 @@ public class GetBookListQueryHandler: IQueryHandler<GetBookListQuery, IPagedResu
         if (!string.IsNullOrEmpty(query.SearchByAuthorName))
         {
             dbQuery = dbQuery.Where(x => x.Author.Name.Contains(query.SearchByAuthorName) || 
-                                         x.Author.Surname.Contains(query.SearchByAuthorName));
+                                         x.Author.Surname.Contains(query.SearchByAuthorName) ||
+                                         (x.Author.Surname + " " + x.Author.Name).Contains(query.SearchByAuthorName));
         }
         
         IOrderedQueryable<BookEntity> orderedQuery = query.SortDirection == SortDirection.Ascending

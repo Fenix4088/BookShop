@@ -27,7 +27,7 @@ public class AuthorRepository : GenericRepository<AuthorEntity, ShopDbContext>, 
 
     public void SoftRemove(AuthorEntity authorEntity)
     { 
-        authorEntity.Delete();
+        authorEntity.SoftDelete();
         context.Authors.Update(authorEntity);
     }
 }

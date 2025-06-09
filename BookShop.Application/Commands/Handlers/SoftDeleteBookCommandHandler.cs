@@ -23,7 +23,7 @@ public class SoftDeleteBookCommandHandler: ICommandHandler<SoftDeleteBookCommand
         }
         
         
-        _bookRepository.SoftRemove(book);
+        _bookRepository.SoftDelete(book);
         await _bookRepository.SaveAsync();
     }
 }

@@ -23,4 +23,5 @@ public class BookRatingEntity : RatingBaseEntity
         Score = score;
         CreateAt = DateTime.Now;
     }
+    
 }

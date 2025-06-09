@@ -44,6 +44,14 @@ public class BookEntity : BookShopGenericEntity
         }
     }
 
+    public void SoftDeleteRatings()
+    {
+        foreach (var rating in Ratings)
+        {
+            rating.SoftDelete();
+        }
+    }
+
     public void SetCoverImage(string imageUrl)
     {
         CoverImgUrl = imageUrl;

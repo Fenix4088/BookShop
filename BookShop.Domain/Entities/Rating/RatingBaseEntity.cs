@@ -12,10 +12,16 @@ public abstract class RatingBaseEntity
     public int Score { get; protected set; }
     public DateTime CreateAt { get; protected set; }
     
+    public DateTime? DeletedAt { get; protected set; }
     
     protected virtual void CheckScore(int score)
     {
         if (score < 1 || score > 5)
             throw new ArgumentOutOfRangeException(nameof(score), "Score must be between 1 and 5.");
+    }
+    
+    public virtual void SoftDelete()
+    {
+        DeletedAt = DateTime.Now;
     }
 }

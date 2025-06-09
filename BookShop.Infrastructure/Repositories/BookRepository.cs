@@ -37,20 +37,21 @@ public class BookRepository: GenericRepository<BookEntity, ShopDbContext>, IBook
             book.Title == title && book.ReleaseDate == releaseDate && book.DeletedAt == null));
     }
 
-    public void BulkSoftRemove(int authorId, bool includeDeleted = false)
+    public void BulkSoftDelete(int authorId, bool includeDeleted = false)
     {
         var books = GetAllBooksByAuthor(authorId, includeDeleted);
 
         foreach (var bookEntity in books)
         {
-            SoftRemove(bookEntity);
+            SoftDelete(bookEntity);
         }
     }
 
 
-    public void SoftRemove(BookEntity bookEntity)
-    { 
-        bookEntity.Delete();
+    public void SoftDelete(BookEntity bookEntity)
+    {
+        bookEntity.SoftDeleteRatings();
+        bookEntity.SoftDelete();
         bookEntity.Author.RemoveBook();
         context.Books.Update(bookEntity);
     }

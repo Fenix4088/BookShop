@@ -9,7 +9,7 @@ public abstract class BookShopGenericEntity
 
     public bool IsDeleted => DeletedAt.HasValue;
 
-    public virtual void Delete()
+    public virtual void SoftDelete()
     {
         DeletedAt = DateTime.UtcNow;
     }

@@ -31,12 +31,12 @@ public class AuthorEntity : BookShopGenericEntity
         
     }
 
-    public override void Delete()
+    public override void SoftDelete()
     {
-        base.Delete();
+        base.SoftDelete();
         foreach (var book in books)
         {
-            book.Delete();
+            book.SoftDelete();
         }
     }
     

@@ -27,7 +27,7 @@ public class SoftDeleteAuthorCommandHandler: ICommandHandler<SoftDeleteAuthorCom
         }
 
         _authorRepository.SoftRemove(authorEntity);
-        _bookRepository.BulkSoftRemove(authorEntity.Id);
+        _bookRepository.BulkSoftDelete(authorEntity.Id);
         await _authorRepository.SaveAsync();
         await _bookRepository.SaveAsync();
     }
