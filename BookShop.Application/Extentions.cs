@@ -38,6 +38,7 @@ public static class Extentions
         return services;
     }
     
+    
     public static BookModel ToModel(this BookEntity bookEntity)
     {
         return new BookModel()
@@ -48,7 +49,9 @@ public static class Extentions
             ReleaseDate = bookEntity.ReleaseDate,
             AuthorId = bookEntity.AuthorId,
             Author = bookEntity.Author.ToModel(),
-            CoverImgUrl = bookEntity.CoverImgUrl
+            CoverImgUrl = bookEntity.CoverImgUrl,
+            IsDeleted = bookEntity.IsDeleted,
+            AverageRating = (int)Math.Round(bookEntity.Ratings.Count > 0 ? bookEntity.Ratings.Average(x => x.Score) : 0, 0),
         };
     }
     
@@ -60,6 +63,8 @@ public static class Extentions
             Id = authorEntity.Id,
             Name = authorEntity.Name,
             Surname = authorEntity.Surname,
+            BookCount = authorEntity.BookCount,
+            IsDeleted = authorEntity.IsDeleted
         };
     }
     

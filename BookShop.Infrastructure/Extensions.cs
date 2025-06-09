@@ -1,9 +1,4 @@
-using System;
-using System.Linq;
 using BookShop.Application.Abstractions;
-using BookShop.Application.Models;
-using BookShop.Domain;
-using BookShop.Domain.Entities;
 using BookShop.Domain.Entities.Rating;
 using BookShop.Domain.Repositories;
 using BookShop.Infrastructure.Abstractions;
@@ -87,35 +82,5 @@ public static class Extensions
             pattern: "{controller=Authors}/{action=AuthorList}/{id?}"
             );
         return app;
-    }
-    
-    
-    public static BookModel ToModel(this BookEntity bookEntity)
-    {
-        return new BookModel()
-        {
-            Id = bookEntity.Id,
-            Title = bookEntity.Title,
-            Description = bookEntity.Description,
-            ReleaseDate = bookEntity.ReleaseDate,
-            AuthorId = bookEntity.AuthorId,
-            Author = bookEntity.Author.ToModel(),
-            CoverImgUrl = bookEntity.CoverImgUrl,
-            IsDeleted = bookEntity.IsDeleted,
-            AverageRating = (int)Math.Round(bookEntity.Ratings.Count > 0 ? bookEntity.Ratings.Average(x => x.Score) : 0, 0),
-        };
-    }
-    
-    
-    public static AuthorModel ToModel(this AuthorEntity authorEntity)
-    {
-        return new AuthorModel()
-        {
-            Id = authorEntity.Id,
-            Name = authorEntity.Name,
-            Surname = authorEntity.Surname,
-            BookCount = authorEntity.BookCount,
-            IsDeleted = authorEntity.IsDeleted
-        };
     }
 }
