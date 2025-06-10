@@ -2,7 +2,8 @@
  - [x] Unit of work add
  - [x] Create an Initial Seeds for Authors anb Books
  - [ ] Manage users and users roles for the admin
- - [ ] Add Rankings for books
+ - [ ] Add Rankings for books and authors
+ - [ ] Automatically remove old ratings from archive
  - [ ] Add shopping cart ( anonymous and registered users)
  - [ ] Organise logs
  - [x] Search by books and authors
