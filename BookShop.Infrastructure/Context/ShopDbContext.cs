@@ -20,6 +20,8 @@ public class ShopDbContext : IdentityDbContext<BookShopUser, BookShopRole, Guid>
     public DbSet<AuthorEntity> Authors { get; set; }
     public DbSet<BookEntity> Books { get; set; }
     public DbSet<BookRatingEntity> BookRatings { get; set; }
+    
+    public DbSet<AuthorRatingEntity> AuthorRatings { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -28,9 +30,11 @@ public class ShopDbContext : IdentityDbContext<BookShopUser, BookShopRole, Guid>
         modelBuilder.Entity<AuthorEntity>().ToTable("Authors", Schema);
         modelBuilder.Entity<BookEntity>().ToTable("Books", Schema);
         modelBuilder.Entity<BookRatingEntity>().ToTable("BookRatings", Schema);
+        modelBuilder.Entity<AuthorRatingEntity>().ToTable("AuthorRatings", Schema);
         
         modelBuilder.ApplyConfiguration(new AuthorEntityConfiguration(Schema));
         modelBuilder.ApplyConfiguration(new BookEntityConfiguration(Schema));
         modelBuilder.ApplyConfiguration(new BookRatingEntityConfiguration(Schema));
+        modelBuilder.ApplyConfiguration(new AuthorRatingEntityConfiguration(Schema));
     }
 }

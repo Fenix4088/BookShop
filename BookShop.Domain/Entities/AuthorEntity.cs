@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using BookShop.Domain.Entities;
+using BookShop.Domain.Entities.Rating;
 
 namespace BookShop.Domain;
 
@@ -13,6 +14,8 @@ public class AuthorEntity : BookShopGenericEntity
     
     public IReadOnlyCollection<BookEntity> Books => books;
     private List<BookEntity> books;
+    
+    public ICollection<AuthorRatingEntity> Ratings { get; private set; } = new List<AuthorRatingEntity>();
 
     public AuthorEntity()
     {
