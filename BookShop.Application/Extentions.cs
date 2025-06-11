@@ -64,7 +64,8 @@ public static class Extentions
             Name = authorEntity.Name,
             Surname = authorEntity.Surname,
             BookCount = authorEntity.BookCount,
-            IsDeleted = authorEntity.IsDeleted
+            IsDeleted = authorEntity.IsDeleted,
+            AverageRating = (int)Math.Round(authorEntity.Ratings.Count > 0 ? authorEntity.Ratings.Average(x => x.Score) : 0, 0),
         };
     }
     

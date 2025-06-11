@@ -9,6 +9,8 @@ public class AuthorModel
     public int BookCount { get; set; }
     
     public bool IsDeleted { get; set; }
+    
+    public int AverageRating { get; set; }
 
     public string NameAndSurname
     {

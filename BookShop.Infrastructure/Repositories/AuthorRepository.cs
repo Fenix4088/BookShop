@@ -22,9 +22,13 @@ public class AuthorRepository : GenericRepository<AuthorEntity, ShopDbContext>, 
 
     public async Task<AuthorEntity> GetById(int? id)
     {
-        return await context.Authors.SingleOrDefaultAsync(x => x.Id == id);
+        return await context.Authors.Include(x => x.Ratings).SingleOrDefaultAsync(x => x.Id == id);
     }
 
+    public IQueryable<AuthorEntity> GetAllQueryable(bool isDeleted = false) =>  context.Authors
+        .Include(x => x.Ratings)
+        .Where(x => x.DeletedAt.HasValue == isDeleted);
+    
     public void SoftRemove(AuthorEntity authorEntity)
     { 
         authorEntity.SoftDelete();

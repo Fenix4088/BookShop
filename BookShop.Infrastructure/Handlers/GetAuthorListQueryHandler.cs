@@ -5,34 +5,36 @@ using BookShop.Application.Abstractions;
 using BookShop.Application.Enums;
 using BookShop.Application.Models;
 using BookShop.Application.Queries;
-using BookShop.Domain;
+using BookShop.Domain.Repositories;
 using BookShop.Infrastructure.Context;
 using BookShop.Infrastructure.Pagination;
-using BookShop.Models.Queries;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookShop.Infrastructure.Handlers;
 
 public class GetAuthorListQueryHandler : IQueryHandler<GetAuthorListQuery, IPagedResult<AuthorModel>>
 {
-    private readonly ShopDbContext dbContext;
+    private readonly IAuthorRepository authorRepository;
 
-    public GetAuthorListQueryHandler(ShopDbContext dbContext)
+    public GetAuthorListQueryHandler(IAuthorRepository authorRepository)
     {
-        this.dbContext = dbContext;
+        this.authorRepository = authorRepository;
     }
 
     public async Task<IPagedResult<AuthorModel>> Handler(GetAuthorListQuery query)
     {
-        var dbQuery = dbContext.Authors.AsQueryable().Where(x => x.DeletedAt.HasValue == query.IsDeleted);
+        
+        var dbQuery =  authorRepository.GetAllQueryable(query.IsDeleted);
         
         if (!string.IsNullOrWhiteSpace(query.SearchByNameAndSurname))
         {
             dbQuery = dbQuery.Where(x => (x.Surname + " " + x.Name).Contains(query.SearchByNameAndSurname));
         }
 
-        IOrderedQueryable<AuthorEntity> orderedQuery = query.SortDirection == SortDirection.Descending
+        var orderedQuery = query.SortDirection == SortDirection.Descending
             ? dbQuery.OrderBy(x => x.Surname)
             : dbQuery.OrderByDescending(x => x.Surname);
+
         
         var pagedResult = await orderedQuery.ToPagedResult(query, x => x.ToModel());
         return pagedResult;
