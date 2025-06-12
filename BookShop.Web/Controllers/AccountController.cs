@@ -1,9 +1,9 @@
 using System;
 using System.Threading.Tasks;
-using BookShop.Application.Enums;
 using BookShop.Infrastructure.Identity;
 using BookShop.Infrastructure.Services.User;
 using BookShop.Shared;
+using BookShop.Shared.Enums;
 using BookShop.Web.Attributes;
 using BookShop.Web.Models;
 using Microsoft.AspNetCore.Authorization;

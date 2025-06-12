@@ -1,6 +1,6 @@
-﻿using BookShop.Application.Enums;
+﻿using BookShop.Shared.Enums;
 
-namespace BookShop.Application.Abstractions;
+namespace BookShop.Shared.Pagination.Abstractions;
 
 public interface IPagedResult<TResult>
 {

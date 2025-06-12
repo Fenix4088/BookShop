@@ -1,12 +1,9 @@
-using System.Threading.Tasks;
-using BookShop.Application;
 using BookShop.Application.Abstractions;
 using BookShop.Application.Models;
-using BookShop.Application.Queries;
 using BookShop.Domain.Exceptions;
 using BookShop.Domain.Repositories;
 
-namespace BookShop.Infrastructure.Handlers;
+namespace BookShop.Application.Queries.Handlers;
 
 public class GetBookQueryHandler: IQueryHandler<GetBookQuery, BookModel>
 {

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using BookShop.Application.Enums;
+using BookShop.Shared.Enums;
 
 namespace BookShop.Infrastructure.Services.PolicyRole;
 

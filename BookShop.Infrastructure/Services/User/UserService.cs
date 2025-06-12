@@ -1,8 +1,8 @@
 using System.Linq;
 using System.Threading.Tasks;
-using BookShop.Application.Enums;
 using BookShop.Infrastructure.Identity;
 using BookShop.Shared;
+using BookShop.Shared.Enums;
 using Microsoft.AspNetCore.Identity;
 
 namespace BookShop.Infrastructure.Services.User;

@@ -1,5 +1,5 @@
-﻿@using BookShop.Application.Enums
-@using BookShop.Shared
+﻿@using BookShop.Shared
+@using BookShop.Shared.Enums
 @{
     var userName = Context.User.Identity?.Name;
     var isAuthorized = Context.User.Identity?.IsAuthenticated ?? false;

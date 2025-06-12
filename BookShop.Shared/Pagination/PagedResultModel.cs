@@ -1,7 +1,7 @@
-﻿using BookShop.Application.Abstractions;
-using BookShop.Application.Enums;
+﻿using BookShop.Shared.Enums;
+using BookShop.Shared.Pagination.Abstractions;
 
-namespace BookShop.Application.Models;
+namespace BookShop.Shared.Pagination;
 
 public class PagedResultModel<TResult> : IPagedResult<TResult>
 {

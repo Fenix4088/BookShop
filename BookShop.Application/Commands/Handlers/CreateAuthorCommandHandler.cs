@@ -1,5 +1,4 @@
 ﻿using BookShop.Application.Abstractions;
-using BookShop.Application.Enums;
 using BookShop.Domain;
 using BookShop.Domain.Repositories;
 using FluentValidation;

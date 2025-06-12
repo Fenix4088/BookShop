@@ -1,5 +1,5 @@
 using System;
-using BookShop.Application.Enums;
+using BookShop.Shared.Enums;
 
 namespace BookShop.Web.Models;
 

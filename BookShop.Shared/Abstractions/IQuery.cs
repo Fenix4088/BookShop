@@ -1,4 +1,4 @@
-﻿namespace BookShop.Models.Queries.Abstractions
+﻿namespace BookShop.Shared.Abstractions
 {
     public interface IQuery<TResult>
     {

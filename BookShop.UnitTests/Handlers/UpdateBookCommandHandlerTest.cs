@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using BookShop.Application.Commands;
 using BookShop.Application.Commands.Handlers;
-using BookShop.Infrastructure.Handlers;
+using BookShop.Application.Queries.Handlers;
 using BookShop.Infrastructure.Repositories;
 using BookShop.UnitTests.Helpers;
 using Microsoft.Extensions.DependencyInjection;

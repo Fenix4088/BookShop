@@ -1,11 +1,12 @@
 using System.Threading.Tasks;
 using BookShop.Application.Abstractions;
 using BookShop.Application.Commands;
-using BookShop.Application.Enums;
 using BookShop.Application.Models;
 using BookShop.Application.Queries;
 using BookShop.Infrastructure.Filters;
 using BookShop.Infrastructure.Services.PolicyRole;
+using BookShop.Shared.Enums;
+using BookShop.Shared.Pagination.Abstractions;
 using BookShop.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

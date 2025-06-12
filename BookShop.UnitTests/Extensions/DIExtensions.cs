@@ -1,9 +1,9 @@
 using System;
 using BookShop.Application.Commands.Handlers;
+using BookShop.Application.Queries.Handlers;
 using BookShop.Application.Validators;
 using BookShop.Domain.Repositories;
 using BookShop.Infrastructure.Context;
-using BookShop.Infrastructure.Handlers;
 using BookShop.Infrastructure.Repositories;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;

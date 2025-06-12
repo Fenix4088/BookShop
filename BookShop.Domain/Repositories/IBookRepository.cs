@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BookShop.Domain.Entities;
+using BookShop.Shared.Enums;
+using BookShop.Shared.Pagination.Abstractions;
 
 namespace BookShop.Domain.Repositories;
 
@@ -15,6 +17,14 @@ public interface IBookRepository: IRepository<BookEntity>
     public Task<BookEntity> GetBookById(int bookId);
     
     public Task<bool> IsUniqueBookAsync(string title, DateTime releaseDate);
+    
+    Task<IPagedResult<BookEntity>> GetPagedResultAsync(
+        IPagedQuery<BookEntity> pagedQuery,
+        SortDirection sortDirection = SortDirection.Descending, 
+        string searchByBookTitle = "",
+        string searchByAuthorName = "",
+        bool isDeleted = false
+    );
 
     public void SoftDelete(BookEntity bookEntity);
 

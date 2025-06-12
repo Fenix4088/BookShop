@@ -1,9 +1,9 @@
 using System;
-using BookShop.Application.Enums;
 using BookShop.Application.Queries;
 using BookShop.Domain;
 using BookShop.Domain.Entities;
 using BookShop.Infrastructure.Context;
+using BookShop.Shared.Enums;
 
 namespace BookShop.UnitTests.Helpers;
 

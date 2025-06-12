@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace BookShop.Application.Enums;
+namespace BookShop.Shared.Enums;
 
 public enum Roles
 {

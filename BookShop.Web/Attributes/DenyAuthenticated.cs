@@ -1,5 +1,5 @@
 using System;
-using BookShop.Application.Enums;
+using BookShop.Shared.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 

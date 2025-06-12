@@ -19,4 +19,8 @@
     <ProjectReference Include="..\BookShop.Application\BookShop.Application.csproj" />
     <ProjectReference Include="..\BookShop.Shared\BookShop.Shared.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Handlers\" />
+  </ItemGroup>
 </Project>

@@ -1,4 +1,4 @@
-namespace BookShop.Application.Enums;
+namespace BookShop.Shared.Enums;
 
 public enum RatingItemType
 {

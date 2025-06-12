@@ -4,6 +4,9 @@ using BookShop.Domain;
 using BookShop.Domain.Repositories;
 using BookShop.Infrastructure.Context;
 using BookShop.Infrastructure.Repositories.Abstractions;
+using BookShop.Shared.Enums;
+using BookShop.Shared.Pagination;
+using BookShop.Shared.Pagination.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookShop.Infrastructure.Repositories;
@@ -28,7 +31,26 @@ public class AuthorRepository : GenericRepository<AuthorEntity, ShopDbContext>, 
     public IQueryable<AuthorEntity> GetAllQueryable(bool isDeleted = false) =>  context.Authors
         .Include(x => x.Ratings)
         .Where(x => x.DeletedAt.HasValue == isDeleted);
-    
+
+    public async Task<IPagedResult<AuthorEntity>> GetPagedResultAsync(IPagedQuery<AuthorEntity> pagedQuery, SortDirection sortDirection = SortDirection.Descending,
+        string searchByNameAndSurname = "", bool isDeleted = false)
+    {
+        var dbQuery =  GetAllQueryable(isDeleted);
+        
+        if (!string.IsNullOrWhiteSpace(searchByNameAndSurname))
+        {
+            dbQuery = dbQuery.Where(x => (x.Surname + " " + x.Name).Contains(searchByNameAndSurname));
+        }
+
+        var orderedQuery = sortDirection == SortDirection.Descending
+            ? dbQuery.OrderBy(x => x.Surname)
+            : dbQuery.OrderByDescending(x => x.Surname);
+
+        
+        var pagedResult = await orderedQuery.ToPagedResult(pagedQuery, x => x);
+        return pagedResult;
+    }
+
     public void SoftRemove(AuthorEntity authorEntity)
     { 
         authorEntity.SoftDelete();

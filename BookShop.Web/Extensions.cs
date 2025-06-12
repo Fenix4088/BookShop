@@ -1,7 +1,7 @@
-using BookShop.Application.Enums;
 using BookShop.Infrastructure.Context;
 using BookShop.Infrastructure.Identity;
 using BookShop.Shared;
+using BookShop.Shared.Enums;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 

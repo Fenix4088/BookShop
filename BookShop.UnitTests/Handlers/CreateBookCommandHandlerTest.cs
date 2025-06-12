@@ -4,14 +4,14 @@ using System.Threading.Tasks;
 using BookShop.Application.Commands;
 using BookShop.Application.Commands.Handlers;
 using BookShop.Application.Queries;
+using BookShop.Application.Queries.Handlers;
 using BookShop.Domain.Exceptions;
-using BookShop.Infrastructure.Handlers;
 using BookShop.UnitTests.Helpers;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using Xunit;
-using SortDirection = BookShop.Application.Enums.SortDirection;
+using SortDirection = BookShop.Shared.Enums.SortDirection;
 
 namespace BookShop.UnitTests.Handlers;
 

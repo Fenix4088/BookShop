@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
 using BookShop.Application.Abstractions;
 using BookShop.Application.Commands;
-using BookShop.Application.Enums;
 using BookShop.Infrastructure.Services.User;
 using BookShop.Shared;
+using BookShop.Shared.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

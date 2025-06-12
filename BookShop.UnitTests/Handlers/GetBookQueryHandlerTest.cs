@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
 using BookShop.Application.Models;
 using BookShop.Application.Queries;
+using BookShop.Application.Queries.Handlers;
 using BookShop.Domain.Exceptions;
-using BookShop.Infrastructure.Handlers;
 using BookShop.UnitTests.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;

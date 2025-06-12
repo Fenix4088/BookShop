@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
 using BookShop.Application.Commands;
 using BookShop.Application.Commands.Handlers;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Shouldly;
 using Xunit;
 
 namespace BookShop.UnitTests.Handlers;
@@ -46,7 +46,7 @@ public class CreateAuthorCommandHandlerTests: TestBase
     {
         var command = new CreateAuthorCommand(name, surname);
 
-        await Assert.ThrowsAsync<FluentValidation.ValidationException>(async () => await handler.Handler(command));
+        await Assert.ThrowsAsync<ValidationException>(async () => await handler.Handler(command));
         
         var entity = await DbContext.Authors.FirstOrDefaultAsync();
         Assert.Null(entity);
@@ -60,7 +60,7 @@ public class CreateAuthorCommandHandlerTests: TestBase
 
         await handler.Handler(commandBillyOne);
         
-        var exception = await Assert.ThrowsAsync<FluentValidation.ValidationException>(async () => await handler.Handler(commandBillyTwo));
+        var exception = await Assert.ThrowsAsync<ValidationException>(async () => await handler.Handler(commandBillyTwo));
         
         Assert.Contains("An author with the same name and surname already exists.", exception.Message);
     }

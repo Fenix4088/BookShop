@@ -1,5 +1,5 @@
 using BookShop.Application.Abstractions;
-using BookShop.Application.Enums;
+using BookShop.Shared.Enums;
 
 namespace BookShop.Application.Queries;
 

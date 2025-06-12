@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using BookShop.Application.Abstractions;
-using BookShop.Application.Models;
+using BookShop.Shared.Pagination.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
-namespace BookShop.Infrastructure.Pagination;
+namespace BookShop.Shared.Pagination;
 
 public static class Extensions
 {

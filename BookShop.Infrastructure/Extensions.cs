@@ -1,10 +1,10 @@
 using BookShop.Application.Abstractions;
+using BookShop.Application.Queries.Handlers;
 using BookShop.Domain.Entities.Rating;
 using BookShop.Domain.Repositories;
 using BookShop.Infrastructure.Abstractions;
 using BookShop.Infrastructure.Context;
 using BookShop.Infrastructure.Decorators;
-using BookShop.Infrastructure.Handlers;
 using BookShop.Infrastructure.Middlewares;
 using BookShop.Infrastructure.Repositories;
 using BookShop.Infrastructure.Services.Background;
@@ -42,11 +42,6 @@ public static class Extensions
             .AddScoped<IUserService, UserService>()
             .AddScoped<IPolicyRoleService, PolicyRoleService>();
         
-        var infrastructureAssembly = typeof(GetAuthorListQueryHandler).Assembly;
-        services.Scan(s => s.FromAssemblies(infrastructureAssembly)
-            .AddClasses(c => c.AssignableTo(typeof (IQueryHandler<,>)))
-            .AsImplementedInterfaces()
-            .WithScopedLifetime());
 
         services.TryDecorate(typeof(ICommandHandler<>), typeof(UnitOfWorkCommandHandlerDecorator<>));
 

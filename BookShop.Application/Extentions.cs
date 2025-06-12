@@ -23,6 +23,11 @@ public static class Extentions
             .AsImplementedInterfaces()
             .WithScopedLifetime()
         );
+        
+        services.Scan(s => s.FromAssemblies(applicationAssembly).AddClasses(c => c.AssignableTo(typeof(IQueryHandler<,>)))
+            .AsImplementedInterfaces()
+            .WithScopedLifetime()
+        );
         return services;
     }
 

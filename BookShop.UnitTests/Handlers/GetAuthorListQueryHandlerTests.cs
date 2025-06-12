@@ -1,11 +1,8 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using BookShop.Application.Enums;
-using BookShop.Application.Queries;
+using BookShop.Application.Queries.Handlers;
 using BookShop.Domain;
-using BookShop.Infrastructure.Handlers;
-using BookShop.Models.Queries;
+using BookShop.Shared.Enums;
 using BookShop.UnitTests.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
