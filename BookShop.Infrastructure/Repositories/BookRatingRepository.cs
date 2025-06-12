@@ -13,10 +13,6 @@ public class BookRatingRepository : GenericRepository<BookRatingEntity, ShopDbCo
     {
     }
     
-    public async Task<bool> IsRatingAlreadyExistsAsync(int bookId, Guid userId)
-    {
-        return await context.BookRatings.AnyAsync(x => x.BookId == bookId && x.UserId == userId);
-    }
 
     public async Task<BookRatingEntity> GetByIdAsync(int entityId, Guid userId)
     {

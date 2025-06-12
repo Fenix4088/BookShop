@@ -24,4 +24,12 @@ public abstract class RatingBaseEntity
     {
         DeletedAt = DateTime.Now;
     }
+    
+    public virtual void Update(int score)
+    {
+        CheckScore(score);
+        
+        Score = score;
+        CreateAt = DateTime.Now;
+    }
 }

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookShop.Infrastructure.Repositories;
 
-public class AuthorRepository : GenericRepository<AuthorEntity, ShopDbContext>, IAuthorRepository
+public sealed class AuthorRepository : GenericRepository<AuthorEntity, ShopDbContext>, IAuthorRepository
 {
     public AuthorRepository(ShopDbContext shopDbContext) : base(shopDbContext)
     {

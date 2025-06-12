@@ -1,9 +1,7 @@
 using BookShop.Application.Abstractions;
-using BookShop.Application.Queries.Handlers;
 using BookShop.Domain.Abstractions;
 using BookShop.Domain.Entities.Rating;
 using BookShop.Domain.Repositories;
-using BookShop.Infrastructure.Abstractions;
 using BookShop.Infrastructure.Context;
 using BookShop.Infrastructure.Decorators;
 using BookShop.Infrastructure.Middlewares;
@@ -36,15 +34,9 @@ public static class Extensions
 
         services.AddDatabaseDeveloperPageExceptionFilter()
             .AddTransient<ExceptionsMiddleware>()
-            .AddScoped<IAuthorRepository, AuthorRepository>()
-            .AddScoped<IBookRepository, BookRepository>()
-            .AddScoped<IRatingRepository<BookRatingEntity>, BookRatingRepository>()
-            .AddScoped<IAuthorDomainService, AuthorDomainService>()
-            .AddScoped<IBookDomainService, BookDomainService>()
-            .AddScoped<IUnitOfWork, UnitOfWork>()
-            .AddScoped<IEmailSender, EmailSender>()
-            .AddScoped<IUserService, UserService>()
-            .AddScoped<IPolicyRoleService, PolicyRoleService>();
+            .AddRepositories()
+            .AddApplicationServices()
+            .AddDomainServices();
         
 
         services.TryDecorate(typeof(ICommandHandler<>), typeof(UnitOfWorkCommandHandlerDecorator<>));
@@ -53,7 +45,7 @@ public static class Extensions
         
         return services;
     }
-
+    
     public static WebApplication UseInfrastructure(this WebApplication app)
     {
         if (app.Environment.IsDevelopment())
@@ -79,7 +71,40 @@ public static class Extensions
         app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Authors}/{action=AuthorList}/{id?}"
-            );
+        );
         return app;
     }
+    
+    private static IServiceCollection AddRepositories(this IServiceCollection services)
+    {
+        services
+            .AddScoped<IAuthorRepository, AuthorRepository>()
+            .AddScoped<IBookRepository, BookRepository>()
+            .AddScoped<IRatingRepository<BookRatingEntity>, BookRatingRepository>()
+            .AddScoped<IRatingRepository<AuthorRatingEntity>, AuthorRatingRepository>();
+        
+        return services;
+    }
+
+    private static IServiceCollection AddApplicationServices(this IServiceCollection services)
+    {
+
+        services
+            .AddScoped<IEmailSender, EmailSender>()
+            .AddScoped<IPolicyRoleService, PolicyRoleService>()
+            .AddScoped<IUserService, UserService>()
+            .AddScoped<IPolicyRoleService, PolicyRoleService>();
+        
+        return services;
+    }
+
+    private static IServiceCollection AddDomainServices(this IServiceCollection services)
+    {
+        services
+            .AddScoped<IAuthorDomainService, AuthorDomainService>()
+            .AddScoped<IBookDomainService, BookDomainService>();
+        
+        return services;
+    }
+    
 }

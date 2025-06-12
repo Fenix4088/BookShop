@@ -15,13 +15,4 @@ public class BookRatingEntity : RatingBaseEntity
         CreateAt = DateTime.Now
     };
     
-    
-    public void Update(int score)
-    {
-        CheckScore(score);
-        
-        Score = score;
-        CreateAt = DateTime.Now;
-    }
-    
 }

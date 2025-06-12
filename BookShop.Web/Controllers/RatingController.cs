@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using BookShop.Application.Abstractions;
 using BookShop.Application.Commands;
@@ -13,16 +14,17 @@ public class RatingController : Controller
 {
     
     private readonly ICommandHandler<RateBookCommand> rateBookCommandHandler;
+    private readonly ICommandHandler<RateAuthorCommand> rateAuthorCommandHandler;
     private readonly IUserService userService;
     
-    
-    
     public RatingController(
-        ICommandHandler<RateBookCommand> rateBookCommandHandler, 
+        ICommandHandler<RateBookCommand> rateBookCommandHandler,
+        ICommandHandler<RateAuthorCommand> rateAuthorCommandHandler,
         IUserService userService
         )
     {
         this.rateBookCommandHandler = rateBookCommandHandler;
+        this.rateAuthorCommandHandler = rateAuthorCommandHandler;
         this.userService = userService;
     }
     
@@ -35,18 +37,34 @@ public class RatingController : Controller
         
         if (itemType == RatingItemType.Book.GetName())
         {
-            var command = new RateBookCommand(itemId, user.Id, score);
-            await rateBookCommandHandler.Handler(command);
-        }
-        else
-        {
+            await RateBookAsync(itemId, user.Id, score);
+            return RedirectToAction("BooksList", "Books", new
+            {
+                CurrentPage = currentPage,
+                RowCount = 10,
+                IsDeleted = false
+            });
         }
 
-        return RedirectToAction("BooksList", "Books", new
+        await RateAuthorAsync(itemId, user.Id, score);
+        
+        return RedirectToAction("AuthorList", "Authors", new
         {
             CurrentPage = currentPage,
             RowCount = 10,
             IsDeleted = false
         });
+    }
+    
+    private async Task RateBookAsync(int bookId, Guid userId, int score)
+    {
+        var command = new RateBookCommand(bookId, userId, score);
+        await rateBookCommandHandler.Handler(command);
+    }
+
+    private async Task RateAuthorAsync(int authorId, Guid userId, int score)
+    {
+        var command = new RateAuthorCommand(authorId, userId, score);
+        await rateAuthorCommandHandler.Handler(command);
     }
 }
