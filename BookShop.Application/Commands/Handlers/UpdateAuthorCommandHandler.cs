@@ -1,4 +1,5 @@
 using BookShop.Application.Abstractions;
+using BookShop.Domain.Abstractions;
 using BookShop.Domain.Exceptions;
 using BookShop.Domain.Repositories;
 using FluentValidation;
@@ -8,20 +9,25 @@ namespace BookShop.Application.Commands.Handlers;
 
 public class UpdateAuthorCommandHandler: ICommandHandler<UpdateAuthorCommand>
 {
-    private readonly IAuthorRepository _authorRepository;
-    private readonly IValidator<UpdateAuthorCommand> _validator;
+    private readonly IAuthorRepository authorRepository;
+    private readonly IValidator<UpdateAuthorCommand> validator;
+    private readonly IAuthorDomainService authorDomainService;
     
-    public UpdateAuthorCommandHandler(IAuthorRepository authorRepository, IValidator<UpdateAuthorCommand> validator)
+    public UpdateAuthorCommandHandler(IAuthorRepository authorRepository,
+        IValidator<UpdateAuthorCommand> validator,
+        IAuthorDomainService authorDomainService
+        )
     {
-        _authorRepository = authorRepository;
-        _validator = validator;
+        this.authorRepository = authorRepository;
+        this.validator = validator;
+        this.authorDomainService = authorDomainService;
     }
 
     public async Task Handler(UpdateAuthorCommand command)
     {
-        await _validator.ValidateAndThrowAsync(command);
+        await validator.ValidateAndThrowAsync(command);
         
-        if (!await _authorRepository.IsUniqueAuthorAsync(command.Name, command.Surname))
+        if (!await authorDomainService.IsUniqueAuthorAsync(command.Name, command.Surname))
         {
             throw new ValidationException(new List<ValidationFailure>
             {
@@ -29,7 +35,7 @@ public class UpdateAuthorCommandHandler: ICommandHandler<UpdateAuthorCommand>
             });
         }
         
-        var author = await _authorRepository.GetById(command.Id);
+        var author = await authorRepository.GetById(command.Id);
 
         if (author == null)
         {
@@ -38,7 +44,7 @@ public class UpdateAuthorCommandHandler: ICommandHandler<UpdateAuthorCommand>
         
         author.Update(command.Name, command.Surname);
 
-        await _authorRepository.UpdateAsync(author);
-        await _authorRepository.SaveAsync();
+        await authorRepository.UpdateAsync(author);
+        await authorRepository.SaveAsync();
     }
 }

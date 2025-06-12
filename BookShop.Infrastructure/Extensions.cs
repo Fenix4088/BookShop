@@ -1,5 +1,6 @@
 using BookShop.Application.Abstractions;
 using BookShop.Application.Queries.Handlers;
+using BookShop.Domain.Abstractions;
 using BookShop.Domain.Entities.Rating;
 using BookShop.Domain.Repositories;
 using BookShop.Infrastructure.Abstractions;
@@ -8,6 +9,7 @@ using BookShop.Infrastructure.Decorators;
 using BookShop.Infrastructure.Middlewares;
 using BookShop.Infrastructure.Repositories;
 using BookShop.Infrastructure.Services.Background;
+using BookShop.Infrastructure.Services.Domain;
 using BookShop.Infrastructure.Services.Email;
 using BookShop.Infrastructure.Services.PolicyRole;
 using BookShop.Infrastructure.Services.User;
@@ -37,6 +39,8 @@ public static class Extensions
             .AddScoped<IAuthorRepository, AuthorRepository>()
             .AddScoped<IBookRepository, BookRepository>()
             .AddScoped<IRatingRepository<BookRatingEntity>, BookRatingRepository>()
+            .AddScoped<IAuthorDomainService, AuthorDomainService>()
+            .AddScoped<IBookDomainService, BookDomainService>()
             .AddScoped<IUnitOfWork, UnitOfWork>()
             .AddScoped<IEmailSender, EmailSender>()
             .AddScoped<IUserService, UserService>()

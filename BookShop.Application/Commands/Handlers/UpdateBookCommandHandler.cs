@@ -1,39 +1,56 @@
-using System.ComponentModel.DataAnnotations;
 using BookShop.Application.Abstractions;
+using BookShop.Domain.Abstractions;
 using BookShop.Domain.Exceptions;
 using BookShop.Domain.Repositories;
 using FluentValidation;
+using FluentValidation.Results;
+using ValidationException = FluentValidation.ValidationException;
 
 namespace BookShop.Application.Commands.Handlers;
 
 public class UpdateBookCommandHandler: ICommandHandler<UpdateBookCommand>
 {
-    private readonly IBookRepository _bookRepository;
-    private readonly IAuthorRepository _authorRepository;
-    private readonly IValidator<UpdateBookCommand> _validator;
+    private readonly IBookRepository bookRepository;
+    private readonly IAuthorRepository authorRepository;
+    private readonly IValidator<UpdateBookCommand> validator;
+    private readonly IBookDomainService bookDomainService;
+    
 
-    public UpdateBookCommandHandler(IBookRepository bookRepository, IAuthorRepository authorRepository, IValidator<UpdateBookCommand> validator)
+    public UpdateBookCommandHandler(IBookRepository bookRepository, 
+        IAuthorRepository authorRepository, 
+        IValidator<UpdateBookCommand> validator,
+        IBookDomainService bookDomainService
+        )
     {
-        _bookRepository = bookRepository;
-        _authorRepository = authorRepository;
-        _validator = validator;
+        this.bookRepository = bookRepository;
+        this.authorRepository = authorRepository;
+        this.validator = validator;
+        this.bookDomainService = bookDomainService;
     }
 
     public async Task Handler(UpdateBookCommand command)
     {
-        await _validator.ValidateAndThrowAsync(command);
+        await validator.ValidateAndThrowAsync(command);
         
-        var bookEntity = await _bookRepository.GetBookById(command.Id);
+        var bookEntity = await bookRepository.GetBookById(command.Id);
 
         if (bookEntity is null) throw new BookNotFoundException(command.Id);
 
-        var authorEntity = await _authorRepository.GetById(command.AuthorId);
+        var authorEntity = await authorRepository.GetById(command.AuthorId);
 
         if (authorEntity is null) throw new AuthorNotFoundException(command.AuthorId);
         
+        if(!await bookDomainService.IsUniqueBookAsync(command.Title, command.ReleaseDate))
+        {
+            throw new ValidationException(new List<ValidationFailure>
+            {
+                new ("", $"Author {authorEntity.ToModel().NameAndSurname} already has a book with the title {command.Title} and release date: {command.ReleaseDate.Date.ToShortDateString()}.")
+            }); 
+        }
+        
         bookEntity.Update(authorEntity, command.Title, command.Description, command.ReleaseDate);
-        await _bookRepository.SaveAsync();
-        await _authorRepository.SaveAsync();
+        await bookRepository.SaveAsync();
+        await authorRepository.SaveAsync();
 
     }
 }

@@ -1,5 +1,6 @@
 using BookShop.Application.Abstractions;
 using BookShop.Domain;
+using BookShop.Domain.Abstractions;
 using BookShop.Domain.Entities;
 using BookShop.Domain.Exceptions;
 using BookShop.Domain.Repositories;
@@ -11,30 +12,36 @@ namespace BookShop.Application.Commands.Handlers;
 public sealed class CreateBookCommandHandler: ICommandHandler<CreateBookCommand>
 {
 
-    private readonly IBookRepository _bookRepository;
-    private readonly IAuthorRepository _authorRepository;
-    private readonly IValidator<CreateBookCommand> _validator;
+    private readonly IBookRepository bookRepository;
+    private readonly IAuthorRepository authorRepository;
+    private readonly IValidator<CreateBookCommand> validator;
+    private readonly IBookDomainService bookDomainService;
     
-    public CreateBookCommandHandler(IBookRepository bookRepository, IAuthorRepository authorRepository, IValidator<CreateBookCommand> validator)
+    public CreateBookCommandHandler(
+        IBookRepository bookRepository, 
+        IAuthorRepository authorRepository, 
+        IValidator<CreateBookCommand> validator,
+        IBookDomainService bookDomainService)
     {
-        _bookRepository = bookRepository;
-        _authorRepository = authorRepository;
-        _validator = validator;
+        this.bookRepository = bookRepository;
+        this.authorRepository = authorRepository;
+        this.validator = validator;
+        this.bookDomainService = bookDomainService;
     }
 
     public async Task Handler(CreateBookCommand command)
     {
 
-        await _validator.ValidateAndThrowAsync(command);
+        await validator.ValidateAndThrowAsync(command);
         
-        var authorEntity = await _authorRepository.GetById(command.AuthorId);
+        var authorEntity = await authorRepository.GetById(command.AuthorId);
 
         if (authorEntity is null)
         {
             throw new AuthorNotFoundException(command.AuthorId);
         }
         
-        if(!await _bookRepository.IsUniqueBookAsync(command.Title, command.ReleaseDate))
+        if(!await bookDomainService.IsUniqueBookAsync(command.Title, command.ReleaseDate))
         {
             throw new ValidationException(new List<ValidationFailure>
             {
@@ -45,10 +52,10 @@ public sealed class CreateBookCommandHandler: ICommandHandler<CreateBookCommand>
         var newBookEntity = BookEntity.Create(command.Title, command.Description, command.ReleaseDate, command.AuthorId);
         authorEntity.AddBook();
 
-        await _authorRepository.UpdateAsync(authorEntity);
-        await _bookRepository.AddAsync(newBookEntity);
+        await authorRepository.UpdateAsync(authorEntity);
+        await bookRepository.AddAsync(newBookEntity);
 
-        await _authorRepository.SaveAsync();
-        await _bookRepository.SaveAsync();
+        await authorRepository.SaveAsync();
+        await bookRepository.SaveAsync();
     }
 }

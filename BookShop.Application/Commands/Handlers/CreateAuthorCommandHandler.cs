@@ -1,5 +1,6 @@
 ﻿using BookShop.Application.Abstractions;
 using BookShop.Domain;
+using BookShop.Domain.Abstractions;
 using BookShop.Domain.Repositories;
 using FluentValidation;
 using FluentValidation.Results;
@@ -9,20 +10,25 @@ namespace BookShop.Application.Commands.Handlers;
 
 public class CreateAuthorCommandHandler : ICommandHandler<CreateAuthorCommand>
 {
-    private readonly IAuthorRepository _authorRepository;
-    private readonly IValidator<CreateAuthorCommand> _validator;
+    private readonly IAuthorRepository authorRepository;
+    private readonly IValidator<CreateAuthorCommand> validator;
+    private readonly IAuthorDomainService authorDomainService;
 
-    public CreateAuthorCommandHandler(IAuthorRepository authorRepository, IValidator<CreateAuthorCommand> validator)
+    public CreateAuthorCommandHandler(IAuthorRepository authorRepository,
+        IValidator<CreateAuthorCommand> validator,
+        IAuthorDomainService authorDomainService
+        )
     {
-        _authorRepository = authorRepository;
-        _validator = validator;
+        this.authorRepository = authorRepository;
+        this.validator = validator;
+        this.authorDomainService = authorDomainService;
     }
 
     public async Task Handler(CreateAuthorCommand command)
     {
-        await _validator.ValidateAndThrowAsync(command);
+        await validator.ValidateAndThrowAsync(command);
         
-        if (!await _authorRepository.IsUniqueAuthorAsync(command.Name, command.Surname))
+        if (!await authorDomainService.IsUniqueAuthorAsync(command.Name, command.Surname))
         {
             throw new ValidationException(new List<ValidationFailure>
             {
@@ -32,7 +38,7 @@ public class CreateAuthorCommandHandler : ICommandHandler<CreateAuthorCommand>
         
 
         var entity = AuthorEntity.Create(command.Name, command.Surname);
-        await _authorRepository.AddAsync(entity);
-        await _authorRepository.SaveAsync();
+        await authorRepository.AddAsync(entity);
+        await authorRepository.SaveAsync();
     }
 }
