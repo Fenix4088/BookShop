@@ -23,7 +23,8 @@ public class BookRatingEntityConfiguration : IEntityTypeConfiguration<BookRating
         
         builder.HasOne(bookRating => bookRating.Book)
             .WithMany(book => book.Ratings)
-            .HasForeignKey(bookRating => bookRating.BookId);
+            .HasForeignKey(bookRating => bookRating.BookId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         // ? We use builder.HasOne<BookShopUser> instead builder.HasOne(bookRating => bookRating.User)
         // ? because BookRatingEntity (in Domain) doesn’t contain the User property.

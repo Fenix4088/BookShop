@@ -25,7 +25,9 @@ public sealed class AuthorRepository : GenericRepository<AuthorEntity, ShopDbCon
 
     public async Task<AuthorEntity> GetById(int? id)
     {
-        return await context.Authors.Include(x => x.Ratings).SingleOrDefaultAsync(x => x.Id == id);
+        return await context.Authors
+            .Include(x => x.Ratings)
+            .SingleOrDefaultAsync(x => x.Id == id);
     }
 
     public IQueryable<AuthorEntity> GetAllQueryable(bool isDeleted = false) =>  context.Authors

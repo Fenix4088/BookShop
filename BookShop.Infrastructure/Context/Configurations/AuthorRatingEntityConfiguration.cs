@@ -23,7 +23,8 @@ public class AuthorRatingEntityConfiguration : IEntityTypeConfiguration<AuthorRa
         
         builder.HasOne(authorRating => authorRating.Author)
             .WithMany(author => author.Ratings)
-            .HasForeignKey(authorRating => authorRating.AuthorId);
+            .HasForeignKey(authorRating => authorRating.AuthorId)
+            .OnDelete(DeleteBehavior.Cascade);
         
         builder.HasOne<BookShopUser>()
             .WithMany(user => user.RatingsAuthor)

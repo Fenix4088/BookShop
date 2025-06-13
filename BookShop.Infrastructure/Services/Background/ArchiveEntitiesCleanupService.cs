@@ -56,8 +56,8 @@ internal sealed class ArchiveEntitiesCleanupService : BackgroundService
 
         if (oldAuthors.Any() || oldBooks.Any())
         {
-            dbContext.Authors.RemoveRange(oldAuthors);
             dbContext.Books.RemoveRange(oldBooks);
+            dbContext.Authors.RemoveRange(oldAuthors);
             await dbContext.SaveChangesAsync();
             
             _logger.LogInformation($"Removed {oldAuthors.Count} authors and {oldBooks.Count} books, which were archived more than year");
