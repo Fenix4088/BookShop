@@ -31,9 +31,12 @@ public static class Extensions
                 options.UseSqlServer(
                     configuration.GetConnectionString("BookShop")));
 
-        services.AddHostedService<DatabaseInitializer>();
+        services
+            .AddScoped<IDataSeeder, DataSeeder>()
+            .AddHostedService<DatabaseInitializer>();
 
-        services.AddDatabaseDeveloperPageExceptionFilter()
+        services
+            .AddDatabaseDeveloperPageExceptionFilter()
             .AddTransient<ExceptionsMiddleware>()
             .AddScoped<IUnitOfWork, UnitOfWork>()
             .AddRepositories()

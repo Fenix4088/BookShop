@@ -1,5 +1,7 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
+using BookShop.Infrastructure.Abstractions;
 using BookShop.Infrastructure.Context;
 using BookShop.UnitTests.Extensions;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +23,7 @@ public abstract class TestBase: IAsyncLifetime, IDisposable
 
         _provider = services.BuildServiceProvider();
         DbContext = _provider.GetService<ShopDbContext>();
+        
     }
 
 
@@ -28,6 +31,9 @@ public abstract class TestBase: IAsyncLifetime, IDisposable
     {
         await DbContext.Database.EnsureDeletedAsync();
         await DbContext.Database.EnsureCreatedAsync();
+
+        var seeder = Provider.GetRequiredService<IDataSeeder>();
+        await seeder.SeedAsync(CancellationToken.None);
     }
 
     public Task DisposeAsync() => Task.CompletedTask;
