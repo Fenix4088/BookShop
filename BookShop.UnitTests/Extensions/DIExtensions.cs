@@ -2,9 +2,12 @@ using System;
 using BookShop.Application.Commands.Handlers;
 using BookShop.Application.Queries.Handlers;
 using BookShop.Application.Validators;
+using BookShop.Domain.Abstractions;
+using BookShop.Domain.Entities.Rating;
 using BookShop.Domain.Repositories;
 using BookShop.Infrastructure.Context;
 using BookShop.Infrastructure.Repositories;
+using BookShop.Infrastructure.Services.Domain;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,7 +27,11 @@ public static class DIExtensions
         
         // Repositories
         services.AddTransient<IAuthorRepository, AuthorRepository>()
-            .AddTransient<IBookRepository, BookRepository>();
+            .AddTransient<IBookRepository, BookRepository>()
+            .AddTransient<IRatingRepository<AuthorRatingEntity>, AuthorRatingRepository>()
+            .AddTransient<IRatingRepository<BookRatingEntity>, BookRatingRepository>()
+            .AddTransient<IAuthorDomainService, AuthorDomainService>()
+            .AddTransient<IBookDomainService, BookDomainService>();
 
         //Handlers
         services.AddTransient<CreateAuthorCommandHandler>()
