@@ -2,6 +2,7 @@ using BookShop.Application.Abstractions;
 using BookShop.Domain.Abstractions;
 using BookShop.Domain.Entities.Rating;
 using BookShop.Domain.Repositories;
+using BookShop.Infrastructure.Abstractions;
 using BookShop.Infrastructure.Context;
 using BookShop.Infrastructure.Decorators;
 using BookShop.Infrastructure.Middlewares;
@@ -34,6 +35,7 @@ public static class Extensions
 
         services.AddDatabaseDeveloperPageExceptionFilter()
             .AddTransient<ExceptionsMiddleware>()
+            .AddScoped<IUnitOfWork, UnitOfWork>()
             .AddRepositories()
             .AddApplicationServices()
             .AddDomainServices();

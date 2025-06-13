@@ -63,6 +63,12 @@
                 <td>
                     @Html.DisplayFor(modelItem => authorModel.BookCount)
                 </td>
+                <td>
+                    @if (authorModel.IsDeleted == false)
+                    {
+                        @Html.Partial("_Rating", new RatingViewModel(RatingItemType.Author, authorModel.Id, authorModel.AverageRating, Model.CurrentPage))
+                    }
+                </td>
                 <td class="flex gap-x-2">
                     <form asp-action="RemoveAuthor" method="post">
                         @if (!authorModel.IsDeleted && IsAdminOrManager)

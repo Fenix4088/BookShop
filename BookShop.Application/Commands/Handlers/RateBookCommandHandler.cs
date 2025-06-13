@@ -1,6 +1,7 @@
 using BookShop.Application.Abstractions;
 using BookShop.Domain.Abstractions;
 using BookShop.Domain.Entities.Rating;
+using BookShop.Domain.Exceptions;
 using BookShop.Domain.Repositories;
 
 namespace BookShop.Application.Commands.Handlers;
@@ -37,7 +38,8 @@ public class RateBookCommandHandler : ICommandHandler<RateBookCommand>
         }
         catch (Exception e)
         {
-            throw new Exception("An error occurred while rating the book.", e);
+            Console.WriteLine(e);
+            throw new RateException("An error occurred while rating the author. Error: " + e.Message);
         }
         
     }
