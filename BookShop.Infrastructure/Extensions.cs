@@ -1,12 +1,15 @@
 using BookShop.Application.Abstractions;
+using BookShop.Application.Users;
 using BookShop.Domain.Abstractions;
 using BookShop.Domain.Entities.Rating;
 using BookShop.Domain.Repositories;
 using BookShop.Infrastructure.Abstractions;
 using BookShop.Infrastructure.Context;
 using BookShop.Infrastructure.Decorators;
+using BookShop.Infrastructure.Identity;
 using BookShop.Infrastructure.Middlewares;
 using BookShop.Infrastructure.Repositories;
+using BookShop.Infrastructure.Repositories.Abstractions;
 using BookShop.Infrastructure.Services.Background;
 using BookShop.Infrastructure.Services.Domain;
 using BookShop.Infrastructure.Services.Email;
@@ -83,6 +86,7 @@ public static class Extensions
     private static IServiceCollection AddRepositories(this IServiceCollection services)
     {
         services
+            .AddScoped<IUserRepository, UserRepository>()
             .AddScoped<IAuthorRepository, AuthorRepository>()
             .AddScoped<IBookRepository, BookRepository>()
             .AddScoped<IRatingRepository<BookRatingEntity>, BookRatingRepository>()

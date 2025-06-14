@@ -1,6 +1,7 @@
 using System;
 using BookShop.Application.Commands.Handlers;
 using BookShop.Application.Queries.Handlers;
+using BookShop.Application.Users;
 using BookShop.Application.Validators;
 using BookShop.Domain.Abstractions;
 using BookShop.Domain.Entities.Rating;
@@ -41,6 +42,7 @@ public static class DIExtensions
         
         // Repositories
         services
+            .AddTransient<IUserRepository, UserRepository>()
             .AddTransient<IDataSeeder, DataSeeder>()
             .AddTransient<IAuthorRepository, AuthorRepository>()
             .AddTransient<IBookRepository, BookRepository>()

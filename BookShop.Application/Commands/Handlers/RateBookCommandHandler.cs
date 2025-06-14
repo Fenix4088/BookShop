@@ -1,5 +1,5 @@
 using BookShop.Application.Abstractions;
-using BookShop.Domain.Abstractions;
+using BookShop.Application.Users;
 using BookShop.Domain.Entities.Rating;
 using BookShop.Domain.Exceptions;
 using BookShop.Domain.Repositories;
@@ -10,14 +10,37 @@ public class RateBookCommandHandler : ICommandHandler<RateBookCommand>
 {
 
     private readonly IRatingRepository<BookRatingEntity> bookRatingRepository;
+    private readonly IUserRepository userRepository;
+    private readonly IBookRepository bookRepository;
     
     public RateBookCommandHandler(
-        IRatingRepository<BookRatingEntity> bookRatingRepository)
+        IRatingRepository<BookRatingEntity> bookRatingRepository,
+        IUserRepository userRepository,
+        IBookRepository bookRepository
+        )
     {
         this.bookRatingRepository = bookRatingRepository;
+        this.userRepository = userRepository;
+        this.bookRepository = bookRepository;
     }
     public async Task Handler(RateBookCommand command)
     {
+        
+        var user = await userRepository.GetByIdAsync(command.UserId);
+        
+        if (user is null)
+        {
+            throw new UserNotFoundException(command.UserId);
+        }
+        
+        
+        var book = await bookRepository.GetBookById(command.BookId);
+        
+        if (book is null)
+        {
+            throw new BookNotFoundException(command.BookId);
+        }
+        
         try
         {
             var bookRatingEntity = await bookRatingRepository.GetByEntityAndUserIdsAsync(command.BookId, command.UserId);

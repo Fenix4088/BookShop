@@ -18,9 +18,7 @@ public class BookEntity : BookShopGenericEntity
     public ICollection<BookRatingEntity> Ratings { get; private set; } = new List<BookRatingEntity>();
 
     
-    //TODO: AddBook to author inside Create method
-    public static BookEntity Create(string title, string description, DateTime releaseDate, int authorId,
-        string? coverImageUrl = "") => new()
+    public static BookEntity Create(string title, string description, DateTime releaseDate, int authorId, string? coverImageUrl = "") => new()
     {
         Title = title,
         Description = description,

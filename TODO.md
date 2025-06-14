@@ -10,3 +10,6 @@
  - [x] Authorizations and Authentication 
  - [ ] Add all necessary credentials into Key-Vault
  - [ ] deploy to Azure
+
+
+!! CONTINUE UNIT TESTING OF ENTITIES, YOU STOPED ON AuthorRatingEntityTests
