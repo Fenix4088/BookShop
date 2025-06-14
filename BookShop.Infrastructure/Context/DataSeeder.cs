@@ -39,8 +39,6 @@ public class DataSeeder : IDataSeeder
     {
         try
         {
-            // await ctx.Database.MigrateAsync(cancellationToken);
-
             await EnsureCreatedAsync(cancellationToken);
         
             if (!(await ctx.Users.AnyAsync(cancellationToken)))

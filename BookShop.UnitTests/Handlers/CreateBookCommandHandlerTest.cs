@@ -37,7 +37,7 @@ public class CreateBookCommandHandlerTest: TestBase
         
         // Act
         await createBookCommandHandler.Handler(command);
-        var result = (await getBookListQueryHandler.Handler(mockHelper.CreateGetBookListQuery())).Items.FirstOrDefault();
+        var result = (await getBookListQueryHandler.Handler(mockHelper.GenerateGetBookListQuery())).Items.FirstOrDefault(x => x.Title == command.Title && x.AuthorId == command.AuthorId);
         
         // Assert
         result.ShouldNotBeNull();

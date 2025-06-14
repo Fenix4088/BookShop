@@ -18,7 +18,7 @@ public class RateAuthorCommandHandler : ICommandHandler<RateAuthorCommand>
     public async Task Handler(RateAuthorCommand command)
     {
         
-        var authorRatingEntity = await authorRatingRepository.GetByIdAsync(command.AuthorId, command.UserId);
+        var authorRatingEntity = await authorRatingRepository.GetByEntityAndUserIdsAsync(command.AuthorId, command.UserId);
         
         try
         {

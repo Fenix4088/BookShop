@@ -20,7 +20,7 @@ public class RateBookCommandHandler : ICommandHandler<RateBookCommand>
     {
         try
         {
-            var bookRatingEntity = await bookRatingRepository.GetByIdAsync(command.BookId, command.UserId);
+            var bookRatingEntity = await bookRatingRepository.GetByEntityAndUserIdsAsync(command.BookId, command.UserId);
 
             if (bookRatingEntity is null)
             {

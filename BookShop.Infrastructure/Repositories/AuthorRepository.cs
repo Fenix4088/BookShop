@@ -45,8 +45,8 @@ public sealed class AuthorRepository : GenericRepository<AuthorEntity, ShopDbCon
         }
 
         var orderedQuery = sortDirection == SortDirection.Descending
-            ? dbQuery.OrderBy(x => x.Surname)
-            : dbQuery.OrderByDescending(x => x.Surname);
+            ? dbQuery.OrderByDescending(x => x.Surname)
+            : dbQuery.OrderBy(x => x.Surname);
 
         
         var pagedResult = await orderedQuery.ToPagedResult(pagedQuery, x => x);
@@ -55,6 +55,7 @@ public sealed class AuthorRepository : GenericRepository<AuthorEntity, ShopDbCon
 
     public void SoftRemove(AuthorEntity authorEntity)
     { 
+        authorEntity.SoftDeleteRatings();
         authorEntity.SoftDelete();
         context.Authors.Update(authorEntity);
     }

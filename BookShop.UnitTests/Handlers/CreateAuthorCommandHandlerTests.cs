@@ -30,7 +30,7 @@ public class CreateAuthorCommandHandlerTests: TestBase
 
         await handler.Handler(command);
 
-        var entity = await DbContext.Authors.FirstOrDefaultAsync();
+        var entity = await DbContext.Authors.FirstOrDefaultAsync(x => x.Name == command.Name && x.Surname == command.Surname);
         Assert.NotNull(entity);
         Assert.False(entity.IsDeleted);
         Assert.NotEqual(0, entity.Id);
@@ -48,7 +48,7 @@ public class CreateAuthorCommandHandlerTests: TestBase
 
         await Assert.ThrowsAsync<ValidationException>(async () => await handler.Handler(command));
         
-        var entity = await DbContext.Authors.FirstOrDefaultAsync();
+        var entity = await DbContext.Authors.FirstOrDefaultAsync(x => x.Name == command.Name && x.Surname == command.Surname);
         Assert.Null(entity);
     }
     

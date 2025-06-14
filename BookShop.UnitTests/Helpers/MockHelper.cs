@@ -50,7 +50,7 @@ public sealed class MockHelper
         return author;
     }
 
-    public GetBookListQuery CreateGetBookListQuery(
+    public GetBookListQuery GenerateGetBookListQuery(
         int? currentPage = 1,
         int? pageSize = 10,
         SortDirection sortDirection = SortDirection.Descending,
@@ -59,7 +59,7 @@ public sealed class MockHelper
         bool isDeleted = false) => new(currentPage ?? 1, pageSize ?? 10, sortDirection, searchByBookTitle,
         searchByAuthorName, isDeleted);
 
-    public GetAuthorListQuery CreateGetAuthorListQuery(
+    public GetAuthorListQuery GenerateGetAuthorListQuery(
         int? currentPage = 1,
         int? pageSize = 10,
         SortDirection sortDirection = SortDirection.Descending,

@@ -21,14 +21,14 @@ public class GetAuthorListQueryHandlerTests: TestBase
     public override async Task InitializeAsync()
     {
         await base.InitializeAsync();
-        InitTestData();
+        // InitTestData();
     }
 
     [Fact]
     public async Task GetAuthorListQueryHandler_Success()
     {
         var handler = Provider.GetService<GetAuthorListQueryHandler>();
-        var query = mockHelper.CreateGetAuthorListQuery(
+        var query = mockHelper.GenerateGetAuthorListQuery(
                 pageSize: 4
             );
 
@@ -36,17 +36,18 @@ public class GetAuthorListQueryHandlerTests: TestBase
 
         Assert.Equal(query.RowCount, result.PageSize);
         Assert.Equal(query.CurrentPage, result.CurrentPage);
-        Assert.Equal(5, result.PageCount);
-        Assert.Equal(20, result.TotalRowCount);
+        Assert.Equal(3, result.PageCount);
+        Assert.Equal(10, result.TotalRowCount);
         Assert.NotEmpty(result.Items);
     }
     
     [Fact]
     public async Task GetAuthorListQueryHandler_Success_WithSearch()
     {
+        var author = mockHelper.CreateAuthor();
         var handler = Provider.GetService<GetAuthorListQueryHandler>();
-        var query = mockHelper.CreateGetAuthorListQuery(
-                searchByNameAndSurname: "Surname 1 Name 1"
+        var query = mockHelper.GenerateGetAuthorListQuery(
+                searchByNameAndSurname: author.Surname + " " + author.Name
             );
 
         var result = await handler.Handler(query);
@@ -62,7 +63,7 @@ public class GetAuthorListQueryHandlerTests: TestBase
     public async Task GetAuthorListQueryHandler_Should_Return_EmptyList_If_Provided_With_Invalid_Search()
     {
         var handler = Provider.GetService<GetAuthorListQueryHandler>();
-        var query = mockHelper.CreateGetAuthorListQuery(
+        var query = mockHelper.GenerateGetAuthorListQuery(
                 searchByNameAndSurname: "Invalid Name"
             );
 
@@ -79,24 +80,24 @@ public class GetAuthorListQueryHandlerTests: TestBase
     public async Task GetAuthorListQueryHandler_Should_Sort_By_Name_Asc()
     {
         var handler = Provider.GetService<GetAuthorListQueryHandler>();
-        var query = mockHelper.CreateGetAuthorListQuery(
-                sortDirection: SortDirection.Ascending
+        var query = mockHelper.GenerateGetAuthorListQuery(
+                sortDirection: SortDirection.Ascending,
+                pageSize: 1000                
             );
 
         var result = await handler.Handler(query);
 
         Assert.Equal(query.RowCount, result.PageSize);
         Assert.Equal(query.CurrentPage, result.CurrentPage);
-        Assert.Equal(2, result.PageCount);
-        Assert.Equal(20, result.TotalRowCount);
+        Assert.Equal(1, result.PageCount);
+        Assert.Equal(10, result.TotalRowCount);
         Assert.NotEmpty(result.Items);
         
         var itemsList = result.Items.ToList();
+        var expectedList = itemsList.OrderBy(x => x.Surname).ToList();
 
-        for (int i = 0; i < itemsList.Count - 1; i++)
-        {
-            Assert.True(string.Compare(itemsList[i].Name, itemsList[i + 1].Name) >= 0);
-        }
+        
+        Assert.True(expectedList.SequenceEqual(itemsList));
     }
 
     private void InitTestData()

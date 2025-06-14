@@ -39,7 +39,7 @@ public class RateAuthorCommandHandlerTests : TestBase
         await rateAuthorCommandHandler.Handler(command);
         
         // Assert
-        var rating = await authorRatingRepository.GetByIdAsync(author.Id, user.Id);
+        var rating = await authorRatingRepository.GetByEntityAndUserIdsAsync(author.Id, user.Id);
         Assert.NotNull(rating);
         Assert.Equal(command.Score, rating.Score);
     }
@@ -60,7 +60,7 @@ public class RateAuthorCommandHandlerTests : TestBase
         await rateAuthorCommandHandler.Handler(updateCommand);
         
         // Assert
-        var rating = await authorRatingRepository.GetByIdAsync(author.Id, user.Id);
+        var rating = await authorRatingRepository.GetByEntityAndUserIdsAsync(author.Id, user.Id);
         Assert.NotNull(rating);
         Assert.Equal(updateCommand.Score, rating.Score);
     }

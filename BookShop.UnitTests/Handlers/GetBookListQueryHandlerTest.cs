@@ -27,8 +27,7 @@ public class GetBookListQueryHandlerTest: TestBase
     public async Task GetBookList_ShouldReturnPagedResult_WhenBooksExist()
     {
         // Arrange
-        mockHelper.CreateAuthorWithBooks();
-        var query = mockHelper.CreateGetBookListQuery();
+        var query = mockHelper.GenerateGetBookListQuery(pageSize: 1000);
         
         // Act
         var result = await getBookListQueryHandler.Handler(query);
@@ -38,7 +37,7 @@ public class GetBookListQueryHandlerTest: TestBase
         result.Items.ShouldNotBeEmpty();
         result.Items.ShouldAllBe(x => x.GetType() == typeof(BookModel));
         result.TotalRowCount.ShouldBeGreaterThan(0);
-        result.PageSize.ShouldBe(10);
+        result.PageSize.ShouldBe(1000);
         result.PageCount.ShouldBe(1);
     }
 
@@ -46,15 +45,16 @@ public class GetBookListQueryHandlerTest: TestBase
     public async Task GetBookList_ShouldNotReturnBooks_WhenBookWasDelete()
     {
         // Arrange
-        var author = mockHelper.CreateAuthor();
-        var book = mockHelper.CreateBook(author);
-        DbContext.SaveChanges();
         
-        
-        var query = mockHelper.CreateGetBookListQuery();
+        var query = mockHelper.GenerateGetBookListQuery(pageSize: 1000);
+        var books = await getBookListQueryHandler.Handler(query);
         
         // Act
-        await softDeleteBookCommandHandler.Handler(new SoftDeleteBookCommand(book.Id));
+        foreach (var bookItem in books.Items)
+        {
+            await softDeleteBookCommandHandler.Handler(new SoftDeleteBookCommand(bookItem.Id));
+        }
+        
         var result = await getBookListQueryHandler.Handler(query);
         
         // Assert

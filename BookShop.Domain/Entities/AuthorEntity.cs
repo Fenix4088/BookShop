@@ -68,4 +68,13 @@ public class AuthorEntity : BookShopGenericEntity
         if (BookCount <= 0) return;
         BookCount -= 1;
     }
+    
+    public void SoftDeleteRatings()
+    {
+        foreach (var rating in Ratings)
+        {
+            rating.SoftDelete();
+        }
+    }
+    
 }

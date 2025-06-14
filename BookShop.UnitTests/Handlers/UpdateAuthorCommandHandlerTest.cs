@@ -35,7 +35,7 @@ public class UpdateAuthorCommandHandlerTest: TestBase
 
         await updateAuthorCommandHandler.Handler(command);
 
-        var entity = await DbContext.Authors.FirstOrDefaultAsync();
+        var entity = await DbContext.Authors.FirstOrDefaultAsync(x => x.Name == command.Name && x.Surname == command.Surname);
         Assert.NotNull(entity);
         Assert.Equal(command.Name, entity.Name);
         Assert.Equal(command.Surname, entity.Surname);
