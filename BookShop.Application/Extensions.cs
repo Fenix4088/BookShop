@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace BookShop.Application;
 
-public static class Extentions
+public static class Extensions
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {

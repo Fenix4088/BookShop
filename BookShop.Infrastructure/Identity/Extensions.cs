@@ -2,7 +2,7 @@ using BookShop.Web.Models;
 
 namespace BookShop.Infrastructure.Identity;
 
-public static class Extentions
+public static class Extensions
 {
     public static BookShopUserModel ToModel(this BookShopUser user)
     {
