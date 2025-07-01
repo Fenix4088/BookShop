@@ -1,3 +1,4 @@
+using Azure.Monitor.OpenTelemetry.AspNetCore;
 using BookShop.Application.Abstractions;
 using BookShop.Application.Users;
 using BookShop.Domain.Abstractions;
@@ -21,6 +22,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using OpenTelemetry.Logs;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 namespace BookShop.Infrastructure;
 
@@ -28,6 +33,27 @@ public static class Extensions
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        const string serviceName = "BookShop.Api";
+        
+        services.AddOpenTelemetry()
+            .ConfigureResource(r => r.AddService(serviceName))
+            .WithTracing(t =>
+                t.AddAspNetCoreInstrumentation()
+                    .AddHttpClientInstrumentation()
+                    .AddConsoleExporter())
+            .WithMetrics(m =>
+                m.AddAspNetCoreInstrumentation()
+                    .AddConsoleExporter())
+            .WithLogging(l =>
+                l.AddConsoleExporter());
+
+        services.AddOpenTelemetry()
+            .UseAzureMonitor(opt =>
+            {
+                opt.ConnectionString = configuration.GetConnectionString("AzureMonitor");
+                opt.SamplingRatio = 0.5F;
+            });
+        
         services.Configure<EmailSettings>(configuration.GetSection("Smtp"));
         
         services.AddDbContext<ShopDbContext>(options =>

@@ -4,6 +4,7 @@ using BookShop.Domain.Abstractions;
 using BookShop.Domain.Repositories;
 using FluentValidation;
 using FluentValidation.Results;
+using Microsoft.Extensions.Logging;
 using ValidationException = FluentValidation.ValidationException;
 
 namespace BookShop.Application.Commands.Handlers;
