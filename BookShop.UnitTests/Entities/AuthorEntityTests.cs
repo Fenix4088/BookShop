@@ -1,4 +1,4 @@
-using BookShop.Domain;
+using BookShop.UnitTests.Helpers;
 using Shouldly;
 using Xunit;
 
@@ -15,7 +15,7 @@ public class AuthorEntityTests
         var surname = "Surname";
 
         // Act
-        var author = CreateAuthor(name, surname);
+        var author = EntityHelpers.CreateAuthor(name, surname);
 
         // Assert
         name.ShouldBe(author.Name);
@@ -32,7 +32,7 @@ public class AuthorEntityTests
     public void UpdateAuthor_ShouldUpdateProperties()
     {
         // Arrange
-        var author = CreateAuthor();
+        var author = EntityHelpers.CreateAuthor();
         var newName = "NewName";
         var newSurname = "NewSurname";
 
@@ -48,7 +48,7 @@ public class AuthorEntityTests
     public void SoftDelete_ShouldSetIsDeletedTrue()
     {
         // Arrange
-        var author = CreateAuthor();
+        var author = EntityHelpers.CreateAuthor();
 
         // Act
         author.SoftDelete();
@@ -62,7 +62,7 @@ public class AuthorEntityTests
     public void Restore_ShouldSetIsDeletedFalse()
     {
         // Arrange
-        var author = CreateAuthor();
+        var author = EntityHelpers.CreateAuthor();
         author.SoftDelete();
 
         // Act
@@ -77,7 +77,7 @@ public class AuthorEntityTests
     public void AddBook_ShouldIncreaseBookCount()
     {
         // Arrange
-        var author = CreateAuthor();
+        var author = EntityHelpers.CreateAuthor();
 
         // Act
         author.AddBook();
@@ -90,7 +90,7 @@ public class AuthorEntityTests
     public void RemoveBook_ShouldDecreaseBookCount()
     {
         // Arrange
-        var author = CreateAuthor();
+        var author = EntityHelpers.CreateAuthor();
         author.AddBook();
 
         // Act
@@ -100,9 +100,4 @@ public class AuthorEntityTests
         author.BookCount.ShouldBe(0);
     }
     
-
-    private AuthorEntity CreateAuthor(string name = "TestName", string surname = "TestSurname")
-    {
-        return AuthorEntity.Create(name, surname);
-    }
 }
