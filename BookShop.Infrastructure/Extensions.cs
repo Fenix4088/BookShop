@@ -40,12 +40,14 @@ public static class Extensions
             .WithTracing(t =>
                 t.AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
-                    .AddConsoleExporter())
+                    .AddConsoleExporter()
+                )
             .WithMetrics(m =>
                 m.AddAspNetCoreInstrumentation()
-                    .AddConsoleExporter())
+                    .AddConsoleExporter()
+                )
             .WithLogging(l =>
-                l.AddConsoleExporter());
+            l.AddConsoleExporter());
 
         services.AddOpenTelemetry()
             .UseAzureMonitor(opt =>

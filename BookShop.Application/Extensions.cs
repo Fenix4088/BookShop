@@ -1,4 +1,5 @@
 using BookShop.Application.Abstractions;
+using BookShop.Application.Decorators;
 using BookShop.Application.Models;
 using BookShop.Application.Validators;
 using BookShop.Domain;
@@ -28,6 +29,10 @@ public static class Extensions
             .AsImplementedInterfaces()
             .WithScopedLifetime()
         );
+        
+        services.Decorate(typeof(IQueryHandler<,>), typeof(LoggingQueryHandlerDecorator<,>));
+        services.Decorate(typeof(ICommandHandler<>), typeof(LoggingQueryHandlerDecorator<>));
+
         return services;
     }
 

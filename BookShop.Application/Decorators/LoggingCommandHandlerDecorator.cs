@@ -3,30 +3,30 @@ using Microsoft.Extensions.Logging;
 
 namespace BookShop.Application.Decorators;
 
-public class LoggingQueryHandlerDecorator<TQuery, TResult>: IQueryHandler<TQuery, TResult>
+public class LoggingQueryHandlerDecorator<TCommand>: ICommandHandler<TCommand> where TCommand : class, ICommand
 {
 
-    private readonly IQueryHandler<TQuery, TResult> queryHandler;
-    private readonly ILogger<LoggingQueryHandlerDecorator<TQuery, TResult>> logger;
+    private readonly ICommandHandler<TCommand> commandHandler;
+    private readonly ILogger<LoggingQueryHandlerDecorator<TCommand>> logger;
     
     public LoggingQueryHandlerDecorator(
-        IQueryHandler<TQuery, TResult> queryHandler,
-        ILogger<LoggingQueryHandlerDecorator<TQuery, TResult>> logger)
+        ICommandHandler<TCommand> commandHandler,
+        ILogger<LoggingQueryHandlerDecorator<TCommand>> logger)
     {
-        this.queryHandler = queryHandler;
+        this.commandHandler = commandHandler;
         this.logger = logger;
     }
     
-    public async Task<TResult> Handler(TQuery query)
+    public async Task Handler(TCommand command)
     {
         try
         {
-            return await queryHandler.Handler(query);
+            await commandHandler.Handler(command);
         }
         catch (Exception e)
         {
             logger.LogError(e, "Error in handler {Handler} for query {@Query}",
-                queryHandler.GetType().Name, query);
+                commandHandler.GetType().Name, command);
 
             throw;
         }
