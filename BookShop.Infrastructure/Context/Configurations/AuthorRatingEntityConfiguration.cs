@@ -36,6 +36,6 @@ public class AuthorRatingEntityConfiguration : IEntityTypeConfiguration<AuthorRa
         
         builder.Property(bookRating => bookRating.DeletedAt).IsRequired(false);
         
-        builder.HasCheckConstraint("CK_Rating_Score_Valid", "[Score] >= 1 AND [Score] <= 5");
+        builder.HasCheckConstraint("CK_AuthorRating_Score_Valid", "[Score] >= 1 AND [Score] <= 5");
     }
 }
