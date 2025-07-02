@@ -31,30 +31,15 @@ namespace BookShop.Infrastructure;
 
 public static class Extensions
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
     {
         const string serviceName = "BookShop.Api";
-        
-        services.AddOpenTelemetry()
-            .ConfigureResource(r => r.AddService(serviceName))
-            .WithTracing(t =>
-                t.AddAspNetCoreInstrumentation()
-                    .AddHttpClientInstrumentation()
-                    .AddConsoleExporter()
-                )
-            .WithMetrics(m =>
-                m.AddAspNetCoreInstrumentation()
-                    .AddConsoleExporter()
-                )
-            .WithLogging(l =>
-            l.AddConsoleExporter());
+        var isProduction = environment.IsProduction();
 
-        services.AddOpenTelemetry()
-            .UseAzureMonitor(opt =>
-            {
-                opt.ConnectionString = configuration.GetConnectionString("AzureMonitor");
-                opt.SamplingRatio = 0.5F;
-            });
+        if (isProduction)
+        {
+            services.AddTelemetry(configuration);
+        }
         
         services.Configure<EmailSettings>(configuration.GetSection("Smtp"));
         
@@ -110,7 +95,35 @@ public static class Extensions
         );
         return app;
     }
-    
+
+    private static IServiceCollection AddTelemetry(this IServiceCollection services, IConfiguration configuration)
+    {
+        const string serviceName = "BookShop.Api";
+        
+        services.AddOpenTelemetry()
+            .ConfigureResource(r => r.AddService(serviceName))
+            .WithTracing(t =>
+                t.AddAspNetCoreInstrumentation()
+                    .AddHttpClientInstrumentation()
+                    .AddConsoleExporter()
+            )
+            .WithMetrics(m =>
+                m.AddAspNetCoreInstrumentation()
+                    .AddConsoleExporter()
+            )
+            .WithLogging(l =>
+                l.AddConsoleExporter());
+
+        services.AddOpenTelemetry()
+            .UseAzureMonitor(opt =>
+            {
+                opt.ConnectionString = configuration.GetConnectionString("AzureMonitor");
+                opt.SamplingRatio = 0.5F;
+            });
+
+        return services;
+    }
+
     private static IServiceCollection AddRepositories(this IServiceCollection services)
     {
         services
