@@ -27,12 +27,20 @@ internal sealed class DatabaseInitializer: IHostedService
     
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        _logger.LogInformation("🚀 Starting database migration & seeding…");
+        try
+        {
+            _logger.LogInformation("🚀 Starting database migration & seeding…");
 
-        using var scope = _services.CreateScope();
+            using var scope = _services.CreateScope();
 
-        var seeder = scope.ServiceProvider.GetRequiredService<IDataSeeder>();
-        await seeder.SeedAsync(cancellationToken);
+            var seeder = scope.ServiceProvider.GetRequiredService<IDataSeeder>();
+            await seeder.SeedAsync(cancellationToken);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "❌ Exception during database seeding");
+            throw;
+        }
     }
 
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
