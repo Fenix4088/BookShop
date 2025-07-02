@@ -56,8 +56,8 @@ public class DataSeeder : IDataSeeder
         }
         catch (Exception e)
         {
-            logger.LogError(e.Message);
-            throw new Exception(e.Message, e);
+            logger.LogError(e, "❌ Exception during database seeding");
+            throw;
         }
     }
 
