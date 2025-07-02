@@ -9,6 +9,7 @@ using BookShop.Shared.Enums;
 using BookShop.Shared.Pagination.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace BookShop.Web.Controllers;
 [ValidationExceptionFilter]
@@ -20,6 +21,7 @@ public class AuthorsController : Controller
     private readonly IQueryHandler<GetAuthorQuery, AuthorModel> getAuthorQueryHandler;
     private readonly ICommandHandler<UpdateAuthorCommand> updateAuthorCommandHandler;    
     private readonly IPolicyRoleService policyRoleService;
+    private readonly ILogger<AuthorsController> logger;
 
 
     public AuthorsController(
@@ -28,7 +30,8 @@ public class AuthorsController : Controller
         IQueryHandler<GetAuthorListQuery, IPagedResult<AuthorModel>> getAuthorListQueryHandler,
         IQueryHandler<GetAuthorQuery, AuthorModel> getAuthorQueryHandler,
         ICommandHandler<UpdateAuthorCommand> updateAuthorCommandHandler,
-        IPolicyRoleService policyRoleService
+        IPolicyRoleService policyRoleService,
+        ILogger<AuthorsController> logger
         )
         
     {
@@ -38,6 +41,7 @@ public class AuthorsController : Controller
         this.getAuthorQueryHandler = getAuthorQueryHandler;
         this.updateAuthorCommandHandler = updateAuthorCommandHandler;
         this.policyRoleService = policyRoleService;
+        this.logger = logger;
     }
     
 
