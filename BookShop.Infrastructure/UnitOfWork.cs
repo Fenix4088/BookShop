@@ -20,8 +20,8 @@ internal sealed class UnitOfWork: IUnitOfWork
     public async Task ExecuteAsync(Func<Task> action)
     {
         await using var transaction = await shopDbContext.Database.BeginTransactionAsync();
-        logger.LogInformation($"Starting transaction: {transaction.TransactionId} for unit of work.");
-
+        logger.LogInformation($"🔀 Starting transaction: {transaction.TransactionId} for unit of work. Target: {action.Target}");
+        
         try
         {
             await action();
