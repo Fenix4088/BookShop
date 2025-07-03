@@ -7,23 +7,12 @@ using BookShop.Domain.Repositories;
 
 namespace BookShop.Application.Commands.Handlers;
 
-public class SoftDeleteAuthorCommandHandler: ICommandHandler<SoftDeleteAuthorCommand>
+public class SoftDeleteAuthorCommandHandler(
+    IAuthorRepository authorRepository,
+    IBookRepository bookRepository,
+    IRatingRepository<BookRatingEntity> bookRatingRepository)
+    : ICommandHandler<SoftDeleteAuthorCommand>
 {
-    private readonly IAuthorRepository authorRepository;
-    private readonly IBookRepository bookRepository;
-    private readonly IRatingRepository<BookRatingEntity> bookRatingRepository;
-
-    public SoftDeleteAuthorCommandHandler(
-        IAuthorRepository authorRepository, 
-        IBookRepository bookRepository,
-        IRatingRepository<BookRatingEntity> bookRatingRepository
-        )
-    {
-        this.authorRepository = authorRepository;
-        this.bookRepository = bookRepository;
-        this.bookRatingRepository = bookRatingRepository;
-    }
-
     public async Task Handler(SoftDeleteAuthorCommand command)
     {
         var authorEntity = await authorRepository.GetById(command.AuthorId);

@@ -4,18 +4,11 @@ using BookShop.Domain.Repositories;
 
 namespace BookShop.Application.Commands.Handlers;
 
-public class SoftDeleteBookCommandHandler: ICommandHandler<SoftDeleteBookCommand>
+public class SoftDeleteBookCommandHandler(IBookRepository bookRepository) : ICommandHandler<SoftDeleteBookCommand>
 {
-    private readonly IBookRepository _bookRepository;
-
-    public SoftDeleteBookCommandHandler(IBookRepository bookRepository)
-    {
-        _bookRepository = bookRepository;
-    }
-
     public async Task Handler(SoftDeleteBookCommand command)
     {
-        var book = await _bookRepository.GetBookById(command.BookId);
+        var book = await bookRepository.GetBookById(command.BookId);
 
         if (book is null)
         {
@@ -23,7 +16,7 @@ public class SoftDeleteBookCommandHandler: ICommandHandler<SoftDeleteBookCommand
         }
         
         
-        _bookRepository.SoftDelete(book);
-        await _bookRepository.SaveAsync();
+        bookRepository.SoftDelete(book);
+        await bookRepository.SaveAsync();
     }
 }

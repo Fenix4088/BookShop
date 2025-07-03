@@ -10,3 +10,4 @@
  - [x] Authorizations and Authentication 
  - [x] Add all necessary credentials into Key-Vault
  - [x] deploy to Azure
+ - [ ] Configure SMTP for Production

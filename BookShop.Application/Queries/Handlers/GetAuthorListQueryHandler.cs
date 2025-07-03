@@ -6,15 +6,9 @@ using BookShop.Shared.Pagination.Abstractions;
 
 namespace BookShop.Application.Queries.Handlers;
 
-public class GetAuthorListQueryHandler : IQueryHandler<GetAuthorListQuery, IPagedResult<AuthorModel>>
+public class GetAuthorListQueryHandler(IAuthorRepository authorRepository)
+    : IQueryHandler<GetAuthorListQuery, IPagedResult<AuthorModel>>
 {
-    private readonly IAuthorRepository authorRepository;
-
-    public GetAuthorListQueryHandler(IAuthorRepository authorRepository)
-    {
-        this.authorRepository = authorRepository;
-    }
-
     public async Task<IPagedResult<AuthorModel>> Handler(GetAuthorListQuery query)
     {
         

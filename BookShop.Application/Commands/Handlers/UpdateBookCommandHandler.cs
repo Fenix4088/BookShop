@@ -8,26 +8,13 @@ using ValidationException = FluentValidation.ValidationException;
 
 namespace BookShop.Application.Commands.Handlers;
 
-public class UpdateBookCommandHandler: ICommandHandler<UpdateBookCommand>
+public class UpdateBookCommandHandler(
+    IBookRepository bookRepository,
+    IAuthorRepository authorRepository,
+    IValidator<UpdateBookCommand> validator,
+    IBookDomainService bookDomainService)
+    : ICommandHandler<UpdateBookCommand>
 {
-    private readonly IBookRepository bookRepository;
-    private readonly IAuthorRepository authorRepository;
-    private readonly IValidator<UpdateBookCommand> validator;
-    private readonly IBookDomainService bookDomainService;
-    
-
-    public UpdateBookCommandHandler(IBookRepository bookRepository, 
-        IAuthorRepository authorRepository, 
-        IValidator<UpdateBookCommand> validator,
-        IBookDomainService bookDomainService
-        )
-    {
-        this.bookRepository = bookRepository;
-        this.authorRepository = authorRepository;
-        this.validator = validator;
-        this.bookDomainService = bookDomainService;
-    }
-
     public async Task Handler(UpdateBookCommand command)
     {
         await validator.ValidateAndThrowAsync(command);

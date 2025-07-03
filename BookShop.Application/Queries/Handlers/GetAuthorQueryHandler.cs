@@ -4,18 +4,11 @@ using BookShop.Domain.Repositories;
 
 namespace BookShop.Application.Queries.Handlers;
 
-public class GetAuthorQueryHandler: IQueryHandler<GetAuthorQuery, AuthorModel>
+public class GetAuthorQueryHandler(IAuthorRepository authorRepository) : IQueryHandler<GetAuthorQuery, AuthorModel>
 {
-    private readonly IAuthorRepository _authorRepository;
-
-    public GetAuthorQueryHandler(IAuthorRepository authorRepository)
-    {
-        _authorRepository = authorRepository;
-    }
-
     public async Task<AuthorModel?> Handler(GetAuthorQuery query)
     {
-        var author = await _authorRepository.GetById(query?.Id);
+        var author = await authorRepository.GetById(query?.Id);
         return author?.ToModel();
     }
 }
