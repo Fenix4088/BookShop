@@ -9,4 +9,4 @@
  - [x] Search by books and authors
  - [x] Authorizations and Authentication 
  - [ ] Add all necessary credentials into Key-Vault
- - [ ] deploy to Azure
+ - [x] deploy to Azure

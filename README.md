@@ -19,6 +19,11 @@
 
 If have any questions please let us know: abronowicki@openskydata.com, mlinke@openskydata.com
 
+``` Project link
+https://bookshopmvc-fgdmc9aqeyeucsc6.polandcentral-01.azurewebsites.net
+```
+
+
 //TODO: create alises for this command
 ```bash
 >> create migration
