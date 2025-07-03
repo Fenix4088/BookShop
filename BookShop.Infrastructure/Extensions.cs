@@ -33,7 +33,6 @@ public static class Extensions
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
     {
-        const string serviceName = "BookShop.Api";
         var isProduction = environment.IsProduction();
 
         if (isProduction)

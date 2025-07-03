@@ -8,5 +8,5 @@
  - [ ] Add Domain events to the project
  - [x] Search by books and authors
  - [x] Authorizations and Authentication 
- - [ ] Add all necessary credentials into Key-Vault
+ - [x] Add all necessary credentials into Key-Vault
  - [x] deploy to Azure
