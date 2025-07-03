@@ -46,6 +46,8 @@
                     </a>
                 </th>
                 <th>@Html.DisplayName("Description")</th>
+                <th>@Html.DisplayName("Count")</th>
+                <th>@Html.DisplayName("Price")</th>
                 <th>@Html.DisplayName("ReleaseDate")</th>
                 <th>@Html.DisplayName("Author Name")</th>
                 <th></th> 
@@ -59,6 +61,8 @@
                 <td>@Html.DisplayFor(_ => item.Id)</td>
                 <td>@Html.DisplayFor(_ => item.Title)</td>
                 <td>@Html.DisplayFor(_ => item.Description)</td>
+                <td>@Html.DisplayFor(_ => item.Count)</td>
+                <td>💵&nbsp;@Html.DisplayFor(_ => item.Price)</td>
                 <td>@item.ReleaseDate.ToString("yyyy-MM-dd")</td>
                 <td>@item.Author.NameAndSurname</td>
                 <td>

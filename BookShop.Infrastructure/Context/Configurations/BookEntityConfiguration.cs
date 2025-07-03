@@ -27,6 +27,10 @@ public class BookEntityConfiguration: IEntityTypeConfiguration<BookEntity>
         builder.Property(e => e.ReleaseDate).IsRequired();
         
         builder.Property(author => author.DeletedAt).IsRequired(false);
+
+        builder.Property(book => book.Count).IsRequired();
+        
+        builder.Property(book => book.Price).IsRequired().HasColumnType("decimal(18,2)");
         
         builder.HasOne(b => b.Author)
             .WithMany(a => a.Books)

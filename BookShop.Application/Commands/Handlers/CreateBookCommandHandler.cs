@@ -36,7 +36,8 @@ public sealed class CreateBookCommandHandler(
             }); 
         }
 
-        var newBookEntity = BookEntity.Create(command.Title, command.Description, command.ReleaseDate, command.AuthorId);
+        var newBookEntity = BookEntity.Create(command.Title, command.Description, command.ReleaseDate, command.AuthorId, command.Count, command.Price);
+        
         authorEntity.AddBook();
 
         await authorRepository.UpdateAsync(authorEntity);
