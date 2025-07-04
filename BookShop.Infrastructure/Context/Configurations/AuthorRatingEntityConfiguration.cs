@@ -5,16 +5,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace BookShop.Infrastructure.Context.Configurations;
 
-public class AuthorRatingEntityConfiguration : IEntityTypeConfiguration<AuthorRatingEntity>
+public class AuthorRatingEntityConfiguration(string schema) : IEntityTypeConfiguration<AuthorRatingEntity>
 {
     
-    protected string Schema { get; set; }
-    
-    public AuthorRatingEntityConfiguration(string schema)
-    {
-        Schema = schema;
-    }
-    
+    protected string Schema { get; set; } = schema;
+
     public void Configure(EntityTypeBuilder<AuthorRatingEntity> builder)
     {
         builder.HasKey(authorRating => authorRating.Id);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using BookShop.Domain.Entities.Cart;
 using BookShop.Domain.Entities.Rating;
 
 namespace BookShop.Domain.Entities;
@@ -20,7 +21,8 @@ public class BookEntity : BookShopGenericEntity
     public AuthorEntity Author { get; private set; }
     
     public ICollection<BookRatingEntity> Ratings { get; private set; } = new List<BookRatingEntity>();
-
+    
+    public ICollection<CartItemEntity> CartItems { get; private set; } = new List<CartItemEntity>();
     
     public static BookEntity Create(string title, string description, DateTime releaseDate, int authorId, int quantity, decimal price, string? coverImageUrl = "") => new()
     {

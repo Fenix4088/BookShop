@@ -4,14 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace BookShop.Infrastructure.Context.Configurations;
 
-public class AuthorEntityConfiguration : IEntityTypeConfiguration<AuthorEntity>
+public class AuthorEntityConfiguration(string schema) : IEntityTypeConfiguration<AuthorEntity>
 {
-    protected string Schema { get; set; }
-
-    public AuthorEntityConfiguration(string schema)
-    {
-        Schema = schema;
-    }
+    protected string Schema { get; set; } = schema;
 
     public void Configure(EntityTypeBuilder<AuthorEntity> builder)
     {
