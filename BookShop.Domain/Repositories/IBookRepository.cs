@@ -17,6 +17,7 @@ public interface IBookRepository: IRepository<BookEntity>
     public Task<BookEntity> GetBookById(int bookId);
     
     public Task<bool> IsUniqueBookAsync(string title, DateTime releaseDate);
+    public Task<bool> IsUniqueBookAsync(int targetBookId, string title, DateTime releaseDate);
     
     Task<IPagedResult<BookEntity>> GetPagedResultAsync(
         IPagedQuery<BookEntity> pagedQuery,

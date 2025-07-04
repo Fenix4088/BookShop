@@ -27,7 +27,7 @@ public class UpdateBookCommandHandler(
 
         if (authorEntity is null) throw new AuthorNotFoundException(command.AuthorId);
         
-        if(!await bookDomainService.IsUniqueBookAsync(command.Title, command.ReleaseDate))
+        if(!await bookDomainService.IsUniqueBookAsync(bookEntity.Id, command.Title, command.ReleaseDate))
         {
             throw new ValidationException(new List<ValidationFailure>
             {
