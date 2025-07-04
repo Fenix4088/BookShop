@@ -28,7 +28,7 @@ public class BookEntityConfiguration: IEntityTypeConfiguration<BookEntity>
         
         builder.Property(author => author.DeletedAt).IsRequired(false);
 
-        builder.Property(book => book.Count).IsRequired();
+        builder.Property(book => book.Quantity).IsRequired();
         
         builder.Property(book => book.Price).IsRequired().HasColumnType("decimal(18,2)");
         

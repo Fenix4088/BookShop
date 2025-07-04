@@ -145,7 +145,7 @@ public class DataSeeder : IDataSeeder
                 .RuleFor(book => book.CoverImgUrl, f => f.Image.PicsumUrl())
                 .RuleFor(book => book.CreatedAt, f => DateTime.UtcNow)
                 .RuleFor(book => book.DeletedAt, f => null)
-                .RuleFor(book => book.Count, f => f.Random.Int(100, 200))
+                .RuleFor(book => book.Quantity, f => f.Random.Int(100, 200))
                 .RuleFor(book => book.Price, f => f.Finance.Amount(10, 100))
                 .Generate(5));
             seededAuthor.AddBook(5);

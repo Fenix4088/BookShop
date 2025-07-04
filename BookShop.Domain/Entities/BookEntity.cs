@@ -14,7 +14,7 @@ public class BookEntity : BookShopGenericEntity
 
     public string? CoverImgUrl { get; private set; }
 
-    public int Count { get; private set; } = 0;
+    public int Quantity { get; private set; } = 0;
     
     public decimal Price { get; private set; } = 0;
     public AuthorEntity Author { get; private set; }
@@ -22,24 +22,24 @@ public class BookEntity : BookShopGenericEntity
     public ICollection<BookRatingEntity> Ratings { get; private set; } = new List<BookRatingEntity>();
 
     
-    public static BookEntity Create(string title, string description, DateTime releaseDate, int authorId, int count, decimal price, string? coverImageUrl = "") => new()
+    public static BookEntity Create(string title, string description, DateTime releaseDate, int authorId, int quantity, decimal price, string? coverImageUrl = "") => new()
     {
         Title = title,
         Description = description,
         ReleaseDate = releaseDate,
         AuthorId = authorId,
-        Count = count,
+        Quantity = quantity,
         Price = price,
         CoverImgUrl = coverImageUrl,
         CreatedAt = DateTime.Now
     };
 
-    public void Update(AuthorEntity newAuthor, string title, string description, int count, decimal price, DateTime releaseDate)
+    public void Update(AuthorEntity newAuthor, string title, string description, int quantity, decimal price, DateTime releaseDate)
     {
         Title = title;
         Description = description;
         ReleaseDate = releaseDate;
-        Count = count;
+        Quantity = quantity;
         Price = price;
 
         if (AuthorId != newAuthor.Id)

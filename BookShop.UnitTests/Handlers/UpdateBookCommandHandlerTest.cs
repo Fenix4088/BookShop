@@ -36,7 +36,7 @@ public class UpdateBookCommandHandlerTest: TestBase
         
         
         // Act
-        var command = new UpdateBookCommand(book.Id, book.AuthorId, "Updated Title", "Updated Description", DateTime.Now.AddDays(-1));
+        var command = new UpdateBookCommand(book.Id, book.AuthorId, "Updated Title", "Updated Description", 1, 1, DateTime.Now.AddDays(-1));
         
         await updateBookCommandHandler.Handler(command);
         
@@ -59,7 +59,7 @@ public class UpdateBookCommandHandlerTest: TestBase
         author.BookCount.ShouldBe(1);
 
         // Act
-        var command = new UpdateBookCommand(book.Id, book.AuthorId, "Updated Title", "Updated Description", DateTime.Now.AddDays(-1));
+        var command = new UpdateBookCommand(book.Id, book.AuthorId, "Updated Title", "Updated Description", 1, 1, DateTime.Now.AddDays(-1));
         
         await updateBookCommandHandler.Handler(command);
         
@@ -84,11 +84,49 @@ public class UpdateBookCommandHandlerTest: TestBase
         newAuthor.BookCount.ShouldBe(0);
         
         // Act
-        var command = new UpdateBookCommand(book.Id, newAuthor.Id, "Updated Title", "Updated Description", DateTime.Now.AddDays(-1));
+        var command = new UpdateBookCommand(book.Id, newAuthor.Id, "Updated Title", "Updated Description", 1, 1, DateTime.Now.AddDays(-1));
         await updateBookCommandHandler.Handler(command);
         
         oldAuthor.BookCount.ShouldBe(0);
         newAuthor.BookCount.ShouldBe(1);
         
+    }
+
+    [Fact]
+    public async Task UpdateBookCommandHandler_ShouldBeAble_Update_BookQuantity()
+    {
+        // Arrange
+        var author = mockHelper.CreateAuthor();
+        var book = mockHelper.CreateBook(author);
+        
+        // Act
+        var command = new UpdateBookCommand(book.Id, book.AuthorId, "Updated Title", "Updated Description", 10, 1, DateTime.Now.AddDays(-1));
+        
+        await updateBookCommandHandler.Handler(command);
+        
+        var updatedBook = await bookRepository.GetBookById(book.Id);
+        
+        // Assert
+        updatedBook.ShouldNotBeNull();
+        updatedBook.Quantity.ShouldBe(command.Quantity);
+    }
+
+    [Fact]
+    public async Task UpdateBookCommandHandler_ShouldBeAble_To_updateBookPrice()
+    {
+        // Arrange
+        var author = mockHelper.CreateAuthor();
+        var book = mockHelper.CreateBook(author);
+        
+        // Act
+        var command = new UpdateBookCommand(book.Id, book.AuthorId, "Updated Title", "Updated Description", 1, 20.99M, DateTime.Now.AddDays(-1));
+        
+        await updateBookCommandHandler.Handler(command);
+        
+        var updatedBook = await bookRepository.GetBookById(book.Id);
+        
+        // Assert
+        updatedBook.ShouldNotBeNull();
+        updatedBook.Price.ShouldBe(command.Price);
     }
 }

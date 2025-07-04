@@ -56,7 +56,7 @@ public static class Extensions
             Id = bookEntity.Id,
             Title = bookEntity.Title,
             Description = bookEntity.Description,
-            Count = bookEntity.Count,
+            Quantity = bookEntity.Quantity,
             Price = bookEntity.Price,
             ReleaseDate = bookEntity.ReleaseDate,
             AuthorId = bookEntity.AuthorId,

@@ -35,7 +35,7 @@ public class UpdateBookCommandHandler(
             }); 
         }
         
-        bookEntity.Update(authorEntity, command.Title, command.Description, command.Count, command.Price, command.ReleaseDate);
+        bookEntity.Update(authorEntity, command.Title, command.Description, command.Quantity, command.Price, command.ReleaseDate);
         await bookRepository.SaveAsync();
         await authorRepository.SaveAsync();
 

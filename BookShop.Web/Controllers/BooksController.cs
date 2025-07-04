@@ -88,7 +88,7 @@ public class BooksController: Controller
         
         HttpContext.Items["CurrentModel"] = model;
         
-        await createBookCommandHandler.Handler(new CreateBookCommand(model.Book.AuthorId, model.Book.Title, model.Book.Description, model.Book.Count, model.Book.Price, model.Book.ReleaseDate));
+        await createBookCommandHandler.Handler(new CreateBookCommand(model.Book.AuthorId, model.Book.Title, model.Book.Description, model.Book.Quantity, model.Book.Price, model.Book.ReleaseDate));
         
         return RedirectToAction("BooksList");
     }
@@ -104,7 +104,7 @@ public class BooksController: Controller
 
         HttpContext.Items["CurrentModel"] = model;
         
-        await updateBookCommandHandler.Handler(new UpdateBookCommand(model.Book.Id, model.Book.AuthorId, model.Book.Title, model.Book.Description, model.Book.Count, model.Book.Price, model.Book.ReleaseDate));
+        await updateBookCommandHandler.Handler(new UpdateBookCommand(model.Book.Id, model.Book.AuthorId, model.Book.Title, model.Book.Description, model.Book.Quantity, model.Book.Price, model.Book.ReleaseDate));
         
         return RedirectToAction("BooksList");
     }
