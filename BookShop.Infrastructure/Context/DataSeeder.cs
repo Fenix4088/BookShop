@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Bogus;
 using BookShop.Domain;
 using BookShop.Domain.Entities;
+using BookShop.Domain.Entities.Cart;
 using BookShop.Infrastructure.Abstractions;
 using BookShop.Infrastructure.Identity;
 using BookShop.Shared;
@@ -164,8 +165,26 @@ public class DataSeeder : IDataSeeder
             var user = GenerateUser();
             await userManager.CreateAsync(user, "Test12345!");
             await userManager.AddToRoleAsync(user, roles.GetName());
+            CreateUserCart(user);
             await ConfirmEmail(user, userManager);
         }
+    }
+
+    private void CreateUserCart(BookShopUser user)
+    {
+        if (user.Cart != null)
+        {
+            return;
+        }
+        
+        var cart = user.AddCart();
+
+        if (cart is not null)
+        {
+            logger.LogInformation($"🛒 Cart created for user {user.UserName} with ID {user.Id}");
+            ctx.Carts.Add(cart);
+        }
+
     }
 
     private BookShopUser GenerateUser() => new Faker<BookShopUser>()

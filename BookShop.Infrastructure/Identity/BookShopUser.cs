@@ -13,4 +13,13 @@ public class BookShopUser: IdentityUser<Guid>
     public ICollection<AuthorRatingEntity> RatingsAuthor { get; private set; } = new List<AuthorRatingEntity>();
     
     public CartEntity Cart { get; private set; }
+    
+    
+    public CartEntity? AddCart()
+    {
+        if (Cart is not null) return null;
+        
+        Cart = CartEntity.Create(Id);
+        return Cart;
+    }
 }
