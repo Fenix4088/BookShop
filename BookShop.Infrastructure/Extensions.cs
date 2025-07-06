@@ -12,6 +12,7 @@ using BookShop.Infrastructure.Middlewares;
 using BookShop.Infrastructure.Repositories;
 using BookShop.Infrastructure.Repositories.Abstractions;
 using BookShop.Infrastructure.Services.Background;
+using BookShop.Infrastructure.Services.Cart;
 using BookShop.Infrastructure.Services.Domain;
 using BookShop.Infrastructure.Services.Email;
 using BookShop.Infrastructure.Services.PolicyRole;
@@ -130,7 +131,8 @@ public static class Extensions
             .AddScoped<IAuthorRepository, AuthorRepository>()
             .AddScoped<IBookRepository, BookRepository>()
             .AddScoped<IRatingRepository<BookRatingEntity>, BookRatingRepository>()
-            .AddScoped<IRatingRepository<AuthorRatingEntity>, AuthorRatingRepository>();
+            .AddScoped<IRatingRepository<AuthorRatingEntity>, AuthorRatingRepository>()
+            .AddScoped<ICartRepository, CartRepository>();
         
         return services;
     }
@@ -142,7 +144,8 @@ public static class Extensions
             .AddScoped<IEmailSender, EmailSender>()
             .AddScoped<IPolicyRoleService, PolicyRoleService>()
             .AddScoped<IUserService, UserService>()
-            .AddScoped<IPolicyRoleService, PolicyRoleService>();
+            .AddScoped<IPolicyRoleService, PolicyRoleService>()
+            .AddScoped<ICartService, CartService>();
         
         return services;
     }

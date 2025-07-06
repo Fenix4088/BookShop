@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using BookShop.Application.Users;
-using BookShop.Domain.Repositories;
 using BookShop.Infrastructure.Context;
 using BookShop.Infrastructure.Identity;
 using BookShop.Infrastructure.Repositories.Abstractions;
