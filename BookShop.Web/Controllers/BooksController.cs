@@ -13,37 +13,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BookShop.Web.Controllers;
 [ValidationExceptionFilter("Book")]
-public class BooksController: Controller
+public class BooksController(
+    ICommandHandler<CreateBookCommand> createBookCommandHandler,
+    IQueryHandler<GetBookListQuery, IPagedResult<BookModel>> getBookListQueryHandler,
+    IQueryHandler<GetAuthorListQuery, IPagedResult<AuthorModel>> getAuthorsListQueryHandler,
+    ICommandHandler<SoftDeleteBookCommand> softDeleteBookCommandHandler,
+    IQueryHandler<GetBookQuery, BookModel> getBookQueryHandler,
+    ICommandHandler<UpdateBookCommand> updateBookCommandHandler,
+    IPolicyRoleService policyRoleService)
+    : Controller
 {
-
-    private readonly ICommandHandler<CreateBookCommand> createBookCommandHandler;
-    private readonly IQueryHandler<GetBookListQuery, IPagedResult<BookModel>> getBookListQueryHandler;
-    private readonly IQueryHandler<GetAuthorListQuery, IPagedResult<AuthorModel>> getAuthorsListQueryHandler;
-    private readonly IQueryHandler<GetBookQuery, BookModel> getBookQueryHandler;
-    private readonly ICommandHandler<SoftDeleteBookCommand> softDeleteBookCommandHandler;
-    private readonly ICommandHandler<UpdateBookCommand> updateBookCommandHandler;
-    private readonly IPolicyRoleService policyRoleService;
-
-    public BooksController(
-        ICommandHandler<CreateBookCommand> createBookCommandHandler, 
-        IQueryHandler<GetBookListQuery, IPagedResult<BookModel>> getBookListQueryHandler, 
-        IQueryHandler<GetAuthorListQuery, IPagedResult<AuthorModel>> getAuthorsListQueryHandler,
-        ICommandHandler<SoftDeleteBookCommand> softDeleteBookCommandHandler,
-        IQueryHandler<GetBookQuery, BookModel> getBookQueryHandler,
-        ICommandHandler<UpdateBookCommand> updateBookCommandHandler,
-        IPolicyRoleService policyRoleService
-        )
-    {
-        this.createBookCommandHandler = createBookCommandHandler;
-        this.getBookListQueryHandler = getBookListQueryHandler;
-        this.getAuthorsListQueryHandler = getAuthorsListQueryHandler;
-        this.softDeleteBookCommandHandler = softDeleteBookCommandHandler;
-        this.getBookQueryHandler = getBookQueryHandler;
-        this.updateBookCommandHandler = updateBookCommandHandler;
-        this.policyRoleService = policyRoleService;
-    }
-
-
     [HttpGet]
     [Authorize(Policy = nameof(Policies.AdminAndManager))]
     public async Task<IActionResult> BookForm(int? id)

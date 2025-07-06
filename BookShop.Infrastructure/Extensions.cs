@@ -1,5 +1,7 @@
 using Azure.Monitor.OpenTelemetry.AspNetCore;
+using BookShop.Application;
 using BookShop.Application.Abstractions;
+using BookShop.Application.Services;
 using BookShop.Application.Users;
 using BookShop.Domain.Abstractions;
 using BookShop.Domain.Entities.Rating;

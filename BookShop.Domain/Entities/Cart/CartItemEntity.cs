@@ -31,15 +31,25 @@ public class CartItemEntity
             CreatedAt = DateTime.UtcNow
         };
     }
-    
-    public void UpdateQuantity(int quantity)
+
+    public void IncreaseQuantity(int count = 1)
     {
-        if (quantity <= 0) throw new ArgumentException("Quantity must be greater than zero.", nameof(quantity));
+        if (count <= 0) throw new ArgumentException("Count must be greater than zero.", nameof(count));
         
-        Quantity = quantity;
+        Quantity += count;
         UpdatedAt = DateTime.UtcNow;
     }
     
+    public void DecreaseQuantity(int count = 1)
+    {
+        if (count <= 0) throw new ArgumentException("Count must be greater than zero.", nameof(count));
+        
+        if (Quantity < count) throw new InvalidOperationException("Cannot decrease quantity below zero.");
+        
+        Quantity -= count;
+        UpdatedAt = DateTime.UtcNow;
+    }
+
     public void Update(CartItemEntity item)
     {
         if (item == null) throw new ArgumentNullException(nameof(item));

@@ -4,7 +4,7 @@
     var userName = Context.User.Identity?.Name;
     var isAuthorized = Context.User.Identity?.IsAuthenticated ?? false;
     var pageName = ViewContext.RouteData.Values["action"]?.ToString()?.ToLower();
-
+    
     var roleDescription =  Context.User.IsInRole(Roles.Admin.GetName()) ? Roles.Admin.GetDescription() : Context.User.IsInRole(Roles.Manager.GetName()) ? Roles.Manager.GetDescription() : Roles.User.GetDescription();
 }
 
@@ -40,6 +40,11 @@
                             </li>
                         </ul>
                     </div>
+                </div>
+                <div>
+                    <a asp-controller="Cart" asp-action="CartItems" class="bg-sky-600 text-white font-bold py-1 px-2 rounded transition duration-300">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                    </a>
                 </div>
                 <div>
                     @roleDescription: 

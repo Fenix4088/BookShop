@@ -60,6 +60,20 @@ public class BookEntity : BookShopGenericEntity
         }
     }
 
+    public void DecreaseQuantity(int count = 1)
+    {
+        if (count <= 0) throw new ArgumentException("Count must be greater than zero.", nameof(count));
+        if (Quantity < count) throw new InvalidOperationException("Not enough quantity available.");
+
+        Quantity -= count;
+    }
+    
+    public void IncreaseQuantity(int count = 1)
+    {
+        if (count <= 0) throw new ArgumentException("Count must be greater than zero.", nameof(count));
+        Quantity += count;
+    }
+
     public void SetCoverImage(string imageUrl)
     {
         CoverImgUrl = imageUrl;

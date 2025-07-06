@@ -1,5 +1,7 @@
 using System;
 using System.Threading.Tasks;
+using BookShop.Application;
+using BookShop.Application.Services;
 using BookShop.Infrastructure.Identity;
 using BookShop.Infrastructure.Services.Cart;
 using BookShop.Infrastructure.Services.User;
@@ -31,7 +33,6 @@ public class AccountController(
     [DenyAuthenticated]
     public async Task<IActionResult> Login(string email, string password)
     {
-        
         logger.LogInformation($"Trying to login user with email: {email}");
         
         var user = await userService.GetCurrentUserByEmail(email);

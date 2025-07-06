@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BookShop.Domain.Entities.Cart;
 
@@ -26,12 +27,26 @@ public sealed class CartEntity
     };
     
     
-    public void AddItem(CartItemEntity item)
+    public CartItemEntity AddItem(int bookId)
     {
-        if (item == null) throw new ArgumentNullException(nameof(item));
+        var existing = Items.FirstOrDefault(i => i.BookId == bookId);
         
+        if (existing != null)
+        {
+            existing.IncreaseQuantity();
+            UpdatedAt = DateTime.UtcNow;
+            return existing;
+        }
+        
+        var item = CartItemEntity.Create(Id, bookId, 1);
         Items.Add(item);
         UpdatedAt = DateTime.UtcNow;
+        return item;
+    }
+    
+    public bool IsAlreadyItemExists(int bookId)
+    {
+        return Items.Any(i => i.BookId == bookId);
     }
     
     public void RemoveItem(CartItemEntity item)

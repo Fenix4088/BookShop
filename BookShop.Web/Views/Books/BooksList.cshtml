@@ -72,20 +72,32 @@
                     }
                 </td>
                 <td class="flex gap-x-2">
-                    @if (!item.IsDeleted && IsAdminOrManager)
-                    {
+                    
+                        @if (!item.IsDeleted && IsAdminOrManager)
+                        {
                         <form asp-action="RemoveBook" method="post">
-                            <input type="hidden" name="bookId" value="@item.Id"/>
-                            <div class="d-flex gap-x-2">
-                                <button class="bg-red-600 text-white font-bold py-1 px-2 rounded transition duration-300" asp-action="RemoveBook">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
+                                <input type="hidden" name="bookId" value="@item.Id"/>
+                                <div class="d-flex gap-x-2">
+                                    <button class="bg-red-600 text-white font-bold py-1 px-2 rounded transition duration-300" asp-action="RemoveBook">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
                                     <a asp-action="BookForm" asp-route-id="@item.Id" class="bg-blue-600 text-white font-bold py-1 px-2 rounded transition duration-300">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </a>
-                            </div>
-                        </form>
-                    }
+                                </div>
+                            </form>
+                        }
+                        
+                        @if (item.Quantity > 0 && !item.IsDeleted)
+                        {
+                            <form asp-controller="Cart" asp-action="AddToCart" method="post">
+                                <input type="hidden" name="bookId" value="@item.Id"/>
+                                <button asp-controller="Cart" asp-action="AddToCart" class="bg-sky-600 text-white font-bold py-1 px-2 rounded transition duration-300">
+                                    <i class="fa-solid fa-cart-shopping"></i>
+                                </button>
+                            </form>
+                        }
+                    
                 </td>
             </tr>
         }

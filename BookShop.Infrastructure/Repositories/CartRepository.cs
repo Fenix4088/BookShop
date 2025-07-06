@@ -27,13 +27,13 @@ public class CartRepository(ShopDbContext shopDbContext) : GenericRepository<Car
 
     public Task<CartEntity> GetCartByUserIdAsync(Guid userId, bool isGuest = false)
     {
-        return context.Carts.FirstOrDefaultAsync(cart => cart.UserId == userId);
+        return context.Carts.Include(cart => cart.Items).FirstOrDefaultAsync(cart => cart.UserId == userId);
     }
 
 
     public Task<CartEntity> GetCartByIdAsync(Guid cartId)
     {
-        return context.Carts.FirstOrDefaultAsync(cart => cart.Id == cartId);
+        return context.Carts.Include(cart => cart.Items).FirstOrDefaultAsync(cart => cart.Id == cartId);
     }
     
 }
