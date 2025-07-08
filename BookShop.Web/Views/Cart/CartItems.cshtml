@@ -1,0 +1,68 @@
+@model CartDetailsViewModel;
+
+@{
+    ViewData["Title"] = "Cart Items";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1 class="mb-4 font-bold text-xl">Your Shopping Cart</h1>
+
+<div class="bg-white p-4 rounded-lg shadow-md mb-6">
+    <div class="flex justify-between flex-column items-center">
+        <div class="text-lg font-semibold text-gray-800">
+            Total Price: <span class="text-green-600 font-bold">💵@Model.Cart.TotalPrice</span>
+        </div>
+        <div class="text-lg font-semibold text-gray-800">
+            Total Items: <span class="text-sky-600 font-bold">@Model.Cart.TotalQuantity</span>
+        </div>
+    </div>
+</div>
+
+@if (Model.Items.Items.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>@Html.DisplayName("Book Title")</th>
+                <th>@Html.DisplayName("Author")</th>
+                <th>@Html.DisplayName("Quantity")</th>
+                <th>@Html.DisplayName("Price")</th>
+                <th>@Html.DisplayName("Total")</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.Items.Items)
+        {
+            <tr>
+                <td>@item.BookTitle</td>
+                <td>@item.BookAuthorFullname</td>
+                <td>@item.Quantity</td>
+                <td>💵&nbsp;@item.Price</td>
+                <td>💵&nbsp;@item.TotalPrice</td>
+                <td>
+                    <form asp-action="RemoveFromCart" method="post">
+                        <input type="hidden" name="cartItemId" value="@item.Id" />
+                        <button class="bg-red-600 text-white font-bold py-1 px-2 rounded transition duration-300" type="submit">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    <div class="d-flex">
+        @foreach (var paginationButton in Enumerable.Range(1, Model.Items.PageCount))
+        {
+            <a asp-route-CurrentPage="@paginationButton" asp-route-RowCount="10"
+               class="font-bold mr-1 !px-1 rounded transition duration-300 cursor-pointer text-decoration-none @(Model.Items.CurrentPage == paginationButton ? "bg-white-600 !text-sky-600 !border !border-sky-600" : "bg-sky-600 text-white")">
+                @paginationButton
+            </a>
+        }
+    </div>
+}
+else
+{
+    <p>Your cart is empty.</p>
+} 

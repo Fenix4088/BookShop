@@ -56,6 +56,7 @@ public static class ModelsExtensions
             Id = cartItemEntity.Id,
             BookId = cartItemEntity.BookId,
             BookTitle = cartItemEntity.Book.Title,
+            BookAuthorFullname = cartItemEntity.Book.Author.ToModel().NameAndSurname,
             Price = cartItemEntity.Book.Price,
             Quantity = cartItemEntity.Quantity
         };

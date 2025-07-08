@@ -1,9 +1,14 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using BookShop.Application.Models;
 using BookShop.Domain.Entities.Cart;
 using BookShop.Domain.Repositories;
 using BookShop.Infrastructure.Context;
 using BookShop.Infrastructure.Repositories.Abstractions;
+using BookShop.Shared.Pagination;
+using BookShop.Shared.Pagination.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookShop.Infrastructure.Repositories;
@@ -27,13 +32,35 @@ public class CartRepository(ShopDbContext shopDbContext) : GenericRepository<Car
 
     public Task<CartEntity> GetCartByUserIdAsync(Guid userId, bool isGuest = false)
     {
-        return context.Carts.Include(cart => cart.Items).FirstOrDefaultAsync(cart => cart.UserId == userId);
+        return context.Carts
+            .Include(cart => cart.Items)
+            .ThenInclude(cartItem => cartItem.Book)
+            .ThenInclude(book => book.Author)
+            .FirstOrDefaultAsync(cart => cart.UserId == userId);
     }
 
 
     public Task<CartEntity> GetCartByIdAsync(Guid cartId)
     {
-        return context.Carts.Include(cart => cart.Items).FirstOrDefaultAsync(cart => cart.Id == cartId);
+        return context.Carts
+            .Include(cart => cart.Items)
+            .FirstOrDefaultAsync(cart => cart.Id == cartId);
     }
-    
+
+    public async Task<IEnumerable<CartItemEntity>> GetCartItemsAsync(Guid userId)
+    {
+        var cart = await GetCartByUserIdAsync(userId);
+        return cart.Items;
+    }
+
+    public async Task<IPagedResult<CartItemEntity>> GetCartItemsPagedResultAsync(IPagedQuery<CartItemEntity> pagedQuery, Guid userId)
+    {
+
+        var cartItems  = context.Carts
+            .Where(cart => cart.UserId == userId)
+            .SelectMany(cart => cart.Items)
+            .OrderBy(cartItem => cartItem.CreatedAt);
+        
+        return await cartItems.ToPagedResult(pagedQuery, x => x);
+    }
 }
