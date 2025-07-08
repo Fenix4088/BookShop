@@ -105,10 +105,11 @@ public class DataSeeder : IDataSeeder
         var adminUser = await userManager.FindByEmailAsync(adminEmail);
         if (adminUser == null)
         {
-            adminUser = new BookShopUser() { UserName = adminEmail, Email = adminEmail };
-            await userManager.CreateAsync(adminUser, "Admin123!");
-            await userManager.AddToRoleAsync(adminUser, Roles.Admin.GetName());
-            await ConfirmEmail(adminUser, userManager);
+            // adminUser = new BookShopUser() { UserName = adminEmail, Email = adminEmail };
+            // await userManager.CreateAsync(adminUser, "Admin123!");
+            // await userManager.AddToRoleAsync(adminUser, Roles.Admin.GetName());
+            // await ConfirmEmail(adminUser, userManager);
+            await GenerateAdmin(adminEmail);
             await GenerateUsers(userManager, Roles.Manager, 3);
             await GenerateUsers(userManager);
         }
@@ -156,7 +157,18 @@ public class DataSeeder : IDataSeeder
 
         await ctx.SaveChangesAsync(cancellationToken);
     }
-    
+
+
+    private async Task<BookShopUser> GenerateAdmin(string email)
+    {
+        var adminUser = new BookShopUser() { UserName = email, Email = email };
+        await userManager.CreateAsync(adminUser, "Admin123!");
+        await userManager.AddToRoleAsync(adminUser, Roles.Admin.GetName());
+        await ConfirmEmail(adminUser, userManager);
+        CreateUserCart(adminUser);
+        logger.LogInformation($"Admin user created with email: {email}");
+        return adminUser;
+    }
 
     private async Task GenerateUsers(UserManager<BookShopUser> userManager, Roles roles = Roles.User, int count = 5)
     {

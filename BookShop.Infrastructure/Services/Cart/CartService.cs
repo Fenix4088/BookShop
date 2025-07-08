@@ -42,6 +42,7 @@ public class CartService(
         
         var cart = await cartRepository.GetCartByUserIdAsync(userId);
 
+        //! Predicate in case if cart was not created yet, for existing user
         if (cart is null)
         {
             cart = await CreateCartByUserIdAsync(userId);
