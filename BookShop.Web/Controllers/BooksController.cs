@@ -95,12 +95,11 @@ public class BooksController(
         var isInAdminAndManagerPolicy = await policyRoleService.IsUserInRoleForPolicyAsync(Policies.AdminAndManager, Roles.Admin);
         var shouldShowDeleted = isInAdminAndManagerPolicy && model.IsDeleted;
         
-        //TODO: Make to change IsDelete just for admins
         if (model.CurrentPage == 0 || model.RowCount == 0)
         {
             return RedirectToAction("BooksList", new
             {
-                CurrentPage = 1,
+                CurrentPage = model.CurrentPage > 0 ? model.CurrentPage : 1,
                 RowCount = 10,
                 SortDirection = model.SortDirection,
                 SearchByBookTitle = model.SearchByBookTitle,

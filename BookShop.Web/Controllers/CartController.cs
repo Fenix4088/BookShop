@@ -3,7 +3,6 @@ using BookShop.Application.Abstractions;
 using BookShop.Application.Commands;
 using BookShop.Application.Models;
 using BookShop.Application.Queries;
-using BookShop.Application.Queries.Handlers;
 using BookShop.Application.Services;
 using BookShop.Infrastructure.Services.User;
 using BookShop.Shared.Enums;
@@ -18,7 +17,8 @@ public class CartController(
     ICartService cartService,
     ICommandHandler<AddBookIntoCartCommand> addBookIntoCartCommandHandler,
     IQueryHandler<GetCartItemsQuery, IPagedResult<CartItemModel>> getCartItemsQueryHandler,
-    IQueryHandler<GetCartQuery, CartModel> getCartQueryHandler
+    IQueryHandler<GetCartQuery, CartModel> getCartQueryHandler,
+    IQueryHandler<GetBookListQuery, IPagedResult<BookModel>> getBookListQueryHandler
     ) : Controller
 {
     
@@ -40,12 +40,21 @@ public class CartController(
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddToCart([FromForm] int bookId)
+    public async Task<IActionResult> AddToCart([FromForm] int currentPage, [FromForm] int bookId)
     {
         var user = await userService.GetCurrentUserAsync();
 
         await addBookIntoCartCommandHandler.Handler(new AddBookIntoCartCommand(user.Id, bookId));
         
-        return RedirectToAction("BooksList", "Books");
+        if (currentPage == 0)
+        {
+            return RedirectToAction("BooksList", "Books", new
+            {
+                CurrentPage = 1,
+                RowCount = 10,
+                IsDeleted = false
+            });
+        }
+        return RedirectToAction("BooksList", "Books", await getBookListQueryHandler.Handler(new GetBookListQuery(currentPage, 10, SortDirection.Descending, "", "", false)));
     }
 }

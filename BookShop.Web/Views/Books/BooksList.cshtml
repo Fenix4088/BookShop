@@ -92,6 +92,7 @@
                         {
                             <form asp-controller="Cart" asp-action="AddToCart" method="post">
                                 <input type="hidden" name="bookId" value="@item.Id"/>
+                                <input type="hidden" name="currentPage" value="@Model.CurrentPage"/>
                                 <button asp-controller="Cart" asp-action="AddToCart" class="bg-sky-600 text-white font-bold py-1 px-2 rounded transition duration-300">
                                     <i class="fa-solid fa-cart-shopping"></i>
                                 </button>
