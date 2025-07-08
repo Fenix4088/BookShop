@@ -1,4 +1,5 @@
 using BookShop.Application.Abstractions;
+using BookShop.Application.Models;
 using BookShop.Domain.Abstractions;
 using BookShop.Domain.Exceptions;
 using BookShop.Domain.Repositories;
