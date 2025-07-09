@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace BookShop.Infrastructure.Filters;
 
+
 public class BookShopExceptionFilter : IExceptionFilter
 {
 
