@@ -3,75 +3,105 @@
 @{
     ViewData["Title"] = "Cart Items";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    
+    var newOutOfStockCartItems = Model.Items.Items.Where(item => item is {
+        NotificationShown: false,
+        IsBookDeleted: true
+    }).ToList();
+    
+    
+    var isNewOutOfStockCartItems = newOutOfStockCartItems.Count > 0;
+    
 }
 
-<h1 class="mb-4 font-bold text-xl">Your Shopping Cart</h1>
 
-<div class="bg-white p-4 rounded-lg shadow-md mb-6">
-    <div class="flex justify-between flex-column items-center">
-        <div class="text-lg font-semibold text-gray-800">
-            Total Price: <span class="text-green-600 font-bold">💵@Model.Cart.TotalPrice</span>
+<div class="position-relative">
+    
+    @if (isNewOutOfStockCartItems)
+    {
+        <div class="p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300 w-full" role="alert">
+            <div class="font-medium">Warning: @newOutOfStockCartItems.Count books in your cart are out of stock !!!</div>
+            <div class="font-medium">@string.Join(", ", newOutOfStockCartItems.Take(3).Select(cartItem => cartItem.BookTitle))</div>
+            @if (newOutOfStockCartItems.Count > 3)
+            {
+                <div class="font-medium">...and @(newOutOfStockCartItems.Count - 3) more items.</div>
+            }
+            <form method="post" action="MarkNotificationShown">
+                <button type="submit" class="close" data-dismiss="alert" aria-label="Close">
+                    <span class="text-white" aria-hidden="true">&times;</span>
+                </button>
+            </form>
         </div>
-        <div class="text-lg font-semibold text-gray-800">
-            Total Items: <span class="text-sky-600 font-bold">@Model.Cart.TotalQuantity</span>
+    }
+
+    <h1 class="mb-4 font-bold text-xl">Your Shopping Cart</h1>
+
+    <div class="bg-white p-4 rounded-lg shadow-md mb-6">
+        <div class="flex justify-between flex-column items-center">
+            <div class="text-lg font-semibold text-gray-800">
+                Total Price: <span class="text-green-600 font-bold">💵@Model.Cart.TotalPrice</span>
+            </div>
+            <div class="text-lg font-semibold text-gray-800">
+                Total Items: <span class="text-sky-600 font-bold">@Model.Cart.TotalQuantity</span>
+            </div>
         </div>
     </div>
-</div>
 
-@if (Model.Items.Items.Any())
-{
-    <table class="table">
-        <thead>
-        <tr>
-            <th>@Html.DisplayName("Book Title")</th>
-            <th>@Html.DisplayName("Author")</th>
-            <th>@Html.DisplayName("Quantity")</th>
-            <th>@Html.DisplayName("Price")</th>
-            <th>@Html.DisplayName("Total")</th>
-            <th></th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var item in Model.Items.Items)
-        {
-            var isBookDeleted = item.IsBookDeleted;
+    @if (Model.Items.Items.Any())
+    {
+        <table class="table">
+            <thead>
             <tr>
-                <td>
-                    @item.BookTitle
-                    @if (isBookDeleted)
-                    {
-                        <span class="text-red-600 text-l font-bold">Out of Stock</span>
-                    }
-                </td>
-                <td>@item.BookAuthorFullname</td>
-                <td>@item.Quantity</td>
-                <td>💵&nbsp;@item.Price</td>
-                <td>💵&nbsp;@item.TotalPrice</td>
-                <td>
-                    <form asp-action="RemoveFromCart" method="post">
-                        <input type="hidden" name="cartItemId" value="@item.Id" />
-                        <input type="hidden" name="cartId" value="@Model.Cart.Id"/>
-                        <input type="hidden" name="currentPage" value="@Model.Items.CurrentPage"/>
-                        <button class="bg-red-600 text-white font-bold py-1 px-2 rounded transition duration-300" type="submit">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
-                    </form>
-                </td>
+                <th>@Html.DisplayName("Book Title")</th>
+                <th>@Html.DisplayName("Author")</th>
+                <th>@Html.DisplayName("Quantity")</th>
+                <th>@Html.DisplayName("Price")</th>
+                <th>@Html.DisplayName("Total")</th>
+                <th></th>
             </tr>
-        }
-        </tbody>
-    </table>
-    <div class="d-flex">
-        @foreach (var paginationButton in Enumerable.Range(1, Model.Items.PageCount))
-        {
-            <a asp-route-CurrentPage="@paginationButton" asp-route-RowCount="10"
-               class="font-bold mr-1 !px-1 rounded transition duration-300 cursor-pointer text-decoration-none @(Model.Items.CurrentPage == paginationButton ? "bg-white-600 !text-sky-600 !border !border-sky-600" : "bg-sky-600 text-white")">
-                @paginationButton
-            </a>
-        }
-    </div>
-}
-else
-{
-    <p>Your cart is empty.</p>
-} 
+            </thead>
+            <tbody>
+            @foreach (var item in Model.Items.Items)
+            {
+                var isBookDeleted = item.IsBookDeleted;
+                <tr>
+                    <td>
+                        @item.BookTitle
+                        @if (isBookDeleted)
+                        {
+                            <span class="text-red-600 text-l font-bold">Out of Stock</span>
+                        }
+                    </td>
+                    <td>@item.BookAuthorFullname</td>
+                    <td>@item.Quantity</td>
+                    <td>💵&nbsp;@item.Price</td>
+                    <td>💵&nbsp;@item.TotalPrice</td>
+                    <td>
+                        <form asp-action="RemoveFromCart" method="post">
+                            <input type="hidden" name="cartItemId" value="@item.Id"/>
+                            <input type="hidden" name="cartId" value="@Model.Cart.Id"/>
+                            <input type="hidden" name="currentPage" value="@Model.Items.CurrentPage"/>
+                            <button class="bg-red-600 text-white font-bold py-1 px-2 rounded transition duration-300" type="submit">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+        <div class="d-flex">
+            @foreach (var paginationButton in Enumerable.Range(1, Model.Items.PageCount))
+            {
+                <a asp-route-CurrentPage="@paginationButton" asp-route-RowCount="10"
+                   class="font-bold mr-1 !px-1 rounded transition duration-300 cursor-pointer text-decoration-none @(Model.Items.CurrentPage == paginationButton ? "bg-white-600 !text-sky-600 !border !border-sky-600" : "bg-sky-600 text-white")">
+                    @paginationButton
+                </a>
+            }
+        </div>
+    }
+    else
+    {
+        <p>Your cart is empty.</p>
+    }
+</div>

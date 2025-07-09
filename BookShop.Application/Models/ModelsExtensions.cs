@@ -60,6 +60,7 @@ public static class ModelsExtensions
             Price = cartItemEntity.Book.Price,
             Quantity = cartItemEntity.Quantity,
             IsBookDeleted = cartItemEntity.IsBookDeleted,
+            NotificationShown = cartItemEntity.NotificationShown,
         };
     }
 }

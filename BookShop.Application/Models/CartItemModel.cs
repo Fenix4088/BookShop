@@ -14,4 +14,6 @@ public sealed class CartItemModel
     public decimal TotalPrice => Price * Quantity;
     
     public bool IsBookDeleted { get; set; }
+    
+    public bool NotificationShown { get; set; }
 }
