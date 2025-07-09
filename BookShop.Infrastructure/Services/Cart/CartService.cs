@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using BookShop.Application.Services;
 using BookShop.Application.Users;
@@ -66,5 +67,41 @@ public class CartService(
         await cartRepository.UpdateAsync(cart);
         await context.SaveChangesAsync();
     }
-    
+
+    public async Task RemoveItemFromCartAsync(Guid cartId, Guid cartItemId)
+    {
+        var cart = await cartRepository.GetCartByIdAsync(cartId);
+        
+        if (cart is null)
+        {
+            throw new CartNotFoundException(cartId);
+        }
+        
+        var cartItem = cart.Items.SingleOrDefault(cartItem => cartItem.Id == cartItemId);
+        
+        if (cartItem is null)
+        {
+            throw new CartItemNotFoundException(cartItemId);
+        }
+        
+        
+        cartItem.Book.IncreaseQuantity();
+        
+        var isSingleItem = cartItem.Quantity == 1;
+        
+        cart.RemoveItem(cartItem);
+
+        if (isSingleItem)
+        {
+            context.CartItems.Remove(cartItem);
+        }
+        else
+        {
+            context.CartItems.Update(cartItem);
+        }
+        
+        await bookRepository.UpdateAsync(cartItem.Book);
+        await cartRepository.UpdateAsync(cart);
+        await context.SaveChangesAsync();
+    }
 }

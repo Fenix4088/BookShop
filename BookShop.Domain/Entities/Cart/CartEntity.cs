@@ -52,7 +52,14 @@ public sealed class CartEntity
     public void RemoveItem(CartItemEntity item)
     {
         if (item == null) throw new ArgumentNullException(nameof(item));
-        
+
+        if (item.Quantity > 1)
+        {
+            item.DecreaseQuantity();
+            UpdatedAt = DateTime.UtcNow;
+            return;
+        }
+
         Items.Remove(item);
         UpdatedAt = DateTime.UtcNow;
     }

@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using BookShop.Application.Abstractions;
 using BookShop.Application.Commands;
@@ -18,7 +19,8 @@ public class CartController(
     ICommandHandler<AddBookIntoCartCommand> addBookIntoCartCommandHandler,
     IQueryHandler<GetCartItemsQuery, IPagedResult<CartItemModel>> getCartItemsQueryHandler,
     IQueryHandler<GetCartQuery, CartModel> getCartQueryHandler,
-    IQueryHandler<GetBookListQuery, IPagedResult<BookModel>> getBookListQueryHandler
+    IQueryHandler<GetBookListQuery, IPagedResult<BookModel>> getBookListQueryHandler,
+    ICommandHandler<RemoveCartItemCommand> removeCartItemCommandHandler
     ) : Controller
 {
     
@@ -46,6 +48,20 @@ public class CartController(
 
         await addBookIntoCartCommandHandler.Handler(new AddBookIntoCartCommand(user.Id, bookId));
         
+        return await RedirectToBookList(currentPage);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> RemoveFromCart([FromForm] int currentPage, [FromForm] Guid cartId, [FromForm] Guid cartItemId)
+    {
+        await removeCartItemCommandHandler.Handler(new RemoveCartItemCommand(cartId, cartItemId));
+
+        return RedirectToAction("CartItems");
+    }
+
+
+    private async Task<IActionResult> RedirectToBookList(int currentPage)
+    {
         if (currentPage == 0)
         {
             return RedirectToAction("BooksList", "Books", new

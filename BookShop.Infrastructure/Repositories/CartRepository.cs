@@ -44,6 +44,7 @@ public class CartRepository(ShopDbContext shopDbContext) : GenericRepository<Car
     {
         return context.Carts
             .Include(cart => cart.Items)
+            .ThenInclude(cartItem => cartItem.Book)
             .FirstOrDefaultAsync(cart => cart.Id == cartId);
     }
 
