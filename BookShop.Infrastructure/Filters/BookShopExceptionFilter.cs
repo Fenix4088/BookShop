@@ -19,7 +19,7 @@ public class BookShopExceptionFilter : IExceptionFilter
 
     public void OnException(ExceptionContext context)
     {
-        if (context.Exception is BookShopException shopException)
+        if (context.Exception is BookShopException { IsGlobal: false } shopException)
         {
             _logger.LogError("BookShopException: {Message}", shopException.Message);
 
@@ -37,8 +37,13 @@ public class BookShopExceptionFilter : IExceptionFilter
                 context.Result = new RedirectToActionResult("Error", "Home", new { message = shopException.Message });
             }
             
-            context.ExceptionHandled = true;
         }
+        else
+        {
+            context.Result = new RedirectToActionResult("Error", "Home", new { message = context.Exception.Message });
+        }
+        
+        context.ExceptionHandled = true;
 
     }
 

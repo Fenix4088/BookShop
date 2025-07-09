@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using BookShop.Domain.Entities.Cart;
 using BookShop.Domain.Entities.Rating;
+using BookShop.Domain.Exceptions;
 
 namespace BookShop.Domain.Entities;
 
@@ -63,7 +64,7 @@ public class BookEntity : BookShopGenericEntity
     public void DecreaseQuantity(int count = 1)
     {
         if (count <= 0) throw new ArgumentException("Count must be greater than zero.", nameof(count));
-        if (Quantity < count) throw new InvalidOperationException("Not enough quantity available.");
+        if (Quantity < count) throw new BookIsOutOfStockException(Id, Title);
 
         Quantity -= count;
     }
