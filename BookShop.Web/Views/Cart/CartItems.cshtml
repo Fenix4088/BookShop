@@ -22,20 +22,27 @@
 {
     <table class="table">
         <thead>
-            <tr>
-                <th>@Html.DisplayName("Book Title")</th>
-                <th>@Html.DisplayName("Author")</th>
-                <th>@Html.DisplayName("Quantity")</th>
-                <th>@Html.DisplayName("Price")</th>
-                <th>@Html.DisplayName("Total")</th>
-                <th></th>
-            </tr>
+        <tr>
+            <th>@Html.DisplayName("Book Title")</th>
+            <th>@Html.DisplayName("Author")</th>
+            <th>@Html.DisplayName("Quantity")</th>
+            <th>@Html.DisplayName("Price")</th>
+            <th>@Html.DisplayName("Total")</th>
+            <th></th>
+        </tr>
         </thead>
         <tbody>
         @foreach (var item in Model.Items.Items)
         {
+            var isBookDeleted = item.IsBookDeleted;
             <tr>
-                <td>@item.BookTitle</td>
+                <td>
+                    @item.BookTitle
+                    @if (isBookDeleted)
+                    {
+                        <span class="text-red-600 text-l font-bold">Out of Stock</span>
+                    }
+                </td>
                 <td>@item.BookAuthorFullname</td>
                 <td>@item.Quantity</td>
                 <td>💵&nbsp;@item.Price</td>

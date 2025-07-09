@@ -58,7 +58,8 @@ public static class ModelsExtensions
             BookTitle = cartItemEntity.Book.Title,
             BookAuthorFullname = cartItemEntity.Book.Author.ToModel().NameAndSurname,
             Price = cartItemEntity.Book.Price,
-            Quantity = cartItemEntity.Quantity
+            Quantity = cartItemEntity.Quantity,
+            IsBookDeleted = cartItemEntity.IsBookDeleted,
         };
     }
 }
