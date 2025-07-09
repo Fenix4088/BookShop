@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BookShop.Application.Models;
 using BookShop.Domain.Entities.Cart;
 using BookShop.Domain.Repositories;
 using BookShop.Infrastructure.Context;
@@ -54,6 +53,14 @@ public class CartRepository(ShopDbContext shopDbContext) : GenericRepository<Car
         return cart.Items;
     }
 
+    public async Task<IEnumerable<CartItemEntity>> GetCartItemsByBookIdAsync(int bookId)
+    {
+        return await context.CartItems
+            .Include(cartItem => cartItem.Book)
+            .Where(cartItem => cartItem.BookId == bookId)
+            .ToListAsync();
+    }
+
     public async Task<IPagedResult<CartItemEntity>> GetCartItemsPagedResultAsync(IPagedQuery<CartItemEntity> pagedQuery, Guid userId)
     {
 
@@ -63,5 +70,15 @@ public class CartRepository(ShopDbContext shopDbContext) : GenericRepository<Car
             .OrderBy(cartItem => cartItem.CreatedAt);
         
         return await cartItems.ToPagedResult(pagedQuery, x => x);
+    }
+    
+    
+    public async Task MarkBookAsDeletedAsync(int bookId)
+    {
+        await context.CartItems
+            .Where(cartItem => cartItem.BookId == bookId && !cartItem.IsBookDeleted)
+            .ExecuteUpdateAsync(updates => updates
+                .SetProperty(cartItem => cartItem.IsBookDeleted, _ => true)
+                .SetProperty(cartItem => cartItem.NotificationShown, _ => false));
     }
 }

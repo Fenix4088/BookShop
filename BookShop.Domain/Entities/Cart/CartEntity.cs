@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace BookShop.Domain.Entities.Cart;
 
-public sealed class CartEntity
+public sealed class CartEntity : BookShopGenericEntity
 {
     public Guid Id { get; private set; }
     
@@ -13,9 +13,6 @@ public sealed class CartEntity
     
     public ICollection<CartItemEntity> Items { get; private set; } = new List<CartItemEntity>();
     
-    public DateTime CreatedAt { get; private set; }
-    public DateTime? UpdatedAt { get; private set; }
-
 
     public static CartEntity Create(Guid userId, bool isGuest = false) => isGuest ? new () {
         GuestId = userId,

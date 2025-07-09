@@ -1,6 +1,9 @@
-HEADERnamespace a;
+using System.Threading;
+using System.Threading.Tasks;
 
-public interface IDomainEventHandler
+namespace BookShop.Domain.Abstractions;
+
+public interface IDomainEventHandler<T> where T : IDomainEvent
 {
-    
+    Task HandleAsync(T ev, CancellationToken ct = default);
 }

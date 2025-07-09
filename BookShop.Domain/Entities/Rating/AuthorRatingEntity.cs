@@ -12,6 +12,6 @@ public class AuthorRatingEntity : RatingBaseEntity
         AuthorId = authorId,
         UserId = userId,
         Score = score,
-        CreateAt = DateTime.Now
+        CreatedAt = DateTime.Now
     };
 }

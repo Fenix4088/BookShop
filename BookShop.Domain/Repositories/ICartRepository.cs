@@ -13,5 +13,9 @@ public interface ICartRepository : IRepository<CartEntity>
     Task<CartEntity> GetCartByIdAsync(Guid cartId);
 
     Task<IEnumerable<CartItemEntity>> GetCartItemsAsync(Guid userId);
+    
+    Task<IEnumerable<CartItemEntity>> GetCartItemsByBookIdAsync(int bookId);
     Task<IPagedResult<CartItemEntity>> GetCartItemsPagedResultAsync(IPagedQuery<CartItemEntity> pagedQuery, Guid userId);
+    Task MarkBookAsDeletedAsync(int bookId);
+
 }

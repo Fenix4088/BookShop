@@ -2,7 +2,7 @@ using System;
 
 namespace BookShop.Domain.Entities.Cart;
 
-public class CartItemEntity
+public class CartItemEntity : BookShopGenericEntity
 {
     public Guid Id { get; private set; }
     
@@ -13,10 +13,9 @@ public class CartItemEntity
     public BookEntity Book { get; private set; }
     
     public int Quantity { get; private set; }
-    
-    public DateTime CreatedAt { get; private set; }
-    
-    public DateTime? UpdatedAt { get; private set; }
+
+    public bool IsBookDeleted { get; set; }
+    public bool NotificationShown { get; set; }
     
     public static CartItemEntity Create(Guid cartId, int bookId, int quantity)
     {
@@ -59,6 +58,5 @@ public class CartItemEntity
         Quantity = item.Quantity;
         UpdatedAt = DateTime.UtcNow;
     }
-    
     
 }

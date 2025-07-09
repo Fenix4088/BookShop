@@ -27,6 +27,7 @@ public class ShopDbContext : IdentityDbContext<BookShopUser, BookShopRole, Guid>
     public DbSet<CartEntity> Carts { get; set; }
     
     public DbSet<CartItemEntity> CartItems { get; set; }
+    
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

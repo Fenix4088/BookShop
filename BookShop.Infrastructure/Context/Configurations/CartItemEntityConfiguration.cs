@@ -12,6 +12,9 @@ public class CartItemEntityConfiguration(string schema) : IEntityTypeConfigurati
     {
         builder.HasKey(cartItem => cartItem.Id);
 
+        builder.Property(cartItem => cartItem.IsBookDeleted).HasDefaultValue(false);
+        builder.Property(cartItem => cartItem.NotificationShown).HasDefaultValue(false);
+
         builder.HasOne(cartItem => cartItem.Cart)
             .WithMany(cart => cart.Items)
             .HasForeignKey(cart => cart.CartId)

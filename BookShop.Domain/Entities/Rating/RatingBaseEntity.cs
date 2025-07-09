@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BookShop.Domain.Entities.Rating;
 
-public abstract class RatingBaseEntity
+public abstract class RatingBaseEntity : BookShopGenericEntity
 {
     public Guid Id { get; private set; }
     public Guid UserId { get; protected set; }
@@ -19,9 +19,6 @@ public abstract class RatingBaseEntity
             _score = value;
         }
     }
-    public DateTime CreateAt { get; protected set; }
-    
-    public DateTime? DeletedAt { get; protected set; }
     
     protected virtual void CheckScore(int score)
     {
@@ -29,16 +26,12 @@ public abstract class RatingBaseEntity
             throw new ArgumentOutOfRangeException(nameof(score), "Score must be between 1 and 5.");
     }
     
-    public virtual void SoftDelete()
-    {
-        DeletedAt = DateTime.Now;
-    }
     
     public virtual void Update(int score)
     {
         CheckScore(score);
         
         Score = score;
-        CreateAt = DateTime.Now;
+        CreatedAt = DateTime.Now;
     }
 }

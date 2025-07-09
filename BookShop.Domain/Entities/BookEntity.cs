@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using BookShop.Domain.Entities.Cart;
 using BookShop.Domain.Entities.Rating;
+using BookShop.Domain.Events;
 using BookShop.Domain.Exceptions;
 
 namespace BookShop.Domain.Entities;
@@ -80,4 +81,9 @@ public class BookEntity : BookShopGenericEntity
         CoverImgUrl = imageUrl;
     }
 
+    public override void SoftDelete()
+    {
+        AddDomainEvent(new BookDeleteEvent(Id));
+        base.SoftDelete();
+    }
 }

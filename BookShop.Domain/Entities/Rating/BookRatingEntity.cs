@@ -12,7 +12,7 @@ public class BookRatingEntity : RatingBaseEntity
         BookId = bookId,
         UserId = userId,
         Score = score,
-        CreateAt = DateTime.Now
+        CreatedAt = DateTime.Now
     };
     
 }
