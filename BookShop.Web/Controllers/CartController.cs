@@ -20,7 +20,8 @@ public class CartController(
     IQueryHandler<GetCartItemsQuery, IPagedResult<CartItemModel>> getCartItemsQueryHandler,
     IQueryHandler<GetCartQuery, CartModel> getCartQueryHandler,
     IQueryHandler<GetBookListQuery, IPagedResult<BookModel>> getBookListQueryHandler,
-    ICommandHandler<RemoveCartItemCommand> removeCartItemCommandHandler
+    ICommandHandler<RemoveCartItemCommand> removeCartItemCommandHandler,
+    ICommandHandler<MarkNotificationShownCommand> markNotificationShownCommandHandler
     ) : Controller
 {
     
@@ -59,6 +60,13 @@ public class CartController(
         return RedirectToAction("CartItems");
     }
 
+    [HttpPost]
+    public async Task<IActionResult> MarkNotificationShown([FromForm] Guid cartId)
+    {
+        await markNotificationShownCommandHandler.Handler(new MarkNotificationShownCommand(cartId));
+        
+        return RedirectToAction("CartItems");
+    }
 
     private async Task<IActionResult> RedirectToBookList(int currentPage)
     {

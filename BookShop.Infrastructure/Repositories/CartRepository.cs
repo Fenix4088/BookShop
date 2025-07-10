@@ -61,6 +61,11 @@ public class CartRepository(ShopDbContext shopDbContext) : GenericRepository<Car
             .ToListAsync();
     }
 
+    public async Task<IEnumerable<CartItemEntity>> GetCartItemsByCartIdAsync(Guid cartId)
+    {
+        return await context.CartItems.Where(cartItem => cartItem.Cart.Id == cartId).ToListAsync();
+    }
+
     public async Task<IPagedResult<CartItemEntity>> GetCartItemsPagedResultAsync(IPagedQuery<CartItemEntity> pagedQuery, Guid userId)
     {
 

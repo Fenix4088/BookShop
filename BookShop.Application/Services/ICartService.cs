@@ -8,4 +8,6 @@ public interface ICartService
     Task AddItemToCartAsync(Guid userId, int bookId);
     
     Task RemoveItemFromCartAsync(Guid cartId, Guid cartItemId);
+
+    Task MarkNotificationShown(Guid cartId);
 }

@@ -7,13 +7,16 @@ using BookShop.Domain.Entities.Cart;
 using BookShop.Domain.Exceptions;
 using BookShop.Domain.Repositories;
 using BookShop.Infrastructure.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookShop.Infrastructure.Services.Cart;
 
 public class CartService(
     ICartRepository cartRepository, 
     IUserRepository userRepository, 
-    IBookRepository bookRepository, ShopDbContext context) : ICartService
+    IBookRepository bookRepository, 
+    ShopDbContext context
+    ) : ICartService
 {
     public async Task<CartEntity> CreateCartByUserIdAsync(Guid userId)
     {
@@ -103,5 +106,24 @@ public class CartService(
         await bookRepository.UpdateAsync(cartItem.Book);
         await cartRepository.UpdateAsync(cart);
         await context.SaveChangesAsync();
+    }
+
+    public async Task MarkNotificationShown(Guid cartId)
+    {
+        
+        var cart = await cartRepository.GetCartByIdAsync(cartId);
+        
+        if (cart is null)
+        {
+            throw new CartNotFoundException(cartId);
+        }
+        
+        await context.CartItems
+            .Where(cartItem => 
+                cartItem.CartId == cartId && 
+                cartItem.IsBookDeleted == true && 
+                cartItem.NotificationShown == false)
+            .ExecuteUpdateAsync(updates => 
+                updates.SetProperty(cartItem => cartItem.NotificationShown, _ => true));
     }
 }
