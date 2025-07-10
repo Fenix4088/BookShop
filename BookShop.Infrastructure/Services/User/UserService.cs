@@ -4,25 +4,23 @@ using BookShop.Infrastructure.Identity;
 using BookShop.Shared;
 using BookShop.Shared.Enums;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 
 namespace BookShop.Infrastructure.Services.User;
 
-public class UserService : IUserService
+public class UserService(
+    UserManager<BookShopUser> userManager,
+    SignInManager<BookShopUser> signInManager,
+    RoleManager<BookShopRole> roleManager,
+    ILogger<UserService> logger)
+    : IUserService
 {
-    private readonly UserManager<BookShopUser> userManager;
-    private readonly SignInManager<BookShopUser> signInManager;
-    private readonly RoleManager<BookShopRole> roleManager;
-    
-    public UserService(UserManager<BookShopUser> userManager, SignInManager<BookShopUser> signInManager, RoleManager<BookShopRole> roleManager)
-    {
-        this.userManager = userManager;
-        this.signInManager = signInManager;
-        this.roleManager = roleManager;
-    }
+    private readonly RoleManager<BookShopRole> roleManager = roleManager;
 
     public async Task<BookShopUser> GetCurrentUserAsync()
     {
         var user = await userManager.GetUserAsync(signInManager.Context?.User);
+        logger.LogInformation($"🧟‍♂️ User data were retrieved: {user?.Id}, {user?.UserName}, {user?.Email}");
         return user;
     }
 

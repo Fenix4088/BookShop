@@ -9,6 +9,7 @@ using BookShop.Infrastructure.Services.User;
 using BookShop.Shared.Enums;
 using BookShop.Shared.Pagination.Abstractions;
 using BookShop.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookShop.Web.Controllers;
@@ -26,6 +27,7 @@ public class CartController(
 {
     
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> CartItems([FromQuery] PagedQueryModel model)
     {
         var user = await userService.GetCurrentUserAsync();
@@ -43,6 +45,7 @@ public class CartController(
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> AddToCart([FromForm] int currentPage, [FromForm] int bookId)
     {
         var user = await userService.GetCurrentUserAsync();
@@ -53,6 +56,7 @@ public class CartController(
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> RemoveFromCart([FromForm] int currentPage, [FromForm] Guid cartId, [FromForm] Guid cartItemId)
     {
         await removeCartItemCommandHandler.Handler(new RemoveCartItemCommand(cartId, cartItemId));
@@ -61,6 +65,7 @@ public class CartController(
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> MarkNotificationShown([FromForm] Guid cartId)
     {
         await markNotificationShownCommandHandler.Handler(new MarkNotificationShownCommand(cartId));

@@ -84,6 +84,9 @@ _Note: This is a conceptual overview. Actual class relationships are more detail
 
 ---
 
+### DD Schema
+![](./readme-imgs/db_schema.png)
+
 ### Shopping Cart Logic
 
 - **Cart Creation**: When a user (authenticated or guest) interacts with the cart for the first time, a new cart is created and linked to their user ID.
