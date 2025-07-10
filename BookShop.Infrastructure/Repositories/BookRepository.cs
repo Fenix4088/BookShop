@@ -14,12 +14,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookShop.Infrastructure.Repositories;
 
-public class BookRepository: GenericRepository<BookEntity, ShopDbContext>, IBookRepository
+public class BookRepository(ShopDbContext shopDbContext)
+    : GenericRepository<BookEntity, ShopDbContext>(shopDbContext), IBookRepository
 {
-    public BookRepository(ShopDbContext shopDbContext) : base(shopDbContext)
-    {
-    }
-
     public Task<BookEntity> GetBookById(int bookId) => context.Books
         .Include(x => x.Author)
         .Include(x => x.Ratings)
@@ -39,10 +36,16 @@ public class BookRepository: GenericRepository<BookEntity, ShopDbContext>, IBook
         return GetAllBooks(includeDeleted).Where(x => x.AuthorId == authorId);
     }
     
+    
     public async Task<bool> IsUniqueBookAsync(string title, DateTime releaseDate)
     {
         return !(await context.Books.Where(x => x.DeletedAt == null).AnyAsync(book =>
             book.Title == title && book.ReleaseDate == releaseDate && book.DeletedAt == null));
+    }
+    public async Task<bool> IsUniqueBookAsync(int targetBookId, string title, DateTime releaseDate)
+    {
+        return !(await context.Books.Where(x => x.DeletedAt == null).AnyAsync(book =>
+            targetBookId != book.Id && book.Title == title && book.ReleaseDate == releaseDate && book.DeletedAt == null));
     }
 
     public async Task<IPagedResult<BookEntity>> GetPagedResultAsync(IPagedQuery<BookEntity> pagedQuery, SortDirection sortDirection = SortDirection.Descending,

@@ -33,7 +33,7 @@ public class CreateBookCommandHandlerTest: TestBase
     {
         // Arrange
         var author = mockHelper.CreateAuthor();
-        var command = new CreateBookCommand(author.Id, "Test Book", "Test Description", DateTime.Now.AddDays(-1));
+        var command = new CreateBookCommand(author.Id, "Test Book", "Test Description", 1, 1,  DateTime.Now.AddDays(-1));
         
         // Act
         await createBookCommandHandler.Handler(command);
@@ -45,13 +45,15 @@ public class CreateBookCommandHandlerTest: TestBase
         result.Title.ShouldBe(command.Title);
         result.Description.ShouldBe(command.Description);
         result.AuthorId.ShouldBe(command.AuthorId);
+        result.Quantity.ShouldBe(command.Quantity);
+        result.Price.ShouldBe(command.Price);
     }
     
     [Fact]
     public async Task CreateBook_ShouldThrowException_WhenAuthorDoesNotExist()
     {
         // Arrange
-        var command = new CreateBookCommand(9999, "Test Book", "Test Description", DateTime.Now.AddDays(-1));
+        var command = new CreateBookCommand(9999, "Test Book", "Test Description", 1, 1, DateTime.Now.AddDays(-1));
         
         // Act & Assert
         await Should.ThrowAsync<AuthorNotFoundException>(async () => await createBookCommandHandler.Handler(command));
@@ -62,7 +64,7 @@ public class CreateBookCommandHandlerTest: TestBase
     {
         // Arrange
         var author = mockHelper.CreateAuthor();
-        var command = new CreateBookCommand(author.Id, "Test Book", "Test Description", DateTime.Now.AddDays(-1));
+        var command = new CreateBookCommand(author.Id, "Test Book", "Test Description", 1, 1, DateTime.Now.AddDays(-1));
         
         // Act
         await createBookCommandHandler.Handler(command);
@@ -78,7 +80,7 @@ public class CreateBookCommandHandlerTest: TestBase
     {
         // Arrange
         var author = mockHelper.CreateAuthor();
-        var command = new CreateBookCommand(author.Id, "Test Book", "Test Description", DateTime.Now.AddDays(-1));
+        var command = new CreateBookCommand(author.Id, "Test Book", "Test Description", 1, 1, DateTime.Now.AddDays(-1));
         
         // Act
         await createBookCommandHandler.Handler(command);

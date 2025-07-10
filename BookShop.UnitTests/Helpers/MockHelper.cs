@@ -24,7 +24,7 @@ public sealed class MockHelper
 
         for (int i = 0; i < 3; i++)
         {
-            var book = BookEntity.Create($"Test Title {i}", $"Test Description {i}", DateTime.Now, author.Id);
+            var book = BookEntity.Create($"Test Title {i}", $"Test Description {i}", DateTime.Now, author.Id, 1, 1);
             dbContext.Add(book);
         }
 
@@ -33,9 +33,9 @@ public sealed class MockHelper
     }
 
     public BookEntity CreateBook(AuthorEntity author, string title = "Test Title",
-        string description = "Test Description")
+        string description = "Test Description", int quantity = 1, decimal price = 1)
     {
-        var book = BookEntity.Create(title, description, DateTime.Now, author.Id);
+        var book = BookEntity.Create(title, description, DateTime.Now, author.Id, quantity, price);
         dbContext.Add(book);
         author.AddBook();
         dbContext.SaveChanges();

@@ -1,8 +1,12 @@
 using Azure.Monitor.OpenTelemetry.AspNetCore;
+using BookShop.Application;
 using BookShop.Application.Abstractions;
+using BookShop.Application.EventHandlers;
+using BookShop.Application.Services;
 using BookShop.Application.Users;
 using BookShop.Domain.Abstractions;
 using BookShop.Domain.Entities.Rating;
+using BookShop.Domain.Events;
 using BookShop.Domain.Repositories;
 using BookShop.Infrastructure.Abstractions;
 using BookShop.Infrastructure.Context;
@@ -12,7 +16,9 @@ using BookShop.Infrastructure.Middlewares;
 using BookShop.Infrastructure.Repositories;
 using BookShop.Infrastructure.Repositories.Abstractions;
 using BookShop.Infrastructure.Services.Background;
+using BookShop.Infrastructure.Services.Cart;
 using BookShop.Infrastructure.Services.Domain;
+using BookShop.Infrastructure.Services.DomainEventDispatcher;
 using BookShop.Infrastructure.Services.Email;
 using BookShop.Infrastructure.Services.PolicyRole;
 using BookShop.Infrastructure.Services.User;
@@ -53,10 +59,12 @@ public static class Extensions
         services
             .AddDatabaseDeveloperPageExceptionFilter()
             .AddTransient<ExceptionsMiddleware>()
+            .AddSingleton<IDomainEventDispatcher, DomainEventDispatcher>()
             .AddScoped<IUnitOfWork, UnitOfWork>()
             .AddRepositories()
             .AddApplicationServices()
-            .AddDomainServices();
+            .AddDomainServices()
+            .AddDomainEvents();
         
 
         services.TryDecorate(typeof(ICommandHandler<>), typeof(UnitOfWorkCommandHandlerDecorator<>));
@@ -130,7 +138,8 @@ public static class Extensions
             .AddScoped<IAuthorRepository, AuthorRepository>()
             .AddScoped<IBookRepository, BookRepository>()
             .AddScoped<IRatingRepository<BookRatingEntity>, BookRatingRepository>()
-            .AddScoped<IRatingRepository<AuthorRatingEntity>, AuthorRatingRepository>();
+            .AddScoped<IRatingRepository<AuthorRatingEntity>, AuthorRatingRepository>()
+            .AddScoped<ICartRepository, CartRepository>();
         
         return services;
     }
@@ -142,7 +151,8 @@ public static class Extensions
             .AddScoped<IEmailSender, EmailSender>()
             .AddScoped<IPolicyRoleService, PolicyRoleService>()
             .AddScoped<IUserService, UserService>()
-            .AddScoped<IPolicyRoleService, PolicyRoleService>();
+            .AddScoped<IPolicyRoleService, PolicyRoleService>()
+            .AddScoped<ICartService, CartService>();
         
         return services;
     }
@@ -152,6 +162,14 @@ public static class Extensions
         services
             .AddScoped<IAuthorDomainService, AuthorDomainService>()
             .AddScoped<IBookDomainService, BookDomainService>();
+        
+        return services;
+    }
+    
+    private static IServiceCollection AddDomainEvents(this IServiceCollection services)
+    {
+        services
+            .AddScoped<IDomainEventHandler<BookDeleteEvent>, BookDeleteEventHandler>();
         
         return services;
     }

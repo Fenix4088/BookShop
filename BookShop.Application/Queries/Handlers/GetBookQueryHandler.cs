@@ -5,18 +5,11 @@ using BookShop.Domain.Repositories;
 
 namespace BookShop.Application.Queries.Handlers;
 
-public class GetBookQueryHandler: IQueryHandler<GetBookQuery, BookModel>
+public class GetBookQueryHandler(IBookRepository bookRepository) : IQueryHandler<GetBookQuery, BookModel>
 {
-    private readonly IBookRepository _bookRepository;
-
-    public GetBookQueryHandler(IBookRepository bookRepository)
-    {
-        _bookRepository = bookRepository;
-    }
-
     public async Task<BookModel> Handler(GetBookQuery query)
     {
-        var book = await _bookRepository.GetBookById(query.BookId);
+        var book = await bookRepository.GetBookById(query.BookId);
 
         if (book is null)
         {

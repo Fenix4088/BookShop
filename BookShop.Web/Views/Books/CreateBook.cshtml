@@ -1,3 +1,4 @@
+@using System.Globalization
 @model BookShop.Web.Models.BookDetailsViewModel;
 
 @{
@@ -22,6 +23,16 @@
                 <label asp-for="Book.Description" class="control-label"></label>
                 <textarea asp-for="Book.Description" class="form-control">@Model.Book.Description</textarea>
                 <span asp-validation-for="Book.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Book.Price" class="control-label"></label>
+                <input asp-for="Book.Price" type="number" step="any" class="form-control" value="@(isEdit ? Model.Book.Price.ToString("F2",CultureInfo.InvariantCulture) : String.Empty)" />
+                <span asp-validation-for="Book.Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Book.Quantity" class="control-label"></label>
+                <input asp-for="Book.Quantity" type="number" class="form-control" value="@(isEdit ? Model.Book.Quantity.ToString() : String.Empty)" />
+                <span asp-validation-for="Book.Quantity" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Book.ReleaseDate" class="control-label"></label>

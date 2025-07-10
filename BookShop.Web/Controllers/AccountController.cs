@@ -1,6 +1,9 @@
 using System;
 using System.Threading.Tasks;
+using BookShop.Application;
+using BookShop.Application.Services;
 using BookShop.Infrastructure.Identity;
+using BookShop.Infrastructure.Services.Cart;
 using BookShop.Infrastructure.Services.User;
 using BookShop.Shared;
 using BookShop.Shared.Enums;
@@ -13,28 +16,15 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Logging;
 
 namespace BookShop.Web.Controllers;
-public class AccountController : Controller
+public class AccountController(
+    UserManager<BookShopUser> userManager,
+    SignInManager<BookShopUser> signInManager,
+    IEmailSender emailSender,
+    IUserService userService,
+    ICartService cartService,
+    ILogger<AccountController> logger)
+    : Controller
 {
-    private readonly UserManager<BookShopUser> userManager;
-    private readonly SignInManager<BookShopUser> signInManager;
-    private readonly IEmailSender emailSender;
-    private readonly IUserService userService;
-    private readonly ILogger<AccountController> logger;
-
-    public AccountController(
-        UserManager<BookShopUser> userManager,
-        SignInManager<BookShopUser> signInManager,
-        IEmailSender emailSender, IUserService userService,
-        ILogger<AccountController> logger
-        )
-    {
-        this.userManager = userManager;
-        this.signInManager = signInManager;
-        this.emailSender = emailSender;
-        this.userService = userService;
-        this.logger = logger;
-    }
-
     [HttpGet]
     [DenyAuthenticated]
     public IActionResult Login() => View();
@@ -43,7 +33,6 @@ public class AccountController : Controller
     [DenyAuthenticated]
     public async Task<IActionResult> Login(string email, string password)
     {
-        
         logger.LogInformation($"Trying to login user with email: {email}");
         
         var user = await userService.GetCurrentUserByEmail(email);
@@ -101,7 +90,16 @@ public class AccountController : Controller
         }
 
         var result = await userManager.ConfirmEmailAsync(user, token);
-        return View(result.Succeeded ? "EmailConfirmationSuccess" : "Error");
+        
+        if (result.Succeeded)
+        {
+            logger.LogInformation($"Email confirmed for user with email: {email}");
+            await cartService.CreateCartByUserIdAsync(user.Id);
+            return View("EmailConfirmationSuccess");
+        }
+
+        logger.LogWarning($"Email confirmation failed for user with email: {email}. Errors: {string.Join(", ", result.Errors)}");
+        return View("Error");
     }
 
     [HttpPost]

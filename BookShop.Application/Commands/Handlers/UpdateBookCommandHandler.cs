@@ -1,4 +1,5 @@
 using BookShop.Application.Abstractions;
+using BookShop.Application.Models;
 using BookShop.Domain.Abstractions;
 using BookShop.Domain.Exceptions;
 using BookShop.Domain.Repositories;
@@ -8,26 +9,13 @@ using ValidationException = FluentValidation.ValidationException;
 
 namespace BookShop.Application.Commands.Handlers;
 
-public class UpdateBookCommandHandler: ICommandHandler<UpdateBookCommand>
+public class UpdateBookCommandHandler(
+    IBookRepository bookRepository,
+    IAuthorRepository authorRepository,
+    IValidator<UpdateBookCommand> validator,
+    IBookDomainService bookDomainService)
+    : ICommandHandler<UpdateBookCommand>
 {
-    private readonly IBookRepository bookRepository;
-    private readonly IAuthorRepository authorRepository;
-    private readonly IValidator<UpdateBookCommand> validator;
-    private readonly IBookDomainService bookDomainService;
-    
-
-    public UpdateBookCommandHandler(IBookRepository bookRepository, 
-        IAuthorRepository authorRepository, 
-        IValidator<UpdateBookCommand> validator,
-        IBookDomainService bookDomainService
-        )
-    {
-        this.bookRepository = bookRepository;
-        this.authorRepository = authorRepository;
-        this.validator = validator;
-        this.bookDomainService = bookDomainService;
-    }
-
     public async Task Handler(UpdateBookCommand command)
     {
         await validator.ValidateAndThrowAsync(command);
@@ -40,7 +28,7 @@ public class UpdateBookCommandHandler: ICommandHandler<UpdateBookCommand>
 
         if (authorEntity is null) throw new AuthorNotFoundException(command.AuthorId);
         
-        if(!await bookDomainService.IsUniqueBookAsync(command.Title, command.ReleaseDate))
+        if(!await bookDomainService.IsUniqueBookAsync(bookEntity.Id, command.Title, command.ReleaseDate))
         {
             throw new ValidationException(new List<ValidationFailure>
             {
@@ -48,7 +36,7 @@ public class UpdateBookCommandHandler: ICommandHandler<UpdateBookCommand>
             }); 
         }
         
-        bookEntity.Update(authorEntity, command.Title, command.Description, command.ReleaseDate);
+        bookEntity.Update(authorEntity, command.Title, command.Description, command.Quantity, command.Price, command.ReleaseDate);
         await bookRepository.SaveAsync();
         await authorRepository.SaveAsync();
 

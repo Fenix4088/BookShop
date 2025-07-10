@@ -9,22 +9,12 @@ using ValidationException = FluentValidation.ValidationException;
 
 namespace BookShop.Application.Commands.Handlers;
 
-public class CreateAuthorCommandHandler : ICommandHandler<CreateAuthorCommand>
+public class CreateAuthorCommandHandler(
+    IAuthorRepository authorRepository,
+    IValidator<CreateAuthorCommand> validator,
+    IAuthorDomainService authorDomainService)
+    : ICommandHandler<CreateAuthorCommand>
 {
-    private readonly IAuthorRepository authorRepository;
-    private readonly IValidator<CreateAuthorCommand> validator;
-    private readonly IAuthorDomainService authorDomainService;
-
-    public CreateAuthorCommandHandler(IAuthorRepository authorRepository,
-        IValidator<CreateAuthorCommand> validator,
-        IAuthorDomainService authorDomainService
-        )
-    {
-        this.authorRepository = authorRepository;
-        this.validator = validator;
-        this.authorDomainService = authorDomainService;
-    }
-
     public async Task Handler(CreateAuthorCommand command)
     {
         await validator.ValidateAndThrowAsync(command);

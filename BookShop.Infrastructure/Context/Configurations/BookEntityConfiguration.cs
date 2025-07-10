@@ -4,14 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace BookShop.Infrastructure.Context.Configurations;
 
-public class BookEntityConfiguration: IEntityTypeConfiguration<BookEntity>
+public class BookEntityConfiguration(string schema) : IEntityTypeConfiguration<BookEntity>
 {
-    protected string Schema { get; set; }
-
-    public BookEntityConfiguration(string schema)
-    {
-        Schema = schema;
-    }
+    protected string Schema { get; set; } = schema;
 
     public void Configure(EntityTypeBuilder<BookEntity> builder)
     {
@@ -27,6 +22,10 @@ public class BookEntityConfiguration: IEntityTypeConfiguration<BookEntity>
         builder.Property(e => e.ReleaseDate).IsRequired();
         
         builder.Property(author => author.DeletedAt).IsRequired(false);
+
+        builder.Property(book => book.Quantity).IsRequired();
+        
+        builder.Property(book => book.Price).IsRequired().HasColumnType("decimal(18,2)");
         
         builder.HasOne(b => b.Author)
             .WithMany(a => a.Books)

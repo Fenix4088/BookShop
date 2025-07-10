@@ -6,24 +6,12 @@ using BookShop.Domain.Repositories;
 
 namespace BookShop.Application.Commands.Handlers;
 
-public class RateAuthorCommandHandler : ICommandHandler<RateAuthorCommand>
+public class RateAuthorCommandHandler(
+    IRatingRepository<AuthorRatingEntity> authorRatingRepository,
+    IAuthorRepository authorRepository,
+    IUserRepository userRepository)
+    : ICommandHandler<RateAuthorCommand>
 {
-    private readonly IRatingRepository<AuthorRatingEntity> authorRatingRepository;
-    private readonly IAuthorRepository authorRepository;
-    private readonly IUserRepository userRepository;
-    
-    
-    public RateAuthorCommandHandler(
-        IRatingRepository<AuthorRatingEntity> authorRatingRepository,
-        IAuthorRepository authorRepository,
-        IUserRepository userRepository
-        )
-    {
-        this.authorRatingRepository = authorRatingRepository;
-        this.authorRepository = authorRepository;
-        this.userRepository = userRepository;
-    }
-    
     public async Task Handler(RateAuthorCommand command)
     {
         var user = await userRepository.GetByIdAsync(command.UserId);

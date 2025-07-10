@@ -20,7 +20,7 @@ public class BookEntityTests
         var releaseDate = DateTime.Now;
 
         // Act
-        var book = CreateBook(authorId, title, description, releaseDate);
+        var book = CreateBook(authorId, title, description, 1 , 1, releaseDate);
 
         // Assert
         title.ShouldBe(book.Title);
@@ -47,7 +47,7 @@ public class BookEntityTests
         var newReleaseDate = DateTime.Now.AddDays(1);
 
         // Act
-        book.Update(author, newTitle, newDescription, newReleaseDate);
+        book.Update(author, newTitle, newDescription, 1, 1, newReleaseDate);
 
         // Assert
         book.Title.ShouldBe(newTitle);
@@ -118,13 +118,15 @@ public class BookEntityTests
     }
     
 
-    private BookEntity CreateBook(int authorId = 1, string title = "TestBook", string description = "TestDescription", DateTime releaseDate = default)
+    private BookEntity CreateBook(int authorId = 1, string title = "TestBook", string description = "TestDescription", int quantity = 1, int price = 1, DateTime releaseDate = default)
     {
         return BookEntity.Create(
             title: title,
             description: description,
             releaseDate: releaseDate == default ? DateTime.Now : releaseDate,
-            authorId: authorId
+            authorId: authorId,
+            quantity,
+            price
         );
     }
 }

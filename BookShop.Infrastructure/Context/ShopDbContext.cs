@@ -1,6 +1,7 @@
 ﻿using System;
 using BookShop.Domain;
 using BookShop.Domain.Entities;
+using BookShop.Domain.Entities.Cart;
 using BookShop.Domain.Entities.Rating;
 using BookShop.Infrastructure.Context.Configurations;
 using BookShop.Infrastructure.Identity;
@@ -22,6 +23,11 @@ public class ShopDbContext : IdentityDbContext<BookShopUser, BookShopRole, Guid>
     public DbSet<BookRatingEntity> BookRatings { get; set; }
     
     public DbSet<AuthorRatingEntity> AuthorRatings { get; set; }
+    
+    public DbSet<CartEntity> Carts { get; set; }
+    
+    public DbSet<CartItemEntity> CartItems { get; set; }
+    
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -31,10 +37,14 @@ public class ShopDbContext : IdentityDbContext<BookShopUser, BookShopRole, Guid>
         modelBuilder.Entity<BookEntity>().ToTable("Books", Schema);
         modelBuilder.Entity<BookRatingEntity>().ToTable("BookRatings", Schema);
         modelBuilder.Entity<AuthorRatingEntity>().ToTable("AuthorRatings", Schema);
+        modelBuilder.Entity<CartEntity>().ToTable("Carts", Schema);
+        modelBuilder.Entity<CartItemEntity>().ToTable("CartItems", Schema);
         
         modelBuilder.ApplyConfiguration(new AuthorEntityConfiguration(Schema));
         modelBuilder.ApplyConfiguration(new BookEntityConfiguration(Schema));
         modelBuilder.ApplyConfiguration(new BookRatingEntityConfiguration(Schema));
         modelBuilder.ApplyConfiguration(new AuthorRatingEntityConfiguration(Schema));
+        modelBuilder.ApplyConfiguration(new CartEntityConfiguration(Schema));
+        modelBuilder.ApplyConfiguration(new CartItemEntityConfiguration(Schema));
     }
 }

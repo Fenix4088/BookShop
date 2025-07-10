@@ -1,4 +1,5 @@
 using BookShop.Application.Abstractions;
+using BookShop.Application.Models;
 using BookShop.Domain;
 using BookShop.Domain.Abstractions;
 using BookShop.Domain.Entities;
@@ -9,26 +10,13 @@ using FluentValidation.Results;
 
 namespace BookShop.Application.Commands.Handlers;
 
-public sealed class CreateBookCommandHandler: ICommandHandler<CreateBookCommand>
+public sealed class CreateBookCommandHandler(
+    IBookRepository bookRepository,
+    IAuthorRepository authorRepository,
+    IValidator<CreateBookCommand> validator,
+    IBookDomainService bookDomainService)
+    : ICommandHandler<CreateBookCommand>
 {
-
-    private readonly IBookRepository bookRepository;
-    private readonly IAuthorRepository authorRepository;
-    private readonly IValidator<CreateBookCommand> validator;
-    private readonly IBookDomainService bookDomainService;
-    
-    public CreateBookCommandHandler(
-        IBookRepository bookRepository, 
-        IAuthorRepository authorRepository, 
-        IValidator<CreateBookCommand> validator,
-        IBookDomainService bookDomainService)
-    {
-        this.bookRepository = bookRepository;
-        this.authorRepository = authorRepository;
-        this.validator = validator;
-        this.bookDomainService = bookDomainService;
-    }
-
     public async Task Handler(CreateBookCommand command)
     {
 
@@ -49,7 +37,8 @@ public sealed class CreateBookCommandHandler: ICommandHandler<CreateBookCommand>
             }); 
         }
 
-        var newBookEntity = BookEntity.Create(command.Title, command.Description, command.ReleaseDate, command.AuthorId);
+        var newBookEntity = BookEntity.Create(command.Title, command.Description, command.ReleaseDate, command.AuthorId, command.Quantity, command.Price);
+        
         authorEntity.AddBook();
 
         await authorRepository.UpdateAsync(authorEntity);

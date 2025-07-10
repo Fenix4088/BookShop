@@ -14,9 +14,13 @@ public sealed class BookDomainService : IBookDomainService
     {
         this.bookRepository = bookRepository;
     }
-    
-    public Task<bool> IsUniqueBookAsync(string title, DateTime releaseDate)
+
+    public Task<bool> IsUniqueBookAsync(string title, DateTime releaseDate) 
     {
         return bookRepository.IsUniqueBookAsync(title, releaseDate);
+    }
+    public Task<bool> IsUniqueBookAsync(int targetBookId, string title, DateTime releaseDate)
+    {
+        return bookRepository.IsUniqueBookAsync(targetBookId, title, releaseDate);
     }
 }

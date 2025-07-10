@@ -10,3 +10,5 @@
  - [x] Authorizations and Authentication 
  - [x] Add all necessary credentials into Key-Vault
  - [x] deploy to Azure
+ - [ ] Configure SMTP for Production
+ - [ ] What we gonna do if book was remove from the app, but someone have it in the cart?

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Bogus;
 using BookShop.Domain;
 using BookShop.Domain.Entities;
+using BookShop.Domain.Entities.Cart;
 using BookShop.Infrastructure.Abstractions;
 using BookShop.Infrastructure.Identity;
 using BookShop.Shared;
@@ -104,10 +105,11 @@ public class DataSeeder : IDataSeeder
         var adminUser = await userManager.FindByEmailAsync(adminEmail);
         if (adminUser == null)
         {
-            adminUser = new BookShopUser() { UserName = adminEmail, Email = adminEmail };
-            await userManager.CreateAsync(adminUser, "Admin123!");
-            await userManager.AddToRoleAsync(adminUser, Roles.Admin.GetName());
-            await ConfirmEmail(adminUser, userManager);
+            // adminUser = new BookShopUser() { UserName = adminEmail, Email = adminEmail };
+            // await userManager.CreateAsync(adminUser, "Admin123!");
+            // await userManager.AddToRoleAsync(adminUser, Roles.Admin.GetName());
+            // await ConfirmEmail(adminUser, userManager);
+            await GenerateAdmin(adminEmail);
             await GenerateUsers(userManager, Roles.Manager, 3);
             await GenerateUsers(userManager);
         }
@@ -145,6 +147,8 @@ public class DataSeeder : IDataSeeder
                 .RuleFor(book => book.CoverImgUrl, f => f.Image.PicsumUrl())
                 .RuleFor(book => book.CreatedAt, f => DateTime.UtcNow)
                 .RuleFor(book => book.DeletedAt, f => null)
+                .RuleFor(book => book.Quantity, f => f.Random.Int(100, 200))
+                .RuleFor(book => book.Price, f => f.Finance.Amount(10, 100))
                 .Generate(5));
             seededAuthor.AddBook(5);
         }
@@ -153,7 +157,18 @@ public class DataSeeder : IDataSeeder
 
         await ctx.SaveChangesAsync(cancellationToken);
     }
-    
+
+
+    private async Task<BookShopUser> GenerateAdmin(string email)
+    {
+        var adminUser = new BookShopUser() { UserName = email, Email = email };
+        await userManager.CreateAsync(adminUser, "Admin123!");
+        await userManager.AddToRoleAsync(adminUser, Roles.Admin.GetName());
+        await ConfirmEmail(adminUser, userManager);
+        CreateUserCart(adminUser);
+        logger.LogInformation($"Admin user created with email: {email}");
+        return adminUser;
+    }
 
     private async Task GenerateUsers(UserManager<BookShopUser> userManager, Roles roles = Roles.User, int count = 5)
     {
@@ -162,8 +177,26 @@ public class DataSeeder : IDataSeeder
             var user = GenerateUser();
             await userManager.CreateAsync(user, "Test12345!");
             await userManager.AddToRoleAsync(user, roles.GetName());
+            CreateUserCart(user);
             await ConfirmEmail(user, userManager);
         }
+    }
+
+    private void CreateUserCart(BookShopUser user)
+    {
+        if (user.Cart != null)
+        {
+            return;
+        }
+        
+        var cart = user.AddCart();
+
+        if (cart is not null)
+        {
+            logger.LogInformation($"🛒 Cart created for user {user.UserName} with ID {user.Id}");
+            ctx.Carts.Add(cart);
+        }
+
     }
 
     private BookShopUser GenerateUser() => new Faker<BookShopUser>()

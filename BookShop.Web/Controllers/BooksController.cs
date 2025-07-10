@@ -13,37 +13,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BookShop.Web.Controllers;
 [ValidationExceptionFilter("Book")]
-public class BooksController: Controller
+public class BooksController(
+    ICommandHandler<CreateBookCommand> createBookCommandHandler,
+    IQueryHandler<GetBookListQuery, IPagedResult<BookModel>> getBookListQueryHandler,
+    IQueryHandler<GetAuthorListQuery, IPagedResult<AuthorModel>> getAuthorsListQueryHandler,
+    ICommandHandler<SoftDeleteBookCommand> softDeleteBookCommandHandler,
+    IQueryHandler<GetBookQuery, BookModel> getBookQueryHandler,
+    ICommandHandler<UpdateBookCommand> updateBookCommandHandler,
+    IPolicyRoleService policyRoleService)
+    : Controller
 {
-
-    private readonly ICommandHandler<CreateBookCommand> createBookCommandHandler;
-    private readonly IQueryHandler<GetBookListQuery, IPagedResult<BookModel>> getBookListQueryHandler;
-    private readonly IQueryHandler<GetAuthorListQuery, IPagedResult<AuthorModel>> getAuthorsListQueryHandler;
-    private readonly IQueryHandler<GetBookQuery, BookModel> getBookQueryHandler;
-    private readonly ICommandHandler<SoftDeleteBookCommand> softDeleteBookCommandHandler;
-    private readonly ICommandHandler<UpdateBookCommand> updateBookCommandHandler;
-    private readonly IPolicyRoleService policyRoleService;
-
-    public BooksController(
-        ICommandHandler<CreateBookCommand> createBookCommandHandler, 
-        IQueryHandler<GetBookListQuery, IPagedResult<BookModel>> getBookListQueryHandler, 
-        IQueryHandler<GetAuthorListQuery, IPagedResult<AuthorModel>> getAuthorsListQueryHandler,
-        ICommandHandler<SoftDeleteBookCommand> softDeleteBookCommandHandler,
-        IQueryHandler<GetBookQuery, BookModel> getBookQueryHandler,
-        ICommandHandler<UpdateBookCommand> updateBookCommandHandler,
-        IPolicyRoleService policyRoleService
-        )
-    {
-        this.createBookCommandHandler = createBookCommandHandler;
-        this.getBookListQueryHandler = getBookListQueryHandler;
-        this.getAuthorsListQueryHandler = getAuthorsListQueryHandler;
-        this.softDeleteBookCommandHandler = softDeleteBookCommandHandler;
-        this.getBookQueryHandler = getBookQueryHandler;
-        this.updateBookCommandHandler = updateBookCommandHandler;
-        this.policyRoleService = policyRoleService;
-    }
-
-
     [HttpGet]
     [Authorize(Policy = nameof(Policies.AdminAndManager))]
     public async Task<IActionResult> BookForm(int? id)
@@ -88,7 +67,7 @@ public class BooksController: Controller
         
         HttpContext.Items["CurrentModel"] = model;
         
-        await createBookCommandHandler.Handler(new CreateBookCommand(model.Book.AuthorId, model.Book.Title, model.Book.Description, model.Book.ReleaseDate));
+        await createBookCommandHandler.Handler(new CreateBookCommand(model.Book.AuthorId, model.Book.Title, model.Book.Description, model.Book.Quantity, model.Book.Price, model.Book.ReleaseDate));
         
         return RedirectToAction("BooksList");
     }
@@ -104,7 +83,7 @@ public class BooksController: Controller
 
         HttpContext.Items["CurrentModel"] = model;
         
-        await updateBookCommandHandler.Handler(new UpdateBookCommand(model.Book.Id, model.Book.AuthorId, model.Book.Title, model.Book.Description, model.Book.ReleaseDate));
+        await updateBookCommandHandler.Handler(new UpdateBookCommand(model.Book.Id, model.Book.AuthorId, model.Book.Title, model.Book.Description, model.Book.Quantity, model.Book.Price, model.Book.ReleaseDate));
         
         return RedirectToAction("BooksList");
     }
@@ -116,12 +95,11 @@ public class BooksController: Controller
         var isInAdminAndManagerPolicy = await policyRoleService.IsUserInRoleForPolicyAsync(Policies.AdminAndManager, Roles.Admin);
         var shouldShowDeleted = isInAdminAndManagerPolicy && model.IsDeleted;
         
-        //TODO: Make to change IsDelete just for admins
         if (model.CurrentPage == 0 || model.RowCount == 0)
         {
             return RedirectToAction("BooksList", new
             {
-                CurrentPage = 1,
+                CurrentPage = model.CurrentPage > 0 ? model.CurrentPage : 1,
                 RowCount = 10,
                 SortDirection = model.SortDirection,
                 SearchByBookTitle = model.SearchByBookTitle,

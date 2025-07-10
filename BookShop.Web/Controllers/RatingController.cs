@@ -11,28 +11,13 @@ using Microsoft.Extensions.Logging;
 
 namespace BookShop.Web.Controllers;
 
-public class RatingController : Controller
+public class RatingController(
+    ICommandHandler<RateBookCommand> rateBookCommandHandler,
+    ICommandHandler<RateAuthorCommand> rateAuthorCommandHandler,
+    IUserService userService,
+    ILogger<RatingController> logger)
+    : Controller
 {
-    
-    private readonly ICommandHandler<RateBookCommand> rateBookCommandHandler;
-    private readonly ICommandHandler<RateAuthorCommand> rateAuthorCommandHandler;
-    private readonly IUserService userService;
-    private readonly ILogger<RatingController> logger;
-    
-    public RatingController(
-        ICommandHandler<RateBookCommand> rateBookCommandHandler,
-        ICommandHandler<RateAuthorCommand> rateAuthorCommandHandler,
-        IUserService userService,
-        ILogger<RatingController> logger
-        )
-    {
-        this.rateBookCommandHandler = rateBookCommandHandler;
-        this.rateAuthorCommandHandler = rateAuthorCommandHandler;
-        this.userService = userService;
-        this.logger = logger;
-    }
-    
-    
     [HttpPost]
     [Authorize]
     public async Task<IActionResult> RateItem([FromForm] int currentPage, [FromForm] string itemType, [FromForm] int itemId, [FromForm] int score)

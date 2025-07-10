@@ -1,3 +1,4 @@
+using BookShop.Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -5,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 
 namespace BookShop.Infrastructure.Filters;
+
 
 public class BookShopExceptionFilter : IExceptionFilter
 {
@@ -18,7 +20,7 @@ public class BookShopExceptionFilter : IExceptionFilter
 
     public void OnException(ExceptionContext context)
     {
-        if (context.Exception is BookShopException shopException)
+        if (context.Exception is BookShopException { IsGlobal: false } shopException)
         {
             _logger.LogError("BookShopException: {Message}", shopException.Message);
 
@@ -36,8 +38,13 @@ public class BookShopExceptionFilter : IExceptionFilter
                 context.Result = new RedirectToActionResult("Error", "Home", new { message = shopException.Message });
             }
             
-            context.ExceptionHandled = true;
         }
+        else
+        {
+            context.Result = new RedirectToActionResult("Error", "Home", new { message = context.Exception.Message });
+        }
+        
+        context.ExceptionHandled = true;
 
     }
 
